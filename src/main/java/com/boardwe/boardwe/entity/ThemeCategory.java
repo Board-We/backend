@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -19,6 +20,7 @@ public class ThemeCategory {
     private Long id;
 
     @Column(columnDefinition = "NVARCHAR2(50)",name="theme_category_name")
+    @NotNull
     private String name;
 
     @Builder

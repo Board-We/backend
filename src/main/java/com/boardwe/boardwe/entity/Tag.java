@@ -10,27 +10,30 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "TAG")
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Tag {
     @Id
     @Column(name = "tag_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long tagId;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "board_id", referencedColumnName = "board_id")
     @NotNull
-    private long boardId;
+    private Board board;
 
     @Column(name = "tag_value", length = 20)
     @NotNull
-    private String tagValue;
+    private String value;
+
+    @Builder
+    public Tag(Board board, String value) {
+        this.board = board;
+        this.value = value;
+    }
 }

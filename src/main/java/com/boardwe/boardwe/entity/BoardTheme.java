@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -19,12 +20,15 @@ public class BoardTheme {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "theme_category_id")
+    @NotNull
     private ThemeCategory themeCategory;
 
     @Column(columnDefinition = "NVARCHAR2(20)",name = "board_theme_name")
+    @NotNull
     private String name;
 
     @Column(columnDefinition = "NVARCHAR2(10)",name="board_theme_background_type")
+    @NotNull
     private BackgroundType backgroundType;
 
     @ManyToOne(fetch = FetchType.LAZY)
