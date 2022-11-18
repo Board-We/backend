@@ -1,6 +1,7 @@
 package com.boardwe.boardwe.exception;
 
 import com.boardwe.boardwe.dto.ResponseDto;
+import com.boardwe.boardwe.exception.custom.CustomException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
