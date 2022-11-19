@@ -1,31 +1,26 @@
 package com.boardwe.boardwe.entity;
 
-import java.sql.Timestamp;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-
-import lombok.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "BOARD")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board {
-    @Id
+
+    @Id @GeneratedValue
     @Column(name = "board_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "board_theme_id", referencedColumnName = "board_theme_id")
+    @JoinColumn(name = "board_theme_id")
     @NotNull
     private BoardTheme boardTheme;
 
@@ -42,19 +37,19 @@ public class Board {
 
     @Column(name = "board_writing_start_time")
     @NotNull
-    private Timestamp writingStartTime;
+    private LocalDateTime writingStartTime;
 
     @Column(name = "board_writing_end_time")
     @NotNull
-    private Timestamp writingEndTime;
+    private LocalDateTime writingEndTime;
 
     @Column(name = "board_open_start_time")
     @NotNull
-    private Timestamp openStartTime;
+    private LocalDateTime openStartTime;
 
     @Column(name = "board_open_end_time")
     @NotNull
-    private Timestamp openEndTime;
+    private LocalDateTime openEndTime;
 
     @Column(name = "board_password", length = 16)
     @NotNull
@@ -69,7 +64,7 @@ public class Board {
     private String views;
 
     @Builder
-    public Board(BoardTheme boardTheme, String name, String description, String code, Timestamp writingStartTime, Timestamp writingEndTime, Timestamp openStartTime, Timestamp openEndTime, String password, String openType, String views) {
+    public Board(BoardTheme boardTheme, String name, String description, String code, LocalDateTime writingStartTime, LocalDateTime writingEndTime, LocalDateTime openStartTime, LocalDateTime openEndTime, String password, String openType, String views) {
         this.boardTheme = boardTheme;
         this.name = name;
         this.description = description;
