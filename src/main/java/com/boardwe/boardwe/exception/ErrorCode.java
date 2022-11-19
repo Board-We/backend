@@ -4,6 +4,7 @@ public enum ErrorCode {
     //4xx
     REQUEST_ERROR(400,"잘못된 요청입니다."),
     ENTITY_NOT_FOUND(400, "해당 리소스가 존재하지 않습니다."),
+    BOARD_NOT_FOUND(400, "해당 보드가 존재하지 않습니다."),
 
 
     //5xx
