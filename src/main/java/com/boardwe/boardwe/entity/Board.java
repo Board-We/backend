@@ -1,5 +1,6 @@
 package com.boardwe.boardwe.entity;
 
+import com.boardwe.boardwe.type.OpenType;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -56,15 +57,16 @@ public class Board {
     private String password;
     
     @Column(name = "board_open_type", length = 10)
+    @Enumerated(EnumType.STRING)
     @NotNull
-    private String openType;
+    private OpenType openType;
 
     @Column(name = "board_views")
     @NotNull
     private String views;
 
     @Builder
-    public Board(BoardTheme boardTheme, String name, String description, String code, LocalDateTime writingStartTime, LocalDateTime writingEndTime, LocalDateTime openStartTime, LocalDateTime openEndTime, String password, String openType, String views) {
+    public Board(BoardTheme boardTheme, String name, String description, String code, LocalDateTime writingStartTime, LocalDateTime writingEndTime, LocalDateTime openStartTime, LocalDateTime openEndTime, String password, OpenType openType, String views) {
         this.boardTheme = boardTheme;
         this.name = name;
         this.description = description;
