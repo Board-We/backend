@@ -17,7 +17,6 @@ import java.util.List;
 public class BoardSelectResponseDto {
     private String boardName;
     private String boardDescription;
-    private int memoCnt;
     private LocalDateTime openStartTime;
     private LocalDateTime openEndTime;
     private OpenType openType;
