@@ -2,18 +2,22 @@ package com.boardwe.boardwe.dto;
 
 import com.boardwe.boardwe.dto.Inner.BoardCreateThemeRequestDto;
 import com.boardwe.boardwe.type.OpenType;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Data
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BoardCreateRequestDto {
-    private String name;
-    private String description;
+    private String boardName;
+    private String boardDescription;
     private List<String> tags;
     private LocalDateTime writingStartTime;
     private LocalDateTime writingEndTime;

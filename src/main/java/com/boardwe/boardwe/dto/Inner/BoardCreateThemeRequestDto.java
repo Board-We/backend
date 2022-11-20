@@ -1,17 +1,21 @@
 package com.boardwe.boardwe.dto.Inner;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class BoardCreateThemeRequestDto {
-    private String backgroundImage;
-    private String backgroundImageName;
-    private String backgroundColor;
-    private String font;
-    private List<MemoImagesTextColorSetsRequestDto> imageTextColorSet;
-    private List<MemoBackgroundTextColorSetsRequestDto> backgroundTextColorSet;
+    private String boardBackgroundImage;
+    private String boardBackgroundImageName;
+    private String boardBackgroundColor;
+    private String boardFont;
+    private List<MemoImagesTextColorSetsRequestDto> memoImageTextColorSets;
+    private List<MemoBackgroundTextColorSetsRequestDto> memoBackgroundTextColorSets;
 }
