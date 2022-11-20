@@ -63,10 +63,10 @@ public class Board {
 
     @Column(name = "board_views")
     @NotNull
-    private String views;
+    private int views;
 
     @Builder
-    public Board(BoardTheme boardTheme, String name, String description, String code, LocalDateTime writingStartTime, LocalDateTime writingEndTime, LocalDateTime openStartTime, LocalDateTime openEndTime, String password, OpenType openType, String views) {
+    public Board(BoardTheme boardTheme, String name, String description, String code, LocalDateTime writingStartTime, LocalDateTime writingEndTime, LocalDateTime openStartTime, LocalDateTime openEndTime, String password, OpenType openType, int views) {
         this.boardTheme = boardTheme;
         this.name = name;
         this.description = description;

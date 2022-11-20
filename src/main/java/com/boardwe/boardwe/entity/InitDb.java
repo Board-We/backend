@@ -88,7 +88,7 @@ public class InitDb {
                     .openEndTime(currentTime.plusDays(4))
                     .openType(OpenType.PUBLIC)
                     .password("1234")
-                    .views("0")
+                    .views(0)
                     .build();
             Board writingBoard = Board.builder()
                     .boardTheme(christmasTheme)
@@ -101,7 +101,7 @@ public class InitDb {
                     .openEndTime(currentTime.plusDays(4))
                     .openType(OpenType.PUBLIC)
                     .password("1234")
-                    .views("0")
+                    .views(0)
                     .build();
             Board beforeOpenBoard = Board.builder()
                     .boardTheme(christmasTheme)
@@ -114,7 +114,7 @@ public class InitDb {
                     .openEndTime(currentTime.plusDays(4))
                     .openType(OpenType.PUBLIC)
                     .password("1234")
-                    .views("0")
+                    .views(0)
                     .build();
             Board openBoard = Board.builder()
                     .boardTheme(christmasTheme)
@@ -127,7 +127,7 @@ public class InitDb {
                     .openEndTime(currentTime.plusDays(4))
                     .openType(OpenType.PUBLIC)
                     .password("1234")
-                    .views("0")
+                    .views(0)
                     .build();
             Board closedBoard = Board.builder()
                     .boardTheme(christmasTheme)
@@ -140,7 +140,7 @@ public class InitDb {
                     .openEndTime(currentTime.minusDays(1))
                     .openType(OpenType.PUBLIC)
                     .password("1234")
-                    .views("0")
+                    .views(0)
                     .build();
             Board privateBoard = Board.builder()
                     .boardTheme(userTheme)
@@ -153,7 +153,7 @@ public class InitDb {
                     .openEndTime(currentTime.plusDays(10))
                     .openType(OpenType.PRIVATE)
                     .password("1234")
-                    .views("0")
+                    .views(0)
                     .build();
             em.persist(beforeWritingBoard);
             em.persist(writingBoard);
