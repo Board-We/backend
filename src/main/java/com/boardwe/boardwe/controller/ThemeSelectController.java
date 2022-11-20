@@ -2,7 +2,7 @@ package com.boardwe.boardwe.controller;
 
 import com.boardwe.boardwe.dto.MemoThemeResponseDto;
 import com.boardwe.boardwe.dto.ResponseDto;
-import com.boardwe.boardwe.dto.BoardThemeResponseDto;
+import com.boardwe.boardwe.dto.BoardThemeSelectResponseDto;
 import com.boardwe.boardwe.service.ThemeSelectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,7 @@ public class ThemeSelectController {
 
     @GetMapping("/board-theme")
     public ResponseDto getBoardThemes() {
-        List<BoardThemeResponseDto> responseDtos = themeSelectService.getPublicThemes();
+        List<BoardThemeSelectResponseDto> responseDtos = themeSelectService.getPublicThemes();
         return ResponseDto.ok("themes", responseDtos);
     }
 
