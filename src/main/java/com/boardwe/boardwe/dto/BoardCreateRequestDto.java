@@ -1,11 +1,13 @@
 package com.boardwe.boardwe.dto;
 
+import com.boardwe.boardwe.dto.Inner.BoardCreateThemeRequestDto;
 import com.boardwe.boardwe.type.OpenType;
 import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Builder
@@ -20,4 +22,5 @@ public class BoardCreateRequestDto {
     private String password;
     private OpenType openType;
     private Long boardThemeId;
+    private List<BoardCreateThemeRequestDto> theme;
 }
