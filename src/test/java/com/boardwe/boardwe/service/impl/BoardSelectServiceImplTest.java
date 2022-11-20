@@ -9,6 +9,7 @@ import com.boardwe.boardwe.entity.MemoTheme;
 import com.boardwe.boardwe.exception.custom.BoardBeforeOpenException;
 import com.boardwe.boardwe.exception.custom.BoardBeforeWritingException;
 import com.boardwe.boardwe.exception.custom.BoardClosedException;
+import com.boardwe.boardwe.exception.custom.BoardNotFoundException;
 import com.boardwe.boardwe.repository.BoardRepository;
 import com.boardwe.boardwe.repository.BoardThemeRepository;
 import com.boardwe.boardwe.repository.MemoThemeRepository;
@@ -145,7 +146,7 @@ class BoardSelectServiceImplTest {
 
     @Test
     @DisplayName("작성 이전 상태의 PUBLIC 보드를 조회하는데 실패한다.")
-    void get_before_writing_board_success() throws Exception {
+    void get_before_writing_board() throws Exception {
         // given
         String boardCode = "1234";
         Board board = mock(Board.class);
@@ -169,7 +170,7 @@ class BoardSelectServiceImplTest {
 
     @Test
     @DisplayName("공개 이전 상태의 PUBLIC 보드를 조회하는데 실패한다.")
-    void get_before_open_board_success() throws Exception {
+    void get_before_open_board() throws Exception {
         // given
         String boardCode = "1234";
         Board board = mock(Board.class);
@@ -193,7 +194,7 @@ class BoardSelectServiceImplTest {
 
     @Test
     @DisplayName("공개 종료 상태의 PUBLIC 보드를 조회하는데 실패한다.")
-    void get_closed_board_success() throws Exception {
+    void get_closed_board() throws Exception {
         // given
         String boardCode = "1234";
         Board board = mock(Board.class);
@@ -213,6 +214,18 @@ class BoardSelectServiceImplTest {
 
         // when & then
         assertThrows(BoardClosedException.class, () -> boardSelectService.getBoard(boardCode));
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 보드를 조회하는데 실패한다.")
+    void get_not_exist_board() throws Exception {
+        // given
+        String boardCode = "1234";
+        when(boardRepository.findByCode(boardCode))
+                .thenReturn(Optional.empty());
+
+        // when & then
+        assertThrows(BoardNotFoundException.class, () -> boardSelectService.getBoard(boardCode));
     }
 
     private BoardTheme setBoardTheme(BackgroundType backgroundType){
