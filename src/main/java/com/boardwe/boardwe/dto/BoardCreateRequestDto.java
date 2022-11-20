@@ -22,5 +22,5 @@ public class BoardCreateRequestDto {
     private String password;
     private OpenType openType;
     private Long boardThemeId;
-    private List<BoardCreateThemeRequestDto> theme;
+    private BoardCreateThemeRequestDto theme;
 }
