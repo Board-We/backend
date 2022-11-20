@@ -2,16 +2,14 @@ package com.boardwe.boardwe.service.impl;
 
 import com.boardwe.boardwe.dto.BoardSelectResponseDto;
 import com.boardwe.boardwe.dto.inner.MemoThemeResponseDto;
-import com.boardwe.boardwe.entity.Board;
-import com.boardwe.boardwe.entity.BoardTheme;
-import com.boardwe.boardwe.entity.ImageInfo;
-import com.boardwe.boardwe.entity.MemoTheme;
+import com.boardwe.boardwe.entity.*;
 import com.boardwe.boardwe.exception.custom.BoardBeforeOpenException;
 import com.boardwe.boardwe.exception.custom.BoardBeforeWritingException;
 import com.boardwe.boardwe.exception.custom.BoardClosedException;
 import com.boardwe.boardwe.exception.custom.BoardNotFoundException;
 import com.boardwe.boardwe.repository.BoardRepository;
 import com.boardwe.boardwe.repository.BoardThemeRepository;
+import com.boardwe.boardwe.repository.MemoRepository;
 import com.boardwe.boardwe.repository.MemoThemeRepository;
 import com.boardwe.boardwe.type.BackgroundType;
 import com.boardwe.boardwe.type.BoardStatus;
@@ -28,8 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -40,6 +37,8 @@ class BoardSelectServiceImplTest {
     private BoardRepository boardRepository;
     @Mock
     private MemoThemeRepository memoThemeRepository;
+    @Mock
+    private MemoRepository memoRepository;
 
     @InjectMocks
     private BoardSelectServiceImpl boardSelectService;
@@ -63,6 +62,7 @@ class BoardSelectServiceImplTest {
         LocalDateTime openStartTime = LocalDateTime.now().minusDays(1);
         LocalDateTime openEndTime = openStartTime.plusDays(2);
 
+        when(board.getId()).thenReturn(1L);
         when(board.getName()).thenReturn(boardName);
         when(board.getDescription()).thenReturn(boardDesc);
         when(board.getWritingStartTime()).thenReturn(writingStartTime);
@@ -71,6 +71,7 @@ class BoardSelectServiceImplTest {
         when(board.getOpenEndTime()).thenReturn(openEndTime);
         when(board.getOpenType()).thenReturn(OpenType.PUBLIC);
 
+        List<Memo> memos = setMemos(2);
         BoardTheme boardTheme = setBoardTheme(BackgroundType.COLOR);
         when(board.getBoardTheme()).thenReturn(boardTheme);
         List<MemoTheme> memoThemes = List.of(setMemoTheme(BackgroundType.COLOR),
@@ -78,12 +79,14 @@ class BoardSelectServiceImplTest {
 
         when(boardRepository.findByCode(boardCode))
                 .thenReturn(Optional.of(board));
+        when(memoRepository.findByBoardId(board.getId()))
+                .thenReturn(memos);
         when(memoThemeRepository.findByBoardThemeId(boardTheme.getId()))
                 .thenReturn(memoThemes);
 
         // when
         BoardSelectResponseDto responseDto = boardSelectService.getBoard(boardCode);
-        
+
         // then
         assertEquals(boardName, responseDto.getBoardName());
         assertEquals(boardDesc, responseDto.getBoardDescription());
@@ -91,6 +94,13 @@ class BoardSelectServiceImplTest {
         assertEquals(openEndTime, responseDto.getOpenEndTime());
         assertEquals(OpenType.PUBLIC, responseDto.getOpenType());
         assertEquals(BoardStatus.OPEN, responseDto.getBoardStatus());
+
+        assertEquals(2, responseDto.getMemos().size());
+        assertEquals(201L, responseDto.getMemos().get(0).getMemoThemeId());
+        assertEquals("memo 1", responseDto.getMemos().get(0).getMemoContent());
+        assertEquals(202L, responseDto.getMemos().get(1).getMemoThemeId());
+        assertEquals("memo 2", responseDto.getMemos().get(1).getMemoContent());
+
         assertEquals(BackgroundType.COLOR, responseDto.getTheme().getBoardBackgroundType());
         assertEquals(backgroundColor, responseDto.getTheme().getBoardBackground());
         assertEquals(font, responseDto.getTheme().getBoardFont());
@@ -137,6 +147,8 @@ class BoardSelectServiceImplTest {
         assertEquals(openStartTime, responseDto.getOpenStartTime());
         assertEquals(openEndTime, responseDto.getOpenEndTime());
         assertEquals(OpenType.PUBLIC, responseDto.getOpenType());
+        assertNull(responseDto.getMemos());
+
         assertEquals(BoardStatus.WRITING, responseDto.getBoardStatus());
         assertEquals(BackgroundType.IMAGE, responseDto.getTheme().getBoardBackgroundType());
         assertEquals("/image/" + backgroundImageUuid, responseDto.getTheme().getBoardBackground());
@@ -228,13 +240,13 @@ class BoardSelectServiceImplTest {
         assertThrows(BoardNotFoundException.class, () -> boardSelectService.getBoard(boardCode));
     }
 
-    private BoardTheme setBoardTheme(BackgroundType backgroundType){
+    private BoardTheme setBoardTheme(BackgroundType backgroundType) {
         BoardTheme theme = mock(BoardTheme.class);
         when(theme.getId()).thenReturn(100L);
         when(theme.getBackgroundType()).thenReturn(backgroundType);
         when(theme.getFont()).thenReturn(font);
 
-        if (backgroundType == BackgroundType.COLOR){
+        if (backgroundType == BackgroundType.COLOR) {
             when(theme.getBackgroundColor()).thenReturn(backgroundColor);
         } else {
             ImageInfo imageInfo = mock(ImageInfo.class);
@@ -251,7 +263,7 @@ class BoardSelectServiceImplTest {
         when(theme.getBackgroundType()).thenReturn(backgroundType);
         when(theme.getTextColor()).thenReturn(textColor);
 
-        if (backgroundType == BackgroundType.COLOR){
+        if (backgroundType == BackgroundType.COLOR) {
             when(theme.getBackgroundColor()).thenReturn(backgroundColor);
         } else {
             ImageInfo imageInfo = mock(ImageInfo.class);
@@ -259,6 +271,19 @@ class BoardSelectServiceImplTest {
             when(theme.getBackgroundImageInfo()).thenReturn(imageInfo);
         }
         return theme;
+    }
+
+    private List<Memo> setMemos(int num) {
+        List<Memo> memos = new ArrayList<>();
+        for (int i = 1; i <= num; i++) {
+            Memo memo = mock(Memo.class);
+            MemoTheme memoTheme = mock(MemoTheme.class);
+            when(memoTheme.getId()).thenReturn(200L + i);
+            when(memo.getMemoTheme()).thenReturn(memoTheme);
+            when(memo.getContent()).thenReturn(String.format("memo %d", i));
+            memos.add(memo);
+        }
+        return memos;
     }
 
     private void assertMemoThemeResponseDtos(List<MemoThemeResponseDto> memoThemesWithId) {
