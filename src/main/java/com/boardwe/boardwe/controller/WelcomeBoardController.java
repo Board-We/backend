@@ -8,18 +8,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.boardwe.boardwe.dto.ResponseDto;
-import com.boardwe.boardwe.service.WelcomBoardService;
+import com.boardwe.boardwe.service.WelcomeBoardServiceImpl;
 
 @RestController
-public class boardControllerByH {
+public class WelcomeBoardController {
 
     @Autowired
-    WelcomBoardService welcomBoardService;
+    WelcomeBoardServiceImpl welcomBoardServiceImpl;
 
     @GetMapping("/board/{boardCode}/welcome")
     @ResponseBody
     public ResponseDto getWelcomeBoard(@PathVariable String boardCode){
-        return ResponseDto.ok("board", welcomBoardService.getWelcomBoardDto(boardCode));
+        return ResponseDto.ok("board", welcomBoardServiceImpl.getWelcomBoardDto(boardCode));
     }
 
     @GetMapping("/board/search")

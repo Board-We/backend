@@ -8,5 +8,5 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MemoRepository extends JpaRepository<Memo,Long> {
-    List<Memo> findByBoard(Board board);
+    List<Memo> findAllByBoard(Board board);
 }

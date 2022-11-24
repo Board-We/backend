@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class welcomBoardDto {
+public class WelcomeBoardDto {
     public String boardName;
     public String boradDescription;
     public List<String> tags = new ArrayList<String>();
