@@ -9,7 +9,9 @@ public enum ErrorCode {
 
     BOARD_NOT_FOUND(400,"보드를 찾을 수 없습니다."),
 
+    MEMO_NOT_FOUND(400,"메모를 찾을 수 없습니다."),
 
+    MEMO_WITH_INVALID_BOARD(400,"보드에 속하지 않는 메모입니다."),
     //5xx
     INTERNAL_SERVER_ERROR(500,"서버에 문제가 발생했습니다.");
 
