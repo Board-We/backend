@@ -10,6 +10,7 @@ import com.boardwe.boardwe.entity.Tag;
 import com.boardwe.boardwe.type.BackgroundType;
 import com.boardwe.boardwe.type.BoardStatusType;
 import com.boardwe.boardwe.type.OpenType;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class WelcomeBoardDto {
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+public class WelcomeBoardResponseDto {
     public String boardName;
     public String boradDescription;
     public List<String> tags = new ArrayList<String>();
@@ -57,7 +59,7 @@ public class WelcomeBoardDto {
     public void setBoardThemeInfo(BoardTheme boardTheme){
         this.boardBackgroundType = boardTheme.getBackgroundType();
         this.boardFont = boardTheme.getFont();
-        if(boardBackgroundType == boardBackgroundType.COLOR){
+        if(boardBackgroundType == BackgroundType.COLOR){
             this.boardBackground = boardTheme.getBackgroundColor();
         } else{
             this.boardBackground = boardTheme.getBackgroundImageInfo().getPath();

@@ -7,13 +7,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.boardwe.boardwe.dto.WelcomeBoardDto;
+import com.boardwe.boardwe.dto.WelcomeBoardResponseDto;
 import com.boardwe.boardwe.entity.Board;
-import com.boardwe.boardwe.entity.BoardTheme;
 import com.boardwe.boardwe.entity.Memo;
 import com.boardwe.boardwe.entity.Tag;
 import com.boardwe.boardwe.repository.BoardRepository;
-import com.boardwe.boardwe.repository.BoardThemeRepository;
 import com.boardwe.boardwe.repository.MemoRepository;
 import com.boardwe.boardwe.repository.TagRepository;
 
@@ -27,9 +25,6 @@ public class WelcomeBoardServiceImpl implements WelcomeBoardService{
 
     @Autowired
     private MemoRepository memoRepository;
-
-    @Autowired
-    private BoardThemeRepository boardThemeRepository;
 
     @Override
     public Board getBoardByBoardcode(String boardCode){
@@ -48,20 +43,13 @@ public class WelcomeBoardServiceImpl implements WelcomeBoardService{
     }
 
     @Override
-    public BoardTheme getBoardThemeById(Long boardThemeId){
-        Optional<BoardTheme> optionalBoardTheme = boardThemeRepository.findById(boardThemeId);
-        return optionalBoardTheme.orElseThrow(() -> new NoSuchElementException());
-    }
-
-    @Override
-    public WelcomeBoardDto getWelcomBoardDto(String boardCode){
-        WelcomeBoardDto welcomBoardDto = new WelcomeBoardDto();
+    public WelcomeBoardResponseDto getWelcomBoardDto(String boardCode){
+        WelcomeBoardResponseDto welcomBoardResponseDto = new WelcomeBoardResponseDto();
         Board targetBoard = getBoardByBoardcode(boardCode);
-        BoardTheme targetBoardTheme = getBoardThemeById(targetBoard.getBoardTheme().getId());
-        welcomBoardDto.setBoardInfo(targetBoard);
-        welcomBoardDto.setTagListValue(getTagListByBoard(targetBoard));
-        welcomBoardDto.setMemoCnt(getMemoListByBoard(targetBoard).size());
-        welcomBoardDto.setBoardThemeInfo(targetBoardTheme);
-        return welcomBoardDto;
+        welcomBoardResponseDto.setBoardInfo(targetBoard);
+        welcomBoardResponseDto.setTagListValue(getTagListByBoard(targetBoard));
+        welcomBoardResponseDto.setMemoCnt(getMemoListByBoard(targetBoard).size());
+        welcomBoardResponseDto.setBoardThemeInfo(targetBoard.getBoardTheme());
+        return welcomBoardResponseDto;
     }
 }

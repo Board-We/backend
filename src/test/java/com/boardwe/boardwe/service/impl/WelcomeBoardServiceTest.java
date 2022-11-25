@@ -16,7 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.boardwe.boardwe.dto.WelcomeBoardDto;
+import com.boardwe.boardwe.dto.WelcomeBoardResponseDto;
 import com.boardwe.boardwe.entity.Board;
 import com.boardwe.boardwe.entity.BoardTheme;
 import com.boardwe.boardwe.entity.Memo;
@@ -77,7 +77,7 @@ public class WelcomeBoardServiceTest {
         when(tagRepository.findAllByBoard(board)).thenReturn(tags);
         when(memoRepository.findAllByBoard(board)).thenReturn(memos);
 
-        WelcomeBoardDto welcomeBoardDto = welcomBoardServiceImpl.getWelcomBoardDto("1234");
+        WelcomeBoardResponseDto welcomeBoardDto = welcomBoardServiceImpl.getWelcomBoardDto("1234");
         
         assertEquals(welcomeBoardDto.getBoardName(), board.getName());
         assertEquals(welcomeBoardDto.getBoradDescription(), board.getDescription());
