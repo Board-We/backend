@@ -7,6 +7,8 @@ public enum ErrorCode {
 
     BOARD_THEME_NOT_FOUND(400,"해당 보드 테마가 존재하지 않습니다."),
 
+    BOARD_NOT_FOUND(400,"보드를 찾을 수 없습니다."),
+
 
     //5xx
     INTERNAL_SERVER_ERROR(500,"서버에 문제가 발생했습니다.");
