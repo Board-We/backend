@@ -2,9 +2,7 @@ package com.boardwe.boardwe.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.boardwe.boardwe.dto.ListElementDtos.SimpleBoardResponseDto;
@@ -15,10 +13,9 @@ import com.boardwe.boardwe.entity.Tag;
 import com.boardwe.boardwe.repository.BoardRepository;
 import com.boardwe.boardwe.repository.MemoThemeRepository;
 import com.boardwe.boardwe.repository.TagRepository;
-import com.boardwe.boardwe.type.OpenType;
 
 @Service
-public class HotBoardListServiceImpl implements HotBoardListService {
+public class RecommandBoardListServiceImpl implements RecommandBoardListService{
 
     @Autowired
     BoardRepository boardRepository;
@@ -30,8 +27,8 @@ public class HotBoardListServiceImpl implements HotBoardListService {
     MemoThemeRepository memoThemeRepository;
     
     @Override
-    public List<Board> getBoardList(Pageable pageable) {
-        return boardRepository.findAllByOpenType(OpenType.PUBLIC ,pageable);
+    public List<Board> getBoardList() {
+        return boardRepository.find10RandomOpenBoards();
     }
 
     @Override
@@ -44,15 +41,15 @@ public class HotBoardListServiceImpl implements HotBoardListService {
         return memoThemeRepository.findAllByBoardTheme(boardTheme);
     }
 
-    public List<SimpleBoardResponseDto> getSimpleBoardResponseDtoList(Pageable pageable){
+    public List<SimpleBoardResponseDto> getSimpleBoardResponseDtoList(){
         List<SimpleBoardResponseDto> simpleBoardResponseDtos = new ArrayList<SimpleBoardResponseDto>();
-        List<Board> hotBoards = getBoardList(pageable);
-        for(Board hotBoard:hotBoards){
+        List<Board> recommandBoards = getBoardList();
+        for(Board recommandBoard:recommandBoards){
             SimpleBoardResponseDto simpleBoardResponseDto = new SimpleBoardResponseDto();
-            simpleBoardResponseDto.setBoardInfo(hotBoard);
-            List<Tag> tags = getTagListByBoard(hotBoard);
+            simpleBoardResponseDto.setBoardInfo(recommandBoard);
+            List<Tag> tags = getTagListByBoard(recommandBoard);
             simpleBoardResponseDto.setBoardTagListValue(tags);
-            BoardTheme boardTheme = hotBoard.getBoardTheme();
+            BoardTheme boardTheme = recommandBoard.getBoardTheme();
             List<MemoTheme> memoThemes = getMemoThemeListByBoardTheme(boardTheme);
             simpleBoardResponseDto.setThemeObject(boardTheme, memoThemes);
             simpleBoardResponseDtos.add(simpleBoardResponseDto);

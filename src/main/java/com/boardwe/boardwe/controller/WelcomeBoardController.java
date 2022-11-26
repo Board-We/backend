@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.boardwe.boardwe.dto.ResponseDto;
 import com.boardwe.boardwe.service.HotBoardListServiceImpl;
+import com.boardwe.boardwe.service.RecommandBoardListServiceImpl;
 import com.boardwe.boardwe.service.WelcomeBoardServiceImpl;
 
 @RestController
@@ -22,6 +23,9 @@ public class WelcomeBoardController {
 
     @Autowired
     HotBoardListServiceImpl hotBoardListServiceImpl;
+
+    @Autowired
+    RecommandBoardListServiceImpl recommandBoardListServiceImpl;
 
     @GetMapping("/board/{boardCode}/welcome")
     @ResponseBody
@@ -41,6 +45,6 @@ public class WelcomeBoardController {
 
     @GetMapping("/board/recommand")
     public ResponseDto getRecommandBoard(){
-        return null;
+        return ResponseDto.ok("boards", recommandBoardListServiceImpl.getSimpleBoardResponseDtoList());
     }
 }
