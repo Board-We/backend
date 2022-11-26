@@ -25,7 +25,7 @@ public class ThemeSelectController {
 
     @GetMapping("/board/{boardCode}/memo-theme")
     public ResponseDto getMemoThemes(@PathVariable String boardCode) {
-        List<MemoThemeResponseDto> responseDtos = themeSelectService.getMemoThemes(boardCode);
+        List<MemoThemeResponseDto> responseDtos = themeSelectService.getMemoThemesOfBoard(boardCode);
         return ResponseDto.ok("memoThemesWithId", responseDtos);
     }
 }

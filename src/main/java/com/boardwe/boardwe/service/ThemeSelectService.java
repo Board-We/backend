@@ -8,5 +8,5 @@ import java.util.List;
 public interface ThemeSelectService {
     List<BoardThemeSelectResponseDto> getPublicThemes();
 
-    List<MemoThemeResponseDto> getMemoThemes(String boardCode);
+    List<MemoThemeResponseDto> getMemoThemesOfBoard(String boardCode);
 }
