@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface MemoThemeRepository extends JpaRepository<MemoTheme,Long> {
-    List<MemoTheme> findByBoardThemeId(long boardThemeId);
+    List<MemoTheme> findByBoardThemeId(Long boardThemeId);
 }
