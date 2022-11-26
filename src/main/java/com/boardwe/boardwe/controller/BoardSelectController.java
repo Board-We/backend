@@ -19,15 +19,4 @@ public class BoardSelectController {
         BoardSelectResponseDto responseDto = boardSelectService.getBoard(boardCode);
         return ResponseDto.ok("board", responseDto);
     }
-
-    @GetMapping("/board-theme")
-    public ResponseDto getBoardThemes() {
-        return ResponseDto.ok();
-    }
-
-    @GetMapping("/board/{boardCode}/memo-theme")
-    public ResponseDto getMemoThemes(@PathVariable String boardCode) {
-        return ResponseDto.ok();
-    }
-
 }
