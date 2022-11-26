@@ -1,7 +1,7 @@
 package com.boardwe.boardwe.service.impl;
 
 import com.boardwe.boardwe.dto.BoardThemeSelectResponseDto;
-import com.boardwe.boardwe.dto.MemoThemeResponseDto;
+import com.boardwe.boardwe.dto.MemoThemeSelectResponseDto;
 import com.boardwe.boardwe.entity.*;
 import com.boardwe.boardwe.exception.custom.BoardNotFoundException;
 import com.boardwe.boardwe.repository.BoardRepository;
@@ -111,7 +111,7 @@ class ThemeSelectServiceImplTest {
                 .thenReturn(memoThemes);
 
         // when
-        List<MemoThemeResponseDto> responseDtos = themeSelectService.getMemoThemesOfBoard(boardCode);
+        List<MemoThemeSelectResponseDto> responseDtos = themeSelectService.getMemoThemesOfBoard(boardCode);
 
         // then
         assertMemoThemeResponseDtos(responseDtos, true);
@@ -161,7 +161,7 @@ class ThemeSelectServiceImplTest {
         return theme;
     }
 
-    private void assertMemoThemeResponseDtos(List<MemoThemeResponseDto> memoThemes, Boolean withId) {
+    private void assertMemoThemeResponseDtos(List<MemoThemeSelectResponseDto> memoThemes, Boolean withId) {
         if (withId) assertEquals(200L, memoThemes.get(0).getMemoThemeId());
         assertEquals(BackgroundType.COLOR, memoThemes.get(0).getMemoBackgroundType());
         assertEquals(backgroundColor, memoThemes.get(0).getMemoBackground());

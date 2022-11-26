@@ -3,7 +3,7 @@ package com.boardwe.boardwe.service.impl;
 import com.boardwe.boardwe.dto.BoardSelectResponseDto;
 import com.boardwe.boardwe.dto.inner.BoardThemeResponseDto;
 import com.boardwe.boardwe.dto.inner.MemoSelectResponseDto;
-import com.boardwe.boardwe.dto.inner.MemoThemeResponseDto;
+import com.boardwe.boardwe.dto.MemoThemeSelectResponseDto;
 import com.boardwe.boardwe.entity.*;
 import com.boardwe.boardwe.exception.custom.BoardBeforeOpenException;
 import com.boardwe.boardwe.exception.custom.BoardBeforeWritingException;
@@ -80,20 +80,20 @@ public class BoardSelectServiceImpl implements BoardSelectService {
                 .build();
     }
 
-    private List<MemoThemeResponseDto> getMemoThemeResponseDtos(BoardTheme boardTheme) {
+    private List<MemoThemeSelectResponseDto> getMemoThemeResponseDtos(BoardTheme boardTheme) {
         List<MemoTheme> memoThemes = memoThemeRepository.findByBoardThemeId(boardTheme.getId());
-        List<MemoThemeResponseDto> memoThemeResponseDtos = new ArrayList<>();
+        List<MemoThemeSelectResponseDto> memoThemeSelectResponseDtos = new ArrayList<>();
         for (MemoTheme memoTheme : memoThemes) {
             String memoBackgroundValue = (memoTheme.getBackgroundType() == BackgroundType.COLOR) ?
                     memoTheme.getBackgroundColor() : getBackgroundImageUrl(memoTheme.getBackgroundImageInfo());
-            memoThemeResponseDtos.add(MemoThemeResponseDto.builder()
+            memoThemeSelectResponseDtos.add(MemoThemeSelectResponseDto.builder()
                     .memoThemeId(memoTheme.getId())
                     .memoBackgroundType(memoTheme.getBackgroundType())
                     .memoBackground(memoBackgroundValue)
                     .memoTextColor(memoTheme.getTextColor())
                     .build());
         }
-        return memoThemeResponseDtos;
+        return memoThemeSelectResponseDtos;
     }
 
     private String getBackgroundImageUrl(ImageInfo imageInfo) {

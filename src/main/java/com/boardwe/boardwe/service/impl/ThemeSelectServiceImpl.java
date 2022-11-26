@@ -1,7 +1,7 @@
 package com.boardwe.boardwe.service.impl;
 
 import com.boardwe.boardwe.dto.BoardThemeSelectResponseDto;
-import com.boardwe.boardwe.dto.MemoThemeResponseDto;
+import com.boardwe.boardwe.dto.MemoThemeSelectResponseDto;
 import com.boardwe.boardwe.entity.*;
 import com.boardwe.boardwe.exception.custom.BoardNotFoundException;
 import com.boardwe.boardwe.repository.BoardRepository;
@@ -43,16 +43,16 @@ public class ThemeSelectServiceImpl implements ThemeSelectService {
     }
 
     @Override
-    public List<MemoThemeResponseDto> getMemoThemesOfBoard(String boardCode) {
-        List<MemoThemeResponseDto> memoThemeResponseDtos = new ArrayList<>();
+    public List<MemoThemeSelectResponseDto> getMemoThemesOfBoard(String boardCode) {
+        List<MemoThemeSelectResponseDto> memoThemeSelectResponseDtos = new ArrayList<>();
         Board board = boardRepository.findByCode(boardCode)
                 .orElseThrow(BoardNotFoundException::new);
 
         List<MemoTheme> memoThemes = memoThemeRepository.findByBoardThemeId(board.getBoardTheme().getId());
         for (MemoTheme memoTheme : memoThemes) {
-            memoThemeResponseDtos.add(getMemoThemeSelectResponseDto(memoTheme, true));
+            memoThemeSelectResponseDtos.add(getMemoThemeSelectResponseDto(memoTheme, true));
         }
-        return memoThemeResponseDtos;
+        return memoThemeSelectResponseDtos;
     }
 
     private BoardThemeSelectResponseDto getThemeResponseDto(BoardTheme boardTheme, String category) {
@@ -70,19 +70,19 @@ public class ThemeSelectServiceImpl implements ThemeSelectService {
                 .build();
     }
 
-    private List<MemoThemeResponseDto> getMemoThemeSelectResponseDtos(BoardTheme boardTheme) {
+    private List<MemoThemeSelectResponseDto> getMemoThemeSelectResponseDtos(BoardTheme boardTheme) {
         List<MemoTheme> memoThemes = memoThemeRepository.findByBoardThemeId(boardTheme.getId());
-        List<MemoThemeResponseDto> memoThemeResponseDtos = new ArrayList<>();
+        List<MemoThemeSelectResponseDto> memoThemeSelectResponseDtos = new ArrayList<>();
         for (MemoTheme memoTheme : memoThemes) {
-            memoThemeResponseDtos.add(getMemoThemeSelectResponseDto(memoTheme, false));
+            memoThemeSelectResponseDtos.add(getMemoThemeSelectResponseDto(memoTheme, false));
         }
-        return memoThemeResponseDtos;
+        return memoThemeSelectResponseDtos;
     }
 
-    private MemoThemeResponseDto getMemoThemeSelectResponseDto(MemoTheme memoTheme, Boolean withId) {
+    private MemoThemeSelectResponseDto getMemoThemeSelectResponseDto(MemoTheme memoTheme, Boolean withId) {
         String memoBackgroundValue = (memoTheme.getBackgroundType() == BackgroundType.COLOR) ?
                 memoTheme.getBackgroundColor() : getBackgroundImageUrl(memoTheme.getBackgroundImageInfo());
-        return MemoThemeResponseDto.builder()
+        return MemoThemeSelectResponseDto.builder()
                 .memoThemeId(withId? memoTheme.getId() : null)
                 .memoBackgroundType(memoTheme.getBackgroundType())
                 .memoBackground(memoBackgroundValue)

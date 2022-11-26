@@ -1,5 +1,6 @@
 package com.boardwe.boardwe.dto.inner;
 
+import com.boardwe.boardwe.dto.MemoThemeSelectResponseDto;
 import com.boardwe.boardwe.type.BackgroundType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
@@ -14,5 +15,5 @@ public class BoardThemeResponseDto {
     private BackgroundType boardBackgroundType;
     private String boardBackground;
     private String boardFont;
-    private List<MemoThemeResponseDto> memoThemesWithId;
+    private List<MemoThemeSelectResponseDto> memoThemesWithId;
 }

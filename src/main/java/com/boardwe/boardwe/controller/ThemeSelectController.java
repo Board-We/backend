@@ -1,6 +1,6 @@
 package com.boardwe.boardwe.controller;
 
-import com.boardwe.boardwe.dto.MemoThemeResponseDto;
+import com.boardwe.boardwe.dto.MemoThemeSelectResponseDto;
 import com.boardwe.boardwe.dto.ResponseDto;
 import com.boardwe.boardwe.dto.BoardThemeSelectResponseDto;
 import com.boardwe.boardwe.service.ThemeSelectService;
@@ -25,7 +25,7 @@ public class ThemeSelectController {
 
     @GetMapping("/board/{boardCode}/memo-theme")
     public ResponseDto getMemoThemes(@PathVariable String boardCode) {
-        List<MemoThemeResponseDto> responseDtos = themeSelectService.getMemoThemesOfBoard(boardCode);
+        List<MemoThemeSelectResponseDto> responseDtos = themeSelectService.getMemoThemesOfBoard(boardCode);
         return ResponseDto.ok("memoThemesWithId", responseDtos);
     }
 }

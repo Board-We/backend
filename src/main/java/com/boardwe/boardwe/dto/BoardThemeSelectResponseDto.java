@@ -18,5 +18,5 @@ public class BoardThemeSelectResponseDto {
     private BackgroundType boardBackgroundType;
     private String boardBackground;
     private String boardFont;
-    private List<MemoThemeResponseDto> memoThemes;
+    private List<MemoThemeSelectResponseDto> memoThemes;
 }

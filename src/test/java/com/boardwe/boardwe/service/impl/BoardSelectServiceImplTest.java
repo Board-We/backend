@@ -1,14 +1,13 @@
 package com.boardwe.boardwe.service.impl;
 
 import com.boardwe.boardwe.dto.BoardSelectResponseDto;
-import com.boardwe.boardwe.dto.inner.MemoThemeResponseDto;
+import com.boardwe.boardwe.dto.MemoThemeSelectResponseDto;
 import com.boardwe.boardwe.entity.*;
 import com.boardwe.boardwe.exception.custom.BoardBeforeOpenException;
 import com.boardwe.boardwe.exception.custom.BoardBeforeWritingException;
 import com.boardwe.boardwe.exception.custom.BoardClosedException;
 import com.boardwe.boardwe.exception.custom.BoardNotFoundException;
 import com.boardwe.boardwe.repository.BoardRepository;
-import com.boardwe.boardwe.repository.BoardThemeRepository;
 import com.boardwe.boardwe.repository.MemoRepository;
 import com.boardwe.boardwe.repository.MemoThemeRepository;
 import com.boardwe.boardwe.type.BackgroundType;
@@ -286,7 +285,7 @@ class BoardSelectServiceImplTest {
         return memos;
     }
 
-    private void assertMemoThemeResponseDtos(List<MemoThemeResponseDto> memoThemesWithId) {
+    private void assertMemoThemeResponseDtos(List<MemoThemeSelectResponseDto> memoThemesWithId) {
         assertEquals(BackgroundType.COLOR, memoThemesWithId.get(0).getMemoBackgroundType());
         assertEquals(backgroundColor, memoThemesWithId.get(0).getMemoBackground());
         assertEquals(textColor, memoThemesWithId.get(0).getMemoTextColor());

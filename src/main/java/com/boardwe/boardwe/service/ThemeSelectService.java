@@ -1,12 +1,12 @@
 package com.boardwe.boardwe.service;
 
 import com.boardwe.boardwe.dto.BoardThemeSelectResponseDto;
-import com.boardwe.boardwe.dto.MemoThemeResponseDto;
+import com.boardwe.boardwe.dto.MemoThemeSelectResponseDto;
 
 import java.util.List;
 
 public interface ThemeSelectService {
     List<BoardThemeSelectResponseDto> getPublicThemes();
 
-    List<MemoThemeResponseDto> getMemoThemesOfBoard(String boardCode);
+    List<MemoThemeSelectResponseDto> getMemoThemesOfBoard(String boardCode);
 }
