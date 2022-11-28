@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.boardwe.boardwe.entity.BoardTheme;
-import com.boardwe.boardwe.entity.Memo;
 import com.boardwe.boardwe.entity.MemoTheme;
 import com.boardwe.boardwe.type.BackgroundType;
 import com.fasterxml.jackson.annotation.JsonInclude;

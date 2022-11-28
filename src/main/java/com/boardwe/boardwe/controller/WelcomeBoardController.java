@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.boardwe.boardwe.dto.BoardSearchDto;
 import com.boardwe.boardwe.dto.ResponseDto;
+import com.boardwe.boardwe.service.BoardSearchServiceImpl;
 import com.boardwe.boardwe.service.HotBoardListServiceImpl;
 import com.boardwe.boardwe.service.RecommandBoardListServiceImpl;
 import com.boardwe.boardwe.service.WelcomeBoardServiceImpl;
@@ -27,6 +29,9 @@ public class WelcomeBoardController {
     @Autowired
     RecommandBoardListServiceImpl recommandBoardListServiceImpl;
 
+    @Autowired
+    BoardSearchServiceImpl boardSearchServiceImpl;
+
     @GetMapping("/board/{boardCode}/welcome")
     @ResponseBody
     public ResponseDto getWelcomeBoard(@PathVariable String boardCode){
@@ -34,8 +39,8 @@ public class WelcomeBoardController {
     }
 
     @GetMapping("/board/search")
-    public ResponseDto searchBoardWithTag(@RequestParam String query, @RequestParam int page, @RequestParam int size){
-        return null;
+    public BoardSearchDto searchBoardWithTag(@RequestParam String query, Pageable pageable){
+        return BoardSearchDto.ok(boardSearchServiceImpl.getSimpleBoardResponseDtoPage(pageable, query));
     }
 
     @GetMapping("/board/hot")
