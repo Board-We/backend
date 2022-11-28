@@ -18,7 +18,7 @@ public class BoardMemoSearchController {
     @GetMapping("/board/{boardCode}/memo/search")
     public ResponseDto searchMemo(@PathVariable String boardCode,
                                   @RequestParam String query){
-        BoardMemoSearchResponseDto boardMemoSearchResponseDto = boardMemoSearchService.searchMemo();
+        BoardMemoSearchResponseDto boardMemoSearchResponseDto = boardMemoSearchService.searchMemo(boardCode,query);
         
         return ResponseDto.ok("board",boardMemoSearchResponseDto);
     }

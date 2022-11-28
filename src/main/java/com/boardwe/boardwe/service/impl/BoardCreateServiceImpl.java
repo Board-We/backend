@@ -1,9 +1,9 @@
 package com.boardwe.boardwe.service.impl;
 
 import com.boardwe.boardwe.dto.BoardCreateRequestDto;
-import com.boardwe.boardwe.dto.Inner.BoardCreateThemeRequestDto;
-import com.boardwe.boardwe.dto.Inner.MemoBackgroundTextColorSetsRequestDto;
-import com.boardwe.boardwe.dto.Inner.MemoImagesTextColorSetsRequestDto;
+import com.boardwe.boardwe.dto.inner.BoardCreateThemeRequestDto;
+import com.boardwe.boardwe.dto.inner.MemoBackgroundTextColorSetsRequestDto;
+import com.boardwe.boardwe.dto.inner.MemoImagesTextColorSetsRequestDto;
 import com.boardwe.boardwe.entity.*;
 import com.boardwe.boardwe.exception.custom.BoardThemeNotFoundException;
 import com.boardwe.boardwe.repository.*;
