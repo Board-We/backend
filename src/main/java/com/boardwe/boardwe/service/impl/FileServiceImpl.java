@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.net.MalformedURLException;
 import java.nio.file.Path;
@@ -40,6 +41,9 @@ public class FileServiceImpl implements FileService {
     }
 
     private Path getTargetDir(String path, String savedName) {
+        if (!StringUtils.hasText(path)){
+            return rootDir.resolve(savedName);
+        }
         if (path.startsWith("/")){
             path = path.substring(1);
         }
