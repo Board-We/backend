@@ -12,6 +12,7 @@ public enum ErrorCode {
     BOARD_BEFORE_OPEN(400, "롤링페이퍼의 작성기간이 마감되었습니다."),
     BOARD_CLOSED(400, "롤링페이퍼의 공개기간이 만료되었습니다."),
 
+    IMAGE_NOT_FOUND(400, "이미지가 존재하지 않습니다."),
 
     // -------- 5xx --------
     INTERNAL_SERVER_ERROR(500,"서버에 문제가 발생했습니다.");
