@@ -1,10 +1,9 @@
 package com.boardwe.boardwe.dto;
 
-import com.boardwe.boardwe.dto.Inner.BoardCreateThemeRequestDto;
+import com.boardwe.boardwe.dto.inner.BoardCreateThemeRequestDto;
 import com.boardwe.boardwe.type.OpenType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
