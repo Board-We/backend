@@ -1,6 +1,7 @@
 package com.boardwe.boardwe.controller;
 
 import com.boardwe.boardwe.dto.MemoAddRequestDto;
+import com.boardwe.boardwe.dto.MemoAddResponseDto;
 import com.boardwe.boardwe.dto.ResponseDto;
 import com.boardwe.boardwe.service.MemoAddService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class MemoAddController {
     @PostMapping("/board/{boardCode}/memo")
     public ResponseDto addMemo(@RequestBody MemoAddRequestDto memoAddRequestDto,
                                @PathVariable String boardCode){
-        LocalDateTime openStartTime = memoAddService.addMemo(memoAddRequestDto, boardCode);
-        return ResponseDto.ok("openStartTime",openStartTime);
+        MemoAddResponseDto memoAddResponseDto = memoAddService.addMemo(memoAddRequestDto, boardCode);
+        return ResponseDto.ok("openStartTime",memoAddResponseDto.getOpenStartTime());
     }
 }

@@ -1,6 +1,7 @@
 package com.boardwe.boardwe.service.impl;
 
 import com.boardwe.boardwe.dto.MemoAddRequestDto;
+import com.boardwe.boardwe.dto.MemoAddResponseDto;
 import com.boardwe.boardwe.entity.Board;
 import com.boardwe.boardwe.entity.Memo;
 import com.boardwe.boardwe.entity.MemoTheme;
@@ -25,7 +26,7 @@ public class MemoAddServiceImpl implements MemoAddService {
     private final BoardRepository boardRepository;
     private final MemoThemeRepository memoThemeRepository;
     @Override
-    public LocalDateTime addMemo(MemoAddRequestDto memoAddRequestDto, String boardCode) {
+    public MemoAddResponseDto addMemo(MemoAddRequestDto memoAddRequestDto, String boardCode) {
         Board board = boardRepository.findByCode(boardCode).orElseThrow(BoardNotFoundException::new);
 
         MemoTheme memoTheme = memoThemeRepository.findById(memoAddRequestDto.getMemoThemeId()).orElseThrow(MemoThemeNotFoundException::new);
@@ -37,6 +38,6 @@ public class MemoAddServiceImpl implements MemoAddService {
                 .build();
         memoRepository.save(memo);
 
-        return board.getOpenStartTime();
+        return MemoAddResponseDto.builder().openStartTime(board.getOpenStartTime()).build();
     }
 }
