@@ -1,6 +1,7 @@
 package com.boardwe.boardwe.controller;
 
 import com.boardwe.boardwe.dto.BoardCreateRequestDto;
+import com.boardwe.boardwe.dto.BoardCreateResponseDto;
 import com.boardwe.boardwe.dto.ResponseDto;
 import com.boardwe.boardwe.service.BoardCreateService;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +17,8 @@ public class BoardCreateController {
 
     @PostMapping("/board")
     public ResponseDto create(@RequestBody BoardCreateRequestDto boardCreateRequestDto) {
-        String boardUrl = boardCreateService.createBoard(boardCreateRequestDto);
-        return ResponseDto.ok("boardLink", boardUrl);
+        BoardCreateResponseDto boardCreateResponseDto = boardCreateService.createBoard(boardCreateRequestDto);
+        return ResponseDto.ok("boardLink", boardCreateResponseDto.getBoardLink());
     }
 
 

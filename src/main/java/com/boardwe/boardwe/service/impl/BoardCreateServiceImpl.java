@@ -1,6 +1,7 @@
 package com.boardwe.boardwe.service.impl;
 
 import com.boardwe.boardwe.dto.BoardCreateRequestDto;
+import com.boardwe.boardwe.dto.BoardCreateResponseDto;
 import com.boardwe.boardwe.dto.inner.BoardCreateThemeRequestDto;
 import com.boardwe.boardwe.dto.inner.MemoBackgroundTextColorSetsRequestDto;
 import com.boardwe.boardwe.dto.inner.MemoImagesTextColorSetsRequestDto;
@@ -15,14 +16,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
@@ -43,7 +42,7 @@ public class BoardCreateServiceImpl implements BoardCreateService {
     private final String USER_THEME_NAME = "TEMP";
 
     @Override
-    public String createBoard(BoardCreateRequestDto requestDto) {
+    public BoardCreateResponseDto createBoard(BoardCreateRequestDto requestDto) {
 
         Long requestBoardThemeId = requestDto.getBoardThemeId();
         BoardTheme boardTheme;
@@ -123,7 +122,7 @@ public class BoardCreateServiceImpl implements BoardCreateService {
             tagRepository.save(Tag.builder().board(board).value(tag).build());
         }
 
-        return String.format("/board/%s/welcome", boardUuid);
+        return BoardCreateResponseDto.builder().boardLink(String.format("/board/%s/welcome", boardUuid)).build();
     }
 
     private ImageInfo saveImageAndCreateImageInfo(String base64, String fileName) {
