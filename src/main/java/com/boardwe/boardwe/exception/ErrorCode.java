@@ -14,7 +14,11 @@ public enum ErrorCode {
     BOARD_THEME_NOT_FOUND(400,"해당 보드 테마가 존재하지 않습니다."),
 
 
+    // File
     IMAGE_NOT_FOUND(400, "이미지가 존재하지 않습니다."),
+    UNABLE_TO_CREATE_DIRECTORY(400, "파일 디렉토리를 생성할 수 없습니다."),
+    CANNOT_STORE_FILE(400,"파일을 저장할 수 없습니다."),
+
 
     // -------- 5xx --------
     MEMO_NOT_FOUND(400,"메모를 찾을 수 없습니다."),

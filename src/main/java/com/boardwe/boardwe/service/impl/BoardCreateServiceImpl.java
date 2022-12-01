@@ -6,13 +6,24 @@ import com.boardwe.boardwe.dto.inner.MemoBackgroundTextColorSetsRequestDto;
 import com.boardwe.boardwe.dto.inner.MemoImagesTextColorSetsRequestDto;
 import com.boardwe.boardwe.entity.*;
 import com.boardwe.boardwe.exception.custom.BoardThemeNotFoundException;
+import com.boardwe.boardwe.exception.custom.CannotStoreFileException;
+import com.boardwe.boardwe.exception.custom.UnableToCreateDirectoryException;
 import com.boardwe.boardwe.repository.*;
 import com.boardwe.boardwe.service.BoardCreateService;
 import com.boardwe.boardwe.type.BackgroundType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,6 +38,7 @@ public class BoardCreateServiceImpl implements BoardCreateService {
     private final ThemeCategoryRepository themeCategoryRepository;
     private final ImageInfoRepository imageInfoRepository;
     private final MemoThemeRepository memoThemeRepository;
+    private final Path rootDir;
 
     private final String USER_THEME_NAME = "TEMP";
 
@@ -44,7 +56,10 @@ public class BoardCreateServiceImpl implements BoardCreateService {
             BoardCreateThemeRequestDto theme = requestDto.getTheme();
             if (theme.getBoardBackgroundImage() != null) {
                 //이미지 저장
-                ImageInfo imageInfo = createImageInfo(theme.getBoardBackgroundImageName());
+
+                String imageBase64 = theme.getBoardBackgroundImage();
+                ImageInfo imageInfo = saveImageAndCreateImageInfo(imageBase64,theme.getBoardBackgroundImageName());
+
 
                 boardTheme = boardThemeRepository.save(BoardTheme.builder()
                         .themeCategory(themeCategory)
@@ -61,7 +76,8 @@ public class BoardCreateServiceImpl implements BoardCreateService {
                         .font(theme.getBoardFont()).build());
             }
             for (MemoImagesTextColorSetsRequestDto imageAndTextColor : theme.getMemoImageTextColorSets()) {
-                ImageInfo imageInfo = createImageInfo(imageAndTextColor.getMemoBackgroundImageName());
+                String imageBase64 = imageAndTextColor.getMemoBackgroundImage();
+                ImageInfo imageInfo = saveImageAndCreateImageInfo(imageBase64,imageAndTextColor.getMemoBackgroundImageName());
 
                 memoThemeRepository.save(MemoTheme.builder()
                         .boardTheme(boardTheme)
@@ -107,24 +123,82 @@ public class BoardCreateServiceImpl implements BoardCreateService {
             tagRepository.save(Tag.builder().board(board).value(tag).build());
         }
 
-
-
         return String.format("/board/%s/welcome", boardUuid);
     }
 
-    private ImageInfo createImageInfo(String fileName) {
+    private ImageInfo saveImageAndCreateImageInfo(String base64, String fileName) {
         String imageUuid = UUID.randomUUID().toString();
         String imageOriginalName = fileName.substring(0, fileName.lastIndexOf("."));
         String imageExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
+        String imageSavedName = String.format("%s.%s",imageUuid,imageExtension);
 
         //이미지 저장경로 정해야함
-        String imagePath = "/images";
+//        String imageDir = "/images";
+        String imageDir = "";
+
+        Path savedPath = getTargetPath(imageDir, imageSavedName);
+        saveBase64File(base64, savedPath);
 
         return imageInfoRepository.save(ImageInfo.builder()
                 .uuid(imageUuid)
                 .originalName(imageOriginalName)
-                .savedName(imageUuid)
+                .savedName(imageSavedName)
                 .extension(imageExtension)
-                .path(imagePath).build());
+                .path(imageDir).build());
+
+    }
+
+
+    private Path getTargetPath(String savedDir, String savedName) {
+        if (!StringUtils.hasText(savedDir)){
+            return rootDir.resolve(savedName);
+        }
+        if (savedDir.startsWith("/")){
+            savedDir = savedDir.substring(1);
+        }
+        if (!savedDir.endsWith("/")) {
+            savedDir = savedDir + "/";
+        }
+        Path targetDir = rootDir.resolve(savedDir);
+        createDirectory(targetDir);
+        return targetDir.resolve(savedName);
+    }
+
+    private void createDirectory(Path targetDir) {
+        try {
+            Files.createDirectories(targetDir);
+        } catch (IOException e) {
+            throw new UnableToCreateDirectoryException();
+        }
+    }
+
+    public void saveBase64File(String base64, Path savedPath) {
+        File file = savedPath.toFile();
+        BufferedOutputStream bos = null;
+        java.io.FileOutputStream fos = null;
+        try {
+            byte[] bytes = Base64.getDecoder().decode(base64);
+            fos = new java.io.FileOutputStream(file);
+            bos = new BufferedOutputStream(fos);
+            bos.write(bytes);
+        } catch (Exception e) {
+            file.delete();
+            throw new CannotStoreFileException();
+        } finally {
+            if (bos != null) {
+                try {
+                    bos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }
