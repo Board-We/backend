@@ -1,12 +1,20 @@
 package com.boardwe.boardwe.exception;
 
 public enum ErrorCode {
-    //4xx
+    // -------- 4xx --------
     REQUEST_ERROR(400,"잘못된 요청입니다."),
     ENTITY_NOT_FOUND(400, "해당 리소스가 존재하지 않습니다."),
+    BOARD_NOT_FOUND(400, "해당 보드가 존재하지 않습니다."),
+    IMAGE_INFO_NOT_FOUND(400, "해당 이미지 정보가 존재하지 않습니다."),
 
+    // Unable to Enter Board
+    BOARD_BEFORE_WRITING(400, "롤링페이퍼 작성기간 이전입니다."),
+    BOARD_BEFORE_OPEN(400, "롤링페이퍼의 작성기간이 마감되었습니다."),
+    BOARD_CLOSED(400, "롤링페이퍼의 공개기간이 만료되었습니다."),
 
-    //5xx
+    IMAGE_NOT_FOUND(400, "이미지가 존재하지 않습니다."),
+
+    // -------- 5xx --------
     INTERNAL_SERVER_ERROR(500,"서버에 문제가 발생했습니다.");
 
     private final int status;

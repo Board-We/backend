@@ -1,4 +1,4 @@
-package com.boardwe.boardwe.dto.ListElementDtos;
+package com.boardwe.boardwe.dto;
 
 import com.boardwe.boardwe.type.BackgroundType;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -7,8 +7,9 @@ import lombok.Data;
 
 @Data
 @Builder
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class MemoThemeResponseDto {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class MemoThemeSelectResponseDto {
+    private Long memoThemeId;
     private BackgroundType memoBackgroundType;
     private String memoBackground;
     private String memoTextColor;

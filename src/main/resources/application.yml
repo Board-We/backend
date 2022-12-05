@@ -19,3 +19,6 @@ logging:
   level:
     org.hibernate.SQL: debug
     #    org.hibernate.type: trace
+
+file:
+  upload-dir: ./files

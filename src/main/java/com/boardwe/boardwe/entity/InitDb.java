@@ -28,18 +28,18 @@ public class InitDb {
         private final EntityManager em;
 
         public void dbInit1() {
-            ThemeCategory templateCategory = ThemeCategory.builder()
-                    .name("TEMPLATE")
+            ThemeCategory christmasCategory = ThemeCategory.builder()
+                    .name("크리스마스")
                     .build();
             ThemeCategory tempCategory = ThemeCategory.builder()
                     .name("TEMP")
                     .build();
-            em.persist(templateCategory);
+            em.persist(christmasCategory);
             em.persist(tempCategory);
 
             BoardTheme christmasTheme = BoardTheme.builder()
                     .name("크리스마스 산타 테마")
-                    .themeCategory(templateCategory)
+                    .themeCategory(christmasCategory)
                     .backgroundType(BackgroundType.COLOR)
                     .backgroundColor("#A52A2A")
                     .font("Arial")

@@ -1,16 +1,10 @@
 package com.boardwe.boardwe.service;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.boardwe.boardwe.entity.Board;
-import com.boardwe.boardwe.entity.BoardTheme;
-import com.boardwe.boardwe.entity.MemoTheme;
-import com.boardwe.boardwe.entity.Tag;
+import com.boardwe.boardwe.dto.ListElementDtos.SimpleBoardResponseDto;
 
 public interface BoardSearchService {
-    public abstract List<Board> getBoardList(Pageable pageable, String query);
-    public abstract List<Tag> getTagListByBoard(Board board);
-    public abstract List<MemoTheme> getMemoThemeListByBoardTheme(BoardTheme boardTheme);
+    Page<SimpleBoardResponseDto> getBoardSearchResultPage(String query, Pageable pageable);
 }
