@@ -43,7 +43,7 @@ public class ResponseDto {
     }
 
     public static ResponseDto ok() {
-        return new ResponseDto();
+        return new ResponseDto(HttpStatus.OK);
     }
 
     public static ResponseDto ok(String name, Object data) {

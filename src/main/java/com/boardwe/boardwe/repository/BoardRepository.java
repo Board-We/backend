@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface BoardRepository extends JpaRepository<Board,Long> {
+
     Optional<Board> findByCode(String code);
 
     List<Board> findTop10ByOpenTypeOrderByViewsDesc(OpenType openType);

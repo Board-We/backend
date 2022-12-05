@@ -11,10 +11,22 @@ public enum ErrorCode {
     BOARD_BEFORE_WRITING(400, "롤링페이퍼 작성기간 이전입니다."),
     BOARD_BEFORE_OPEN(400, "롤링페이퍼의 작성기간이 마감되었습니다."),
     BOARD_CLOSED(400, "롤링페이퍼의 공개기간이 만료되었습니다."),
+    BOARD_THEME_NOT_FOUND(400,"해당 보드 테마가 존재하지 않습니다."),
 
+
+    // File
     IMAGE_NOT_FOUND(400, "이미지가 존재하지 않습니다."),
+    UNABLE_TO_CREATE_DIRECTORY(400, "파일 디렉토리를 생성할 수 없습니다."),
+    CANNOT_STORE_FILE(400,"파일을 저장할 수 없습니다."),
+
 
     // -------- 5xx --------
+    MEMO_NOT_FOUND(400,"메모를 찾을 수 없습니다."),
+
+    MEMO_THEME_NOT_FOUND(400,"메모 테마를 찾을 수 없습니다."),
+
+    MEMO_WITH_INVALID_BOARD(400,"보드에 속하지 않는 메모입니다."),
+    //5xx
     INTERNAL_SERVER_ERROR(500,"서버에 문제가 발생했습니다.");
 
     private final int status;
