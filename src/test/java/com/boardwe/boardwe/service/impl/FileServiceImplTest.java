@@ -1,7 +1,6 @@
 package com.boardwe.boardwe.service.impl;
 
 import com.boardwe.boardwe.entity.ImageInfo;
-import com.boardwe.boardwe.exception.custom.BoardNotFoundException;
 import com.boardwe.boardwe.exception.custom.ImageInfoNotFoundException;
 import com.boardwe.boardwe.exception.custom.ImageNotFoundException;
 import com.boardwe.boardwe.repository.ImageInfoRepository;

@@ -1,7 +1,6 @@
 package com.boardwe.boardwe.repository;
 
 import com.boardwe.boardwe.entity.BoardTheme;
-import com.boardwe.boardwe.entity.ThemeCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
