@@ -68,7 +68,7 @@ public class RecommendBoardListServiceImpl implements RecommendBoardListSelectSe
     }
 
     private String getBoardLink(String boardCode){
-        return "/board/" + boardCode + "welcome";
+        return "/board/" + boardCode + "/welcome";
     }
 
     private List<String> getTagValues(Long boardId){

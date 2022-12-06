@@ -25,9 +25,9 @@ public class ResponseDto {
 
     private LocalDateTime timestamp = LocalDateTime.now();
 
-    private Map<String, Object> data = new HashMap<String, Object>();
+    private Map<String, Object> data = new HashMap<>();
 
-    private Map<String, Object> errors = new HashMap<String, Object>();
+    private Map<String, Object> errors = new HashMap<>();
 
     public ResponseDto(HttpStatus httpStatus) {
         this.status = httpStatus.value();

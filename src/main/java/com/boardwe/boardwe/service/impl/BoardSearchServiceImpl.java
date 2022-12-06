@@ -74,7 +74,7 @@ public class BoardSearchServiceImpl implements BoardSearchService{
     }
 
     private String getBoardLink(String boardCode){
-        return "/board/" + boardCode + "welcome";
+        return "/board/" + boardCode + "/welcome";
     }
 
     private List<String> getTagValues(Long boardId){

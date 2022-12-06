@@ -70,7 +70,7 @@ public class HotBoardListServiceImpl implements HotBoardListSelectService{
     }
 
     private String getBoardLink(String boardCode){
-        return "/board/" + boardCode + "welcome";
+        return "/board/" + boardCode + "/welcome";
     }
 
     private List<String> getTagValues(Long boardId){

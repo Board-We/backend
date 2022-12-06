@@ -28,7 +28,7 @@ public class BoardSearchDto {
 
     private Object data;
 
-    private Map<String, Object> errors = new HashMap<String, Object>();
+    private Map<String, Object> errors = new HashMap<>();
 
     public BoardSearchDto(HttpStatus httpStatus) {
         this.status = httpStatus.value();
