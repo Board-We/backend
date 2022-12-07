@@ -37,6 +37,15 @@ public class InitDb {
             em.persist(christmasCategory);
             em.persist(tempCategory);
 
+            ImageInfo imageInfo1 = ImageInfo.builder()
+                    .uuid(UUID.randomUUID().toString())
+                    .originalName("테스트이미지")
+                    .extension("jpg")
+                    .savedName("testImage.jpg")
+                    .path("")
+                    .build();
+            em.persist(imageInfo1);
+
             BoardTheme christmasTheme = BoardTheme.builder()
                     .name("크리스마스 산타 테마")
                     .themeCategory(christmasCategory)
@@ -51,8 +60,16 @@ public class InitDb {
                     .backgroundColor("#FFFFFF")
                     .font("Arial")
                     .build();
+            BoardTheme userTheme2 = BoardTheme.builder()
+                    .name("TEMP")
+                    .themeCategory(tempCategory)
+                    .backgroundType(BackgroundType.IMAGE)
+                    .backgroundImageInfo(imageInfo1)
+                    .font("바탕")
+                    .build();
             em.persist(christmasTheme);
             em.persist(userTheme);
+            em.persist(userTheme2);
 
             MemoTheme christmasMemoTheme1 = MemoTheme.builder()
                     .boardTheme(christmasTheme)
@@ -127,7 +144,7 @@ public class InitDb {
                     .openEndTime(currentTime.plusDays(4))
                     .openType(OpenType.PUBLIC)
                     .password("1234")
-                    .views(0)
+                    .views(45)
                     .build();
             Board closedBoard = Board.builder()
                     .boardTheme(christmasTheme)
@@ -140,7 +157,7 @@ public class InitDb {
                     .openEndTime(currentTime.minusDays(1))
                     .openType(OpenType.PUBLIC)
                     .password("1234")
-                    .views(0)
+                    .views(30)
                     .build();
             Board privateBoard = Board.builder()
                     .boardTheme(userTheme)
@@ -155,12 +172,26 @@ public class InitDb {
                     .password("1234")
                     .views(0)
                     .build();
+            Board publicBoard1 = Board.builder()
+                    .boardTheme(userTheme2)
+                    .name("춘식이는 귀여워")
+                    .description("춘식이를 귀여워해줘")
+                    .code(UUID.randomUUID().toString())
+                    .writingStartTime(currentTime.minusDays(4))
+                    .writingEndTime(currentTime.minusDays(2))
+                    .openStartTime(currentTime.minusDays(1))
+                    .openEndTime(currentTime.plusDays(10))
+                    .openType(OpenType.PUBLIC)
+                    .password("1234")
+                    .views(20)
+                    .build();
             em.persist(beforeWritingBoard);
             em.persist(writingBoard);
             em.persist(beforeOpenBoard);
             em.persist(openBoard);
             em.persist(closedBoard);
             em.persist(privateBoard);
+            em.persist(publicBoard1);
 
             Tag christmasTag1 = Tag.builder()
                     .board(beforeWritingBoard)
@@ -186,12 +217,17 @@ public class InitDb {
                     .board(privateBoard)
                     .value("생일")
                     .build();
+            Tag userTag2 = Tag.builder()
+                    .board(publicBoard1)
+                    .value("춘식이")
+                    .build();
             em.persist(christmasTag1);
             em.persist(christmasTag2);
             em.persist(christmasTag3);
             em.persist(christmasTag4);
             em.persist(christmasTag5);
             em.persist(userTag);
+            em.persist(userTag2);
 
             Memo christmasMemo1 = Memo.builder()
                     .board(writingBoard)
@@ -233,6 +269,26 @@ public class InitDb {
                     .memoTheme(basicMemoTheme1)
                     .content("나랑 100번째 생일에도 같이 놀자>< - 너의 소울 메이트")
                     .build();
+            Memo chunsikMemo1 = Memo.builder()
+                    .board(publicBoard1)
+                    .memoTheme(basicMemoTheme1)
+                    .content("춘식이랑 라이언이랑 평생가자!")
+                    .build();
+            Memo chunsikMemo2 = Memo.builder()
+                    .board(publicBoard1)
+                    .memoTheme(basicMemoTheme1)
+                    .content("춘식이 몰랑몰랑 기여워ㅠㅠ")
+                    .build();
+            Memo chunsikMemo3 = Memo.builder()
+                    .board(publicBoard1)
+                    .memoTheme(basicMemoTheme1)
+                    .content("춘식이 인형 갖고싶당")
+                    .build();
+            Memo chunsikMemo4 = Memo.builder()
+                    .board(publicBoard1)
+                    .memoTheme(basicMemoTheme1)
+                    .content("나는 어피치가 더 좋음ㅡㅡ")
+                    .build();
             em.persist(christmasMemo1);
             em.persist(christmasMemo2);
             em.persist(christmasMemo3);
@@ -241,6 +297,10 @@ public class InitDb {
             em.persist(birthdayMemo1);
             em.persist(birthdayMemo2);
             em.persist(birthdayMemo3);
+            em.persist(chunsikMemo1);
+            em.persist(chunsikMemo2);
+            em.persist(chunsikMemo3);
+            em.persist(chunsikMemo4);
         }
     }
 }
