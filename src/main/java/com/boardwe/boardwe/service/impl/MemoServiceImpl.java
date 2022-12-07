@@ -10,13 +10,16 @@ import com.boardwe.boardwe.entity.Board;
 import com.boardwe.boardwe.entity.BoardTheme;
 import com.boardwe.boardwe.entity.Memo;
 import com.boardwe.boardwe.entity.MemoTheme;
-import com.boardwe.boardwe.exception.custom.BoardNotFoundException;
-import com.boardwe.boardwe.exception.custom.MemoNotFoundException;
-import com.boardwe.boardwe.exception.custom.MemoThemeNotFoundException;
+import com.boardwe.boardwe.exception.custom.entity.BoardNotFoundException;
+import com.boardwe.boardwe.exception.custom.entity.MemoNotFoundException;
+import com.boardwe.boardwe.exception.custom.entity.MemoThemeNotFoundException;
+import com.boardwe.boardwe.exception.custom.other.BoardCannotWriteException;
+import com.boardwe.boardwe.exception.custom.other.BoardNotOpenedException;
 import com.boardwe.boardwe.repository.BoardRepository;
 import com.boardwe.boardwe.repository.MemoRepository;
 import com.boardwe.boardwe.repository.MemoThemeRepository;
 import com.boardwe.boardwe.service.MemoService;
+import com.boardwe.boardwe.type.BoardStatus;
 import com.boardwe.boardwe.util.ThemeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,6 +43,7 @@ public class MemoServiceImpl implements MemoService {
     public MemoCreateResponseDto createMemo(MemoCreateRequestDto memoCreateRequestDto, String boardCode) {
         Board board = boardRepository.findByCode(boardCode)
                 .orElseThrow(BoardNotFoundException::new);
+        validateBoardCanWrite(getBoardStatus(board));
         MemoTheme memoTheme = memoThemeRepository.findByIdAndBoardTheme(
                         memoCreateRequestDto.getMemoThemeId(), board.getBoardTheme())
                 .orElseThrow(MemoThemeNotFoundException::new);
@@ -71,6 +75,7 @@ public class MemoServiceImpl implements MemoService {
     public MemoSearchResponseDto searchMemo(String boardCode, String query) {
         Board board = boardRepository.findByCode(boardCode)
                 .orElseThrow(BoardNotFoundException::new);
+        validateBoardIsOpened(getBoardStatus(board));
         BoardTheme boardTheme = board.getBoardTheme();
         BoardThemeSelectResponseDto boardThemeDto = themeUtil.getBoardThemeSelectResponseDto(boardTheme);
 
@@ -86,5 +91,25 @@ public class MemoServiceImpl implements MemoService {
                 .theme(boardThemeDto)
                 .memos(memoDtos)
                 .build();
+    }
+
+    private BoardStatus getBoardStatus(Board board) {
+        return BoardStatus.calculateBoardStatus(
+                board.getWritingStartTime(),
+                board.getWritingEndTime(),
+                board.getOpenStartTime(),
+                board.getOpenEndTime());
+    }
+
+    private void validateBoardCanWrite(BoardStatus boardStatus) {
+        if (boardStatus != BoardStatus.WRITING) {
+            throw new BoardCannotWriteException();
+        }
+    }
+
+    private void validateBoardIsOpened(BoardStatus boardStatus) {
+        if (boardStatus != BoardStatus.OPEN) {
+            throw new BoardNotOpenedException();
+        }
     }
 }

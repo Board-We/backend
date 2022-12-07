@@ -1,4 +1,4 @@
-package com.boardwe.boardwe.exception.custom;
+package com.boardwe.boardwe.exception.custom.entity;
 
 import com.boardwe.boardwe.exception.ErrorCode;
 

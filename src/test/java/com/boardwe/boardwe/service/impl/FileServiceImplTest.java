@@ -1,12 +1,10 @@
 package com.boardwe.boardwe.service.impl;
 
 import com.boardwe.boardwe.entity.ImageInfo;
-import com.boardwe.boardwe.exception.custom.ImageInfoNotFoundException;
-import com.boardwe.boardwe.exception.custom.ImageNotFoundException;
+import com.boardwe.boardwe.exception.custom.entity.ImageInfoNotFoundException;
+import com.boardwe.boardwe.exception.custom.other.ImageNotFoundException;
 import com.boardwe.boardwe.repository.ImageInfoRepository;
 import com.boardwe.boardwe.util.FileUtil;
-import com.boardwe.boardwe.util.impl.FileUtilImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -3,7 +3,7 @@ package com.boardwe.boardwe.service.impl;
 import com.boardwe.boardwe.dto.res.BoardThemeSelectResponseDto;
 import com.boardwe.boardwe.dto.res.MemoThemeSelectResponseDto;
 import com.boardwe.boardwe.entity.*;
-import com.boardwe.boardwe.exception.custom.BoardNotFoundException;
+import com.boardwe.boardwe.exception.custom.entity.BoardNotFoundException;
 import com.boardwe.boardwe.repository.BoardRepository;
 import com.boardwe.boardwe.repository.BoardThemeRepository;
 import com.boardwe.boardwe.repository.ThemeCategoryRepository;

@@ -9,12 +9,13 @@ public enum ErrorCode {
     BOARD_NOT_FOUND(400, "해당 보드가 존재하지 않습니다."),
     IMAGE_INFO_NOT_FOUND(400, "해당 이미지 정보가 존재하지 않습니다."),
 
-    // Unable to Enter Board
+    // About Board Status
     BOARD_BEFORE_WRITING(400, "롤링페이퍼 작성기간 이전입니다."),
     BOARD_BEFORE_OPEN(400, "롤링페이퍼의 작성기간이 마감되었습니다."),
     BOARD_CLOSED(400, "롤링페이퍼의 공개기간이 만료되었습니다."),
     BOARD_THEME_NOT_FOUND(400,"해당 보드 테마가 존재하지 않습니다."),
-
+    BOARD_CANNOT_WRITE(400, "롤링페이퍼 작성기간이 아닙니다."),
+    BOARD_NOT_OPENED(400, "롤링페이퍼 공개기간이 아닙니다."),
 
     // File
     IMAGE_NOT_FOUND(400, "이미지가 존재하지 않습니다."),

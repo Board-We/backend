@@ -1,7 +1,7 @@
 package com.boardwe.boardwe.util.impl;
 
-import com.boardwe.boardwe.exception.custom.CannotStoreFileException;
-import com.boardwe.boardwe.exception.custom.UnableToCreateDirectoryException;
+import com.boardwe.boardwe.exception.custom.other.CannotStoreFileException;
+import com.boardwe.boardwe.exception.custom.other.UnableToCreateDirectoryException;
 import com.boardwe.boardwe.util.FileUtil;
 import com.boardwe.boardwe.vo.ImageInfoVo;
 import lombok.RequiredArgsConstructor;
