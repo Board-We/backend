@@ -2,7 +2,9 @@ package com.boardwe.boardwe.service.impl;
 
 import com.boardwe.boardwe.dto.res.BoardReadResponseDto;
 import com.boardwe.boardwe.entity.Board;
+import com.boardwe.boardwe.entity.Tag;
 import com.boardwe.boardwe.repository.BoardRepository;
+import com.boardwe.boardwe.repository.TagRepository;
 import com.boardwe.boardwe.service.BoardSearchService;
 import com.boardwe.boardwe.type.OpenType;
 import com.boardwe.boardwe.util.BoardInfoUtil;
@@ -21,6 +23,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class BoardSearchServiceImpl implements BoardSearchService {
     private final BoardRepository boardRepository;
+    private final TagRepository tagRepository;
 
     private final ThemeUtil themeUtil;
     private final BoardInfoUtil boardInfoUtil;
@@ -53,11 +56,15 @@ public class BoardSearchServiceImpl implements BoardSearchService {
     }
 
     private BoardReadResponseDto getBoardSearchResponseDto(Board board) {
+        List<String> tagValues = tagRepository.findAllByBoardId(board.getId())
+                .stream()
+                .map(Tag::getValue)
+                .toList();
         return BoardReadResponseDto.builder()
                 .boardName(board.getName())
                 .boardLink(boardInfoUtil.getBoardLink(board.getCode()))
                 .boardViews(board.getViews())
-                .boardTags(boardInfoUtil.getBoardTags(board))
+                .boardTags(tagValues)
                 .theme(themeUtil.getBoardThemeSelectResponseDto(board.getBoardTheme()))
                 .build();
     }

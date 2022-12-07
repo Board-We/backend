@@ -123,11 +123,15 @@ public class BoardServiceImpl implements BoardService {
                 board.getOpenStartTime(),
                 board.getOpenEndTime());
         BoardTheme boardTheme = board.getBoardTheme();
+        List<String> tagValues = tagRepository.findAllByBoardId(board.getId())
+                .stream()
+                .map(Tag::getValue)
+                .toList();
 
         return WelcomeBoardResponseDto.builder()
                 .boardName(board.getName())
                 .boardDescription(board.getDescription())
-                .tags(boardInfoUtil.getBoardTags(board))
+                .tags(tagValues)
                 .memoCnt(getMemoCnt(board.getId()))
                 .boardViews(board.getViews())
                 .writingStartTime(board.getWritingStartTime())
