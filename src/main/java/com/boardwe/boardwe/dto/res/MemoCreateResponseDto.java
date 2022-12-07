@@ -9,6 +9,6 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MemoAddResponseDto {
+public class MemoCreateResponseDto {
     private LocalDateTime openStartTime;
 }

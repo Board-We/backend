@@ -1,6 +1,6 @@
 package com.boardwe.boardwe.service.impl;
 
-import com.boardwe.boardwe.dto.res.BoardSelectResponseDto;
+import com.boardwe.boardwe.dto.res.BoardReadResponseDto;
 import com.boardwe.boardwe.dto.res.MemoThemeSelectResponseDto;
 import com.boardwe.boardwe.entity.*;
 import com.boardwe.boardwe.exception.custom.BoardBeforeOpenException;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class BoardSelectServiceImplTest {
+class BoardReadTest {
 
     @Mock
     private BoardRepository boardRepository;
@@ -40,7 +40,7 @@ class BoardSelectServiceImplTest {
     private MemoRepository memoRepository;
 
     @InjectMocks
-    private BoardSelectServiceImpl boardSelectService;
+    private BoardServiceImpl boardService;
 
     private final String backgroundColor = "#FFFFFF",
             backgroundImageUuid = "abcd",
@@ -84,7 +84,7 @@ class BoardSelectServiceImplTest {
                 .thenReturn(memoThemes);
 
         // when
-        BoardSelectResponseDto responseDto = boardSelectService.getBoard(boardCode);
+        BoardReadResponseDto responseDto = boardService.readBoard(boardCode);
 
         // then
         assertEquals(boardName, responseDto.getBoardName());
@@ -138,7 +138,7 @@ class BoardSelectServiceImplTest {
                 .thenReturn(memoThemes);
 
         // when
-        BoardSelectResponseDto responseDto = boardSelectService.getBoard(boardCode);
+        BoardReadResponseDto responseDto = boardService.readBoard(boardCode);
 
         // then
         assertEquals(boardName, responseDto.getBoardName());
@@ -176,7 +176,7 @@ class BoardSelectServiceImplTest {
                 .thenReturn(Optional.of(board));
 
         // when & then
-        assertThrows(BoardBeforeWritingException.class, () -> boardSelectService.getBoard(boardCode));
+        assertThrows(BoardBeforeWritingException.class, () -> boardService.readBoard(boardCode));
     }
 
     @Test
@@ -200,7 +200,7 @@ class BoardSelectServiceImplTest {
                 .thenReturn(Optional.of(board));
 
         // when & then
-        assertThrows(BoardBeforeOpenException.class, () -> boardSelectService.getBoard(boardCode));
+        assertThrows(BoardBeforeOpenException.class, () -> boardService.readBoard(boardCode));
     }
 
     @Test
@@ -224,7 +224,7 @@ class BoardSelectServiceImplTest {
                 .thenReturn(Optional.of(board));
 
         // when & then
-        assertThrows(BoardClosedException.class, () -> boardSelectService.getBoard(boardCode));
+        assertThrows(BoardClosedException.class, () -> boardService.readBoard(boardCode));
     }
 
     @Test
@@ -236,7 +236,7 @@ class BoardSelectServiceImplTest {
                 .thenReturn(Optional.empty());
 
         // when & then
-        assertThrows(BoardNotFoundException.class, () -> boardSelectService.getBoard(boardCode));
+        assertThrows(BoardNotFoundException.class, () -> boardService.readBoard(boardCode));
     }
 
     private BoardTheme setBoardTheme(BackgroundType backgroundType) {

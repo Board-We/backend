@@ -25,7 +25,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ThemeSelectServiceImplTest {
+class ThemeServiceImplTest {
 
     @Mock
     private BoardRepository boardRepository;
@@ -37,7 +37,7 @@ class ThemeSelectServiceImplTest {
     private MemoThemeRepository memoThemeRepository;
 
     @InjectMocks
-    private ThemeSelectServiceImpl themeSelectService;
+    private ThemeServiceImpl themeSelectService;
 
     private final String backgroundColor = "#FFFFFF",
             backgroundImageUuid = "abcd",

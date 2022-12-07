@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class BoardSelectResponseDto {
+public class BoardReadResponseDto {
     private String boardName;
     private String boardDescription;
     private List<String> boardTags;

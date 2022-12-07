@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class BoardMemoSearchResponseDto {
+public class MemoSearchResponseDto {
     private BoardThemeSelectResponseDto theme;
     private List<MemoSelectResponseDto> memos;
 }

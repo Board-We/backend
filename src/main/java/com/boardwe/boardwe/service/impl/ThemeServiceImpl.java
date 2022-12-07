@@ -8,7 +8,7 @@ import com.boardwe.boardwe.repository.BoardRepository;
 import com.boardwe.boardwe.repository.BoardThemeRepository;
 import com.boardwe.boardwe.repository.MemoThemeRepository;
 import com.boardwe.boardwe.repository.ThemeCategoryRepository;
-import com.boardwe.boardwe.service.ThemeSelectService;
+import com.boardwe.boardwe.service.ThemeService;
 import com.boardwe.boardwe.type.BackgroundType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class ThemeSelectServiceImpl implements ThemeSelectService {
+public class ThemeServiceImpl implements ThemeService {
 
     private final BoardRepository boardRepository;
     private final ThemeCategoryRepository categoryRepository;

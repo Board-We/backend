@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemoAddRequestDto {
+public class MemoCreateRequestDto {
     private String memoContent;
     private Long memoThemeId;
 }

@@ -1,17 +1,18 @@
 package com.boardwe.boardwe.service.impl;
 
 import com.boardwe.boardwe.dto.req.BoardCreateRequestDto;
-import com.boardwe.boardwe.dto.res.BoardCreateResponseDto;
+import com.boardwe.boardwe.dto.req.BoardDeleteRequestDto;
 import com.boardwe.boardwe.dto.req.inner.BoardThemeCreateRequestDto;
 import com.boardwe.boardwe.dto.req.inner.MemoColorAndTextColorRequestDto;
 import com.boardwe.boardwe.dto.req.inner.MemoImageAndTextColorRequestDto;
+import com.boardwe.boardwe.dto.res.*;
+import com.boardwe.boardwe.dto.res.inner.MemoSelectResponseDto;
 import com.boardwe.boardwe.entity.*;
-import com.boardwe.boardwe.exception.custom.BoardThemeNotFoundException;
-import com.boardwe.boardwe.exception.custom.CannotStoreFileException;
-import com.boardwe.boardwe.exception.custom.UnableToCreateDirectoryException;
+import com.boardwe.boardwe.exception.custom.*;
 import com.boardwe.boardwe.repository.*;
-import com.boardwe.boardwe.service.BoardCreateService;
+import com.boardwe.boardwe.service.BoardService;
 import com.boardwe.boardwe.type.BackgroundType;
+import com.boardwe.boardwe.type.BoardStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,14 +23,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
-public class BoardCreateServiceImpl implements BoardCreateService {
+@Transactional(readOnly = true)
+public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final TagRepository tagRepository;
@@ -37,11 +36,13 @@ public class BoardCreateServiceImpl implements BoardCreateService {
     private final ThemeCategoryRepository themeCategoryRepository;
     private final ImageInfoRepository imageInfoRepository;
     private final MemoThemeRepository memoThemeRepository;
+    private final MemoRepository memoRepository;
     private final Path rootDir;
 
     private final String USER_THEME_NAME = "TEMP";
 
     @Override
+    @Transactional
     public BoardCreateResponseDto createBoard(BoardCreateRequestDto requestDto) {
 
         Long requestBoardThemeId = requestDto.getBoardThemeId();
@@ -125,6 +126,78 @@ public class BoardCreateServiceImpl implements BoardCreateService {
         return BoardCreateResponseDto.builder().boardLink(String.format("/board/%s/welcome", boardUuid)).build();
     }
 
+    @Override
+    public BoardReadResponseDto readBoard(String boardCode) {
+        Board board = boardRepository.findByCode(boardCode)
+                .orElseThrow(BoardNotFoundException::new);
+
+        BoardStatus boardStatus = BoardStatus.calculateBoardStatus(
+                board.getWritingStartTime(),
+                board.getWritingEndTime(),
+                board.getOpenStartTime(),
+                board.getOpenEndTime());
+
+        validateBoardStatus(boardStatus);
+
+        return BoardReadResponseDto.builder()
+                .boardName(board.getName())
+                .boardDescription(board.getDescription())
+                .writingStartTime(board.getWritingStartTime())
+                .writingEndTime(board.getWritingEndTime())
+                .openStartTime(board.getOpenStartTime())
+                .openEndTime(board.getOpenEndTime())
+                .openType(board.getOpenType())
+                .boardStatus(boardStatus)
+                .theme(getThemeResponseDto(board.getBoardTheme()))
+                .memos(boardStatus == BoardStatus.OPEN? getMemoResponseDtos(board) : null)
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public void deleteBoard(BoardDeleteRequestDto requestDto, String boardCode) {
+        Board board = boardRepository.findByCode(boardCode).orElseThrow(BoardNotFoundException::new);
+
+        if(Objects.equals(board.getPassword(), requestDto.getPassword())){
+
+            memoRepository.deleteByBoard(board);
+            tagRepository.deleteByBoard(board);
+
+            boardRepository.delete(board);
+        }
+    }
+
+    @Override
+    public WelcomeBoardResponseDto getBoardWelcomePage(String boardCode) {
+        Board board = boardRepository.findByCode(boardCode).orElseThrow(BoardNotFoundException::new);
+        BoardTheme boardTheme = board.getBoardTheme();
+        BoardStatus boardStatus = BoardStatus.calculateBoardStatus(
+                board.getWritingStartTime(),
+                board.getWritingEndTime(),
+                board.getOpenStartTime(),
+                board.getOpenEndTime()
+        );
+
+        return WelcomeBoardResponseDto.builder()
+                .boardName(board.getName())
+                .boardDescription(board.getDescription())
+                .tags(getTagValues(board.getId()))
+                .memoCnt(getMemoCnt(board.getId()))
+                .boardViews(board.getViews())
+                .writingStartTime(board.getWritingStartTime())
+                .writingEndTime(board.getWritingEndTime())
+                .openStartTime(board.getOpenStartTime())
+                .openEndTime(board.getOpenEndTime())
+                .boardStatus(boardStatus)
+                .boardBackgroundType(boardTheme.getBackgroundType())
+                .boardBackground(
+                        boardTheme.getBackgroundType() == BackgroundType.COLOR ?
+                                boardTheme.getBackgroundColor() : getBackgroundImageUrl(boardTheme.getBackgroundImageInfo())
+                )
+                .boardFont(board.getBoardTheme().getFont())
+                .build();
+    }
+
     private ImageInfo saveImageAndCreateImageInfo(String base64, String fileName) {
         String imageUuid = UUID.randomUUID().toString();
         String imageOriginalName = fileName.substring(0, fileName.lastIndexOf("."));
@@ -199,5 +272,73 @@ public class BoardCreateServiceImpl implements BoardCreateService {
                 }
             }
         }
+    }
+
+    private static void validateBoardStatus(BoardStatus boardStatus) {
+        if (boardStatus == BoardStatus.BEFORE_WRITING) {
+            throw new BoardBeforeWritingException();
+        } else if (boardStatus == BoardStatus.BEFORE_OPEN) {
+            throw new BoardBeforeOpenException();
+        } else if (boardStatus == BoardStatus.CLOSED) {
+            throw new BoardClosedException();
+        }
+    }
+
+    private List<MemoSelectResponseDto> getMemoResponseDtos(Board board) {
+        List<Memo> memos = memoRepository.findByBoardId(board.getId());
+        List<MemoSelectResponseDto> memoResponseDtos = new ArrayList<>();
+        for (Memo memo : memos) {
+            memoResponseDtos.add(MemoSelectResponseDto.builder()
+                    .memoThemeId(memo.getMemoTheme().getId())
+                    .memoContent(memo.getContent())
+                    .build());
+        }
+        return memoResponseDtos;
+    }
+
+    private BoardThemeSelectResponseDto getThemeResponseDto(BoardTheme boardTheme) {
+        String boardBackgroundValue = (boardTheme.getBackgroundType() == BackgroundType.COLOR) ?
+                boardTheme.getBackgroundColor() : getBackgroundImageUrl(boardTheme.getBackgroundImageInfo());
+
+        return BoardThemeSelectResponseDto.builder()
+                .boardBackgroundType(boardTheme.getBackgroundType())
+                .boardBackground(boardBackgroundValue)
+                .boardFont(boardTheme.getFont())
+                .memoThemes(getMemoThemeResponseDtos(boardTheme))
+                .build();
+    }
+
+    private List<MemoThemeSelectResponseDto> getMemoThemeResponseDtos(BoardTheme boardTheme) {
+        List<MemoTheme> memoThemes = memoThemeRepository.findByBoardThemeId(boardTheme.getId());
+        List<MemoThemeSelectResponseDto> memoThemeSelectResponseDtos = new ArrayList<>();
+        for (MemoTheme memoTheme : memoThemes) {
+            String memoBackgroundValue = (memoTheme.getBackgroundType() == BackgroundType.COLOR) ?
+                    memoTheme.getBackgroundColor() : getBackgroundImageUrl(memoTheme.getBackgroundImageInfo());
+            memoThemeSelectResponseDtos.add(MemoThemeSelectResponseDto.builder()
+                    .memoThemeId(memoTheme.getId())
+                    .memoBackgroundType(memoTheme.getBackgroundType())
+                    .memoBackground(memoBackgroundValue)
+                    .memoTextColor(memoTheme.getTextColor())
+                    .build());
+        }
+        return memoThemeSelectResponseDtos;
+    }
+
+    private List<String> getTagValues(Long boardId){
+        List<String> tagValues = new ArrayList<String>();
+        List<Tag> tags = tagRepository.findAllByBoardId(boardId);
+        for(Tag tag:tags){
+            tagValues.add(tag.getValue());
+        }
+        return tagValues;
+    }
+
+    private int getMemoCnt(Long boardId){
+        return memoRepository.findByBoardId(boardId).size();
+    }
+
+
+    private String getBackgroundImageUrl(ImageInfo imageInfo) {
+        return String.format("/image/%s", imageInfo.getUuid());
     }
 }

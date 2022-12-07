@@ -5,7 +5,7 @@ import com.boardwe.boardwe.dto.res.MemoThemeSelectResponseDto;
 
 import java.util.List;
 
-public interface ThemeSelectService {
+public interface ThemeService {
     List<BoardThemeSelectResponseDto> getPublicThemes();
 
     List<MemoThemeSelectResponseDto> getMemoThemesOfBoard(String boardCode);
