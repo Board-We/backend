@@ -1,5 +1,6 @@
 package com.boardwe.boardwe.entity;
 
+import com.boardwe.boardwe.exception.custom.other.InvalidDateValueException;
 import com.boardwe.boardwe.type.OpenType;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,7 +17,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "board_id")
     private Long id;
 
@@ -55,7 +57,7 @@ public class Board {
     @Column(name = "board_password", length = 16)
     @NotNull
     private String password;
-    
+
     @Column(name = "board_open_type", length = 10)
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -67,6 +69,11 @@ public class Board {
 
     @Builder
     public Board(BoardTheme boardTheme, String name, String description, String code, LocalDateTime writingStartTime, LocalDateTime writingEndTime, LocalDateTime openStartTime, LocalDateTime openEndTime, String password, OpenType openType, Integer views) {
+        if (!(writingStartTime.isBefore(writingEndTime)
+                && writingEndTime.isBefore(openStartTime)
+                && openStartTime.isBefore(openEndTime)))
+            throw new InvalidDateValueException();
+
         this.boardTheme = boardTheme;
         this.name = name;
         this.description = description;
