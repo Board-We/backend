@@ -1,23 +1,27 @@
 package com.boardwe.boardwe.service.impl;
 
 import com.boardwe.boardwe.dto.res.BoardReadResponseDto;
-import com.boardwe.boardwe.dto.res.MemoThemeSelectResponseDto;
-import com.boardwe.boardwe.entity.*;
+import com.boardwe.boardwe.dto.res.BoardThemeSelectResponseDto;
+import com.boardwe.boardwe.entity.Board;
+import com.boardwe.boardwe.entity.BoardTheme;
+import com.boardwe.boardwe.entity.Memo;
+import com.boardwe.boardwe.entity.MemoTheme;
 import com.boardwe.boardwe.exception.custom.BoardBeforeOpenException;
 import com.boardwe.boardwe.exception.custom.BoardBeforeWritingException;
 import com.boardwe.boardwe.exception.custom.BoardClosedException;
 import com.boardwe.boardwe.exception.custom.BoardNotFoundException;
 import com.boardwe.boardwe.repository.BoardRepository;
 import com.boardwe.boardwe.repository.MemoRepository;
-import com.boardwe.boardwe.repository.MemoThemeRepository;
 import com.boardwe.boardwe.type.BackgroundType;
 import com.boardwe.boardwe.type.BoardStatus;
 import com.boardwe.boardwe.type.OpenType;
+import com.boardwe.boardwe.util.ThemeUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
@@ -35,9 +39,9 @@ class BoardReadTest {
     @Mock
     private BoardRepository boardRepository;
     @Mock
-    private MemoThemeRepository memoThemeRepository;
-    @Mock
     private MemoRepository memoRepository;
+    @Mock
+    private ThemeUtil themeUtil;
 
     @InjectMocks
     private BoardServiceImpl boardService;
@@ -70,18 +74,21 @@ class BoardReadTest {
         when(board.getOpenEndTime()).thenReturn(openEndTime);
         when(board.getOpenType()).thenReturn(OpenType.PUBLIC);
 
-        List<Memo> memos = setMemos(2);
-        BoardTheme boardTheme = setBoardTheme(BackgroundType.COLOR);
+        BoardTheme boardTheme = Mockito.mock(BoardTheme.class);
         when(board.getBoardTheme()).thenReturn(boardTheme);
-        List<MemoTheme> memoThemes = List.of(setMemoTheme(BackgroundType.COLOR),
-                setMemoTheme(BackgroundType.IMAGE));
+        BoardThemeSelectResponseDto boardThemeDto = BoardThemeSelectResponseDto.builder()
+                .boardBackgroundType(BackgroundType.COLOR)
+                .boardBackground(backgroundColor)
+                .boardFont(font)
+                .build();
 
+        List<Memo> memos = setMemos(2);
         when(boardRepository.findByCode(boardCode))
                 .thenReturn(Optional.of(board));
         when(memoRepository.findByBoardId(board.getId()))
                 .thenReturn(memos);
-        when(memoThemeRepository.findByBoardThemeId(boardTheme.getId()))
-                .thenReturn(memoThemes);
+        when(themeUtil.getBoardThemeSelectResponseDto(boardTheme))
+                .thenReturn(boardThemeDto);
 
         // when
         BoardReadResponseDto responseDto = boardService.readBoard(boardCode);
@@ -103,7 +110,6 @@ class BoardReadTest {
         assertEquals(BackgroundType.COLOR, responseDto.getTheme().getBoardBackgroundType());
         assertEquals(backgroundColor, responseDto.getTheme().getBoardBackground());
         assertEquals(font, responseDto.getTheme().getBoardFont());
-        assertMemoThemeResponseDtos(responseDto.getTheme().getMemoThemes());
     }
 
     @Test
@@ -127,15 +133,19 @@ class BoardReadTest {
         when(board.getOpenEndTime()).thenReturn(openEndTime);
         when(board.getOpenType()).thenReturn(OpenType.PUBLIC);
 
-        BoardTheme boardTheme = setBoardTheme(BackgroundType.IMAGE);
+        BoardTheme boardTheme = Mockito.mock(BoardTheme.class);
         when(board.getBoardTheme()).thenReturn(boardTheme);
-        List<MemoTheme> memoThemes = List.of(setMemoTheme(BackgroundType.COLOR),
-                setMemoTheme(BackgroundType.IMAGE));
+        BoardThemeSelectResponseDto boardThemeDto = BoardThemeSelectResponseDto.builder()
+                .boardBackgroundType(BackgroundType.IMAGE)
+                .boardBackground("/image/" + backgroundImageUuid)
+                .boardFont(font)
+                .build();
 
         when(boardRepository.findByCode(boardCode))
                 .thenReturn(Optional.of(board));
-        when(memoThemeRepository.findByBoardThemeId(boardTheme.getId()))
-                .thenReturn(memoThemes);
+        when(themeUtil.getBoardThemeSelectResponseDto(boardTheme))
+                .thenReturn(boardThemeDto);
+
 
         // when
         BoardReadResponseDto responseDto = boardService.readBoard(boardCode);
@@ -152,7 +162,6 @@ class BoardReadTest {
         assertEquals(BackgroundType.IMAGE, responseDto.getTheme().getBoardBackgroundType());
         assertEquals("/image/" + backgroundImageUuid, responseDto.getTheme().getBoardBackground());
         assertEquals(font, responseDto.getTheme().getBoardFont());
-        assertMemoThemeResponseDtos(responseDto.getTheme().getMemoThemes());
     }
 
     @Test
@@ -239,39 +248,6 @@ class BoardReadTest {
         assertThrows(BoardNotFoundException.class, () -> boardService.readBoard(boardCode));
     }
 
-    private BoardTheme setBoardTheme(BackgroundType backgroundType) {
-        BoardTheme theme = mock(BoardTheme.class);
-        when(theme.getId()).thenReturn(100L);
-        when(theme.getBackgroundType()).thenReturn(backgroundType);
-        when(theme.getFont()).thenReturn(font);
-
-        if (backgroundType == BackgroundType.COLOR) {
-            when(theme.getBackgroundColor()).thenReturn(backgroundColor);
-        } else {
-            ImageInfo imageInfo = mock(ImageInfo.class);
-            when(imageInfo.getUuid()).thenReturn(backgroundImageUuid);
-            when(theme.getBackgroundImageInfo()).thenReturn(imageInfo);
-        }
-
-        return theme;
-    }
-
-    private MemoTheme setMemoTheme(BackgroundType backgroundType) {
-        MemoTheme theme = mock(MemoTheme.class);
-        when(theme.getId()).thenReturn(200L);
-        when(theme.getBackgroundType()).thenReturn(backgroundType);
-        when(theme.getTextColor()).thenReturn(textColor);
-
-        if (backgroundType == BackgroundType.COLOR) {
-            when(theme.getBackgroundColor()).thenReturn(backgroundColor);
-        } else {
-            ImageInfo imageInfo = mock(ImageInfo.class);
-            when(imageInfo.getUuid()).thenReturn(backgroundImageUuid);
-            when(theme.getBackgroundImageInfo()).thenReturn(imageInfo);
-        }
-        return theme;
-    }
-
     private List<Memo> setMemos(int num) {
         List<Memo> memos = new ArrayList<>();
         for (int i = 1; i <= num; i++) {
@@ -283,14 +259,5 @@ class BoardReadTest {
             memos.add(memo);
         }
         return memos;
-    }
-
-    private void assertMemoThemeResponseDtos(List<MemoThemeSelectResponseDto> memoThemesWithId) {
-        assertEquals(BackgroundType.COLOR, memoThemesWithId.get(0).getMemoBackgroundType());
-        assertEquals(backgroundColor, memoThemesWithId.get(0).getMemoBackground());
-        assertEquals(textColor, memoThemesWithId.get(0).getMemoTextColor());
-        assertEquals(BackgroundType.IMAGE, memoThemesWithId.get(1).getMemoBackgroundType());
-        assertEquals("/image/" + backgroundImageUuid, memoThemesWithId.get(1).getMemoBackground());
-        assertEquals(textColor, memoThemesWithId.get(1).getMemoTextColor());
     }
 }

@@ -23,6 +23,8 @@ public class BoardReadResponseDto {
     private LocalDateTime openEndTime;
     private OpenType openType;
     private BoardStatus boardStatus;
+    private String boardLink;
+    private Integer boardViews;
     private BoardThemeSelectResponseDto theme;
     private List<MemoSelectResponseDto> memos;
 }

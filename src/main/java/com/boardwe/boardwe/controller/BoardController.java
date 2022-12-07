@@ -4,9 +4,7 @@ import com.boardwe.boardwe.dto.req.BoardCreateRequestDto;
 import com.boardwe.boardwe.dto.req.BoardDeleteRequestDto;
 import com.boardwe.boardwe.dto.res.BoardCreateResponseDto;
 import com.boardwe.boardwe.dto.res.BoardReadResponseDto;
-import com.boardwe.boardwe.dto.res.BoardSearchResultResponseDto;
 import com.boardwe.boardwe.dto.res.WelcomeBoardResponseDto;
-import com.boardwe.boardwe.service.BoardListService;
 import com.boardwe.boardwe.service.BoardSearchService;
 import com.boardwe.boardwe.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +22,6 @@ public class BoardController {
 
     private final BoardService boardService;
     private final BoardSearchService boardSearchService;
-    private final BoardListService boardListService;
 
     @PostMapping("/board")
     public ResponseEntity<BoardCreateResponseDto> create(@RequestBody BoardCreateRequestDto boardCreateRequestDto) {
@@ -49,18 +46,18 @@ public class BoardController {
     }
 
     @GetMapping("/board/search")
-    public ResponseEntity<Page<BoardSearchResultResponseDto>> searchBoardsByTagValue(@RequestParam String query, @RequestParam int page, @RequestParam int size){
+    public ResponseEntity<Page<BoardReadResponseDto>> searchBoardsByTagValue(@RequestParam String query, @RequestParam int page, @RequestParam int size){
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(boardSearchService.getBoardSearchResultPage(query, pageable));
+        return ResponseEntity.ok(boardSearchService.searchBoardByTagWithPaging(query, pageable));
     }
 
     @GetMapping("/boards/hot")
-    public ResponseEntity<List<BoardSearchResultResponseDto>> getHotBoards(){
-        return ResponseEntity.ok(boardListService.selectHotBoards());
+    public ResponseEntity<List<BoardReadResponseDto>> getHotBoards(){
+        return ResponseEntity.ok(boardSearchService.selectHotBoards());
     }
 
     @GetMapping("/boards/recommend")
-    public ResponseEntity<List<BoardSearchResultResponseDto>> getRecommendBoards(){
-        return ResponseEntity.ok(boardListService.selectRecommendBoards());
+    public ResponseEntity<List<BoardReadResponseDto>> getRecommendBoards(){
+        return ResponseEntity.ok(boardSearchService.selectRecommendBoards());
     }
 }

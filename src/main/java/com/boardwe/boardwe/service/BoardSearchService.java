@@ -1,10 +1,15 @@
 package com.boardwe.boardwe.service;
 
+import com.boardwe.boardwe.dto.res.BoardReadResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.boardwe.boardwe.dto.res.BoardSearchResultResponseDto;
+import java.util.List;
 
 public interface BoardSearchService {
-    Page<BoardSearchResultResponseDto> getBoardSearchResultPage(String query, Pageable pageable);
+    Page<BoardReadResponseDto> searchBoardByTagWithPaging(String query, Pageable pageable);
+
+    List<BoardReadResponseDto> selectHotBoards();
+
+    List<BoardReadResponseDto> selectRecommendBoards();
 }

@@ -6,9 +6,9 @@ import com.boardwe.boardwe.entity.*;
 import com.boardwe.boardwe.exception.custom.BoardNotFoundException;
 import com.boardwe.boardwe.repository.BoardRepository;
 import com.boardwe.boardwe.repository.BoardThemeRepository;
-import com.boardwe.boardwe.repository.MemoThemeRepository;
 import com.boardwe.boardwe.repository.ThemeCategoryRepository;
 import com.boardwe.boardwe.type.BackgroundType;
+import com.boardwe.boardwe.util.ThemeUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -34,7 +35,7 @@ class ThemeServiceImplTest {
     @Mock
     private BoardThemeRepository boardThemeRepository;
     @Mock
-    private MemoThemeRepository memoThemeRepository;
+    private ThemeUtil themeUtil;
 
     @InjectMocks
     private ThemeServiceImpl themeSelectService;
@@ -49,28 +50,38 @@ class ThemeServiceImplTest {
     void get_public_board_themes() throws Exception {
         // given
         // 테마 카테고리 mock 생성 및 stubbing
+        ThemeCategory userCategory = mock(ThemeCategory.class);
         ThemeCategory templateCategory = mock(ThemeCategory.class);
         ThemeCategory publicCategory = mock(ThemeCategory.class);
         when(templateCategory.getId()).thenReturn(101L);
         when(publicCategory.getId()).thenReturn(102L);
+        when(userCategory.getName()).thenReturn("TEMP");
         when(templateCategory.getName()).thenReturn("크리스마스");
         when(publicCategory.getName()).thenReturn("생일");
 
-        // 보드 테마, 메모 테마 mock 생성
-        BoardTheme boardTheme1 = setBoardTheme(BackgroundType.IMAGE);
-        BoardTheme boardTheme2 = setBoardTheme(BackgroundType.COLOR);
-        List<MemoTheme> memoThemes = List.of(setMemoTheme(BackgroundType.COLOR, false),
-                setMemoTheme(BackgroundType.IMAGE, false));
+        // 보드 테마 엔티티 생성
+        BoardTheme boardTheme1 = BoardTheme.builder()
+                .backgroundType(BackgroundType.IMAGE)
+                .font(font)
+                .build();
+        BoardTheme boardTheme2 = BoardTheme.builder()
+                .backgroundType(BackgroundType.COLOR)
+                .font(font)
+                .build();
 
         // 각 mock에 대한 조회 메소드 stubbing
+        when(themeUtil.getUserThemeCategory())
+                .thenReturn(userCategory);
+        when(themeUtil.getBackgroundValue(boardTheme1))
+                .thenReturn("/image/" + backgroundImageUuid);
+        when(themeUtil.getBackgroundValue(boardTheme2))
+                .thenReturn(backgroundColor);
         when(categoryRepository.findByNameNot("TEMP"))
                 .thenReturn(List.of(templateCategory, publicCategory));
         when(boardThemeRepository.findByThemeCategoryId(101L))
                 .thenReturn(List.of(boardTheme1));
         when(boardThemeRepository.findByThemeCategoryId(102L))
                 .thenReturn(List.of(boardTheme2));
-        when(memoThemeRepository.findByBoardThemeId(boardTheme1.getId()))
-                .thenReturn(memoThemes);
 
         // when
         List<BoardThemeSelectResponseDto> responseDtos = themeSelectService.getPublicThemes();
@@ -80,13 +91,11 @@ class ThemeServiceImplTest {
         assertEquals(BackgroundType.IMAGE, responseBoardTheme1.getBoardBackgroundType());
         assertEquals("/image/" + backgroundImageUuid, responseBoardTheme1.getBoardBackground());
         assertEquals(font, responseBoardTheme1.getBoardFont());
-        assertMemoThemeResponseDtos(responseBoardTheme1.getMemoThemes(), false);
 
         BoardThemeSelectResponseDto responseBoardTheme2 = responseDtos.get(1);
         assertEquals(BackgroundType.COLOR, responseBoardTheme2.getBoardBackgroundType());
         assertEquals(backgroundColor, responseBoardTheme2.getBoardBackground());
         assertEquals(font, responseBoardTheme2.getBoardFont());
-        assertMemoThemeResponseDtos(responseBoardTheme2.getMemoThemes(), false);
     }
 
     @Test
@@ -98,23 +107,22 @@ class ThemeServiceImplTest {
         Board board = mock(Board.class);
         BoardTheme boardTheme = mock(BoardTheme.class);
         when(board.getBoardTheme()).thenReturn(boardTheme);
-        when(boardTheme.getId()).thenReturn(100L);
 
         // 메모 테마 mock 생성
-        List<MemoTheme> memoThemes = List.of(setMemoTheme(BackgroundType.COLOR, true),
-                setMemoTheme(BackgroundType.IMAGE, true));
+        List<MemoThemeSelectResponseDto> memoThemes = List.of(setMemoTheme(BackgroundType.COLOR),
+                setMemoTheme(BackgroundType.IMAGE));
 
         // 각 mock에 대한 조회 메소드 stubbing
         when(boardRepository.findByCode(boardCode))
                 .thenReturn(Optional.of(board));
-        when(memoThemeRepository.findByBoardThemeId(boardTheme.getId()))
+        when(themeUtil.getMemoThemeSelectResponseDtos(boardTheme))
                 .thenReturn(memoThemes);
 
         // when
         List<MemoThemeSelectResponseDto> responseDtos = themeSelectService.getMemoThemesOfBoard(boardCode);
 
         // then
-        assertMemoThemeResponseDtos(responseDtos, true);
+        assertMemoThemeResponseDtos(responseDtos);
     }
 
     @Test
@@ -129,45 +137,22 @@ class ThemeServiceImplTest {
         assertThrows(BoardNotFoundException.class, () -> themeSelectService.getMemoThemesOfBoard(boardCode));
     }
 
-    private BoardTheme setBoardTheme(BackgroundType backgroundType) {
-        BoardTheme theme = mock(BoardTheme.class);
-        when(theme.getId()).thenReturn(100L);
-        when(theme.getBackgroundType()).thenReturn(backgroundType);
-        when(theme.getFont()).thenReturn(font);
-
-        if (backgroundType == BackgroundType.COLOR) {
-            when(theme.getBackgroundColor()).thenReturn(backgroundColor);
-        } else {
-            ImageInfo imageInfo = mock(ImageInfo.class);
-            when(imageInfo.getUuid()).thenReturn(backgroundImageUuid);
-            when(theme.getBackgroundImageInfo()).thenReturn(imageInfo);
-        }
-        return theme;
+    private MemoThemeSelectResponseDto setMemoTheme(BackgroundType backgroundType) {
+        return MemoThemeSelectResponseDto.builder()
+                .memoThemeId(200L)
+                .memoBackgroundType(backgroundType)
+                .memoTextColor(textColor)
+                .memoBackground(backgroundType == BackgroundType.COLOR? backgroundColor : "/image/" + backgroundImageUuid)
+                .build();
     }
 
-    private MemoTheme setMemoTheme(BackgroundType backgroundType, Boolean withId) {
-        MemoTheme theme = mock(MemoTheme.class);
-        if (withId) when(theme.getId()).thenReturn(200L);
-        when(theme.getBackgroundType()).thenReturn(backgroundType);
-        when(theme.getTextColor()).thenReturn(textColor);
-
-        if (backgroundType == BackgroundType.COLOR) {
-            when(theme.getBackgroundColor()).thenReturn(backgroundColor);
-        } else {
-            ImageInfo imageInfo = mock(ImageInfo.class);
-            when(imageInfo.getUuid()).thenReturn(backgroundImageUuid);
-            when(theme.getBackgroundImageInfo()).thenReturn(imageInfo);
-        }
-        return theme;
-    }
-
-    private void assertMemoThemeResponseDtos(List<MemoThemeSelectResponseDto> memoThemes, Boolean withId) {
-        if (withId) assertEquals(200L, memoThemes.get(0).getMemoThemeId());
+    private void assertMemoThemeResponseDtos(List<MemoThemeSelectResponseDto> memoThemes) {
+        assertEquals(200L, memoThemes.get(0).getMemoThemeId());
         assertEquals(BackgroundType.COLOR, memoThemes.get(0).getMemoBackgroundType());
         assertEquals(backgroundColor, memoThemes.get(0).getMemoBackground());
         assertEquals(textColor, memoThemes.get(0).getMemoTextColor());
 
-        if (withId) assertEquals(200L, memoThemes.get(1).getMemoThemeId());
+        assertEquals(200L, memoThemes.get(1).getMemoThemeId());
         assertEquals(BackgroundType.IMAGE, memoThemes.get(1).getMemoBackgroundType());
         assertEquals("/image/" + backgroundImageUuid, memoThemes.get(1).getMemoBackground());
         assertEquals(textColor, memoThemes.get(1).getMemoTextColor());
