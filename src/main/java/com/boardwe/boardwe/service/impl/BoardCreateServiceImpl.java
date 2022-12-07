@@ -1,10 +1,10 @@
 package com.boardwe.boardwe.service.impl;
 
-import com.boardwe.boardwe.dto.BoardCreateRequestDto;
-import com.boardwe.boardwe.dto.BoardCreateResponseDto;
-import com.boardwe.boardwe.dto.inner.BoardCreateThemeRequestDto;
-import com.boardwe.boardwe.dto.inner.MemoBackgroundTextColorSetsRequestDto;
-import com.boardwe.boardwe.dto.inner.MemoImagesTextColorSetsRequestDto;
+import com.boardwe.boardwe.dto.req.BoardCreateRequestDto;
+import com.boardwe.boardwe.dto.res.BoardCreateResponseDto;
+import com.boardwe.boardwe.dto.req.inner.BoardThemeCreateRequestDto;
+import com.boardwe.boardwe.dto.req.inner.MemoColorAndTextColorRequestDto;
+import com.boardwe.boardwe.dto.req.inner.MemoImageAndTextColorRequestDto;
 import com.boardwe.boardwe.entity.*;
 import com.boardwe.boardwe.exception.custom.BoardThemeNotFoundException;
 import com.boardwe.boardwe.exception.custom.CannotStoreFileException;
@@ -52,7 +52,7 @@ public class BoardCreateServiceImpl implements BoardCreateService {
             ThemeCategory themeCategory = themeCategoryRepository.save(ThemeCategory.builder().name(USER_THEME_NAME).build());
 
             //테마 저장
-            BoardCreateThemeRequestDto theme = requestDto.getTheme();
+            BoardThemeCreateRequestDto theme = requestDto.getTheme();
             if (theme.getBoardBackgroundImage() != null) {
                 //이미지 저장
 
@@ -74,7 +74,7 @@ public class BoardCreateServiceImpl implements BoardCreateService {
                         .backgroundColor(theme.getBoardBackgroundColor())
                         .font(theme.getBoardFont()).build());
             }
-            for (MemoImagesTextColorSetsRequestDto imageAndTextColor : theme.getMemoImageTextColorSets()) {
+            for (MemoImageAndTextColorRequestDto imageAndTextColor : theme.getMemoImageTextColorSets()) {
                 String imageBase64 = imageAndTextColor.getMemoBackgroundImage();
                 ImageInfo imageInfo = saveImageAndCreateImageInfo(imageBase64,imageAndTextColor.getMemoBackgroundImageName());
 
@@ -84,7 +84,7 @@ public class BoardCreateServiceImpl implements BoardCreateService {
                         .backgroundImageInfo(imageInfo)
                         .build());
             }
-            for (MemoBackgroundTextColorSetsRequestDto backgroundTextColor : theme.getMemoBackgroundTextColorSets()) {
+            for (MemoColorAndTextColorRequestDto backgroundTextColor : theme.getMemoBackgroundTextColorSets()) {
                 memoThemeRepository.save(MemoTheme.builder()
                         .boardTheme(boardTheme)
                         .backgroundType(BackgroundType.COLOR)

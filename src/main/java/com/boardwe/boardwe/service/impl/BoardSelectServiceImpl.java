@@ -1,9 +1,9 @@
 package com.boardwe.boardwe.service.impl;
 
-import com.boardwe.boardwe.dto.BoardSelectResponseDto;
-import com.boardwe.boardwe.dto.inner.BoardThemeResponseDto;
-import com.boardwe.boardwe.dto.inner.MemoSelectResponseDto;
-import com.boardwe.boardwe.dto.MemoThemeSelectResponseDto;
+import com.boardwe.boardwe.dto.res.BoardSelectResponseDto;
+import com.boardwe.boardwe.dto.res.BoardThemeSelectResponseDto;
+import com.boardwe.boardwe.dto.res.MemoThemeSelectResponseDto;
+import com.boardwe.boardwe.dto.res.inner.MemoSelectResponseDto;
 import com.boardwe.boardwe.entity.*;
 import com.boardwe.boardwe.exception.custom.BoardBeforeOpenException;
 import com.boardwe.boardwe.exception.custom.BoardBeforeWritingException;
@@ -47,6 +47,8 @@ public class BoardSelectServiceImpl implements BoardSelectService {
         return BoardSelectResponseDto.builder()
                 .boardName(board.getName())
                 .boardDescription(board.getDescription())
+                .writingStartTime(board.getWritingStartTime())
+                .writingEndTime(board.getWritingEndTime())
                 .openStartTime(board.getOpenStartTime())
                 .openEndTime(board.getOpenEndTime())
                 .openType(board.getOpenType())
@@ -68,15 +70,15 @@ public class BoardSelectServiceImpl implements BoardSelectService {
         return memoResponseDtos;
     }
 
-    private BoardThemeResponseDto getThemeResponseDto(BoardTheme boardTheme) {
+    private BoardThemeSelectResponseDto getThemeResponseDto(BoardTheme boardTheme) {
         String boardBackgroundValue = (boardTheme.getBackgroundType() == BackgroundType.COLOR) ?
                 boardTheme.getBackgroundColor() : getBackgroundImageUrl(boardTheme.getBackgroundImageInfo());
 
-        return BoardThemeResponseDto.builder()
+        return BoardThemeSelectResponseDto.builder()
                 .boardBackgroundType(boardTheme.getBackgroundType())
                 .boardBackground(boardBackgroundValue)
                 .boardFont(boardTheme.getFont())
-                .memoThemesWithId(getMemoThemeResponseDtos(boardTheme))
+                .memoThemes(getMemoThemeResponseDtos(boardTheme))
                 .build();
     }
 

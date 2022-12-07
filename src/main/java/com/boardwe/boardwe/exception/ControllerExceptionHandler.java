@@ -1,6 +1,5 @@
 package com.boardwe.boardwe.exception;
 
-import com.boardwe.boardwe.dto.ResponseDto;
 import com.boardwe.boardwe.exception.custom.CustomException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,16 +9,19 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ControllerExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
-    protected ResponseEntity<ResponseDto> handleCustomException(final CustomException e) {
-        ResponseDto response = ResponseDto.error(e.getErrorCode());
-        return ResponseEntity.status(response.getStatus())
+    protected ResponseEntity<ErrorResponseDto> handleCustomException(final CustomException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        ErrorResponseDto response = ErrorResponseDto.error(errorCode);
+        return ResponseEntity
+                .status(errorCode.getStatus())
                 .body(response);
     }
 
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity<ResponseDto> handleException() {
-        ResponseDto response = ResponseDto.error(ErrorCode.INTERNAL_SERVER_ERROR);
-        return ResponseEntity.status(response.getStatus())
+    protected ResponseEntity<ErrorResponseDto> handleException() {
+        ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
+        ErrorResponseDto response = ErrorResponseDto.error(errorCode);
+        return ResponseEntity.status(errorCode.getStatus())
                 .body(response);
     }
 

@@ -1,4 +1,4 @@
-package com.boardwe.boardwe.dto.inner;
+package com.boardwe.boardwe.dto.req.inner;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,11 +9,11 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardCreateThemeRequestDto {
+public class BoardThemeCreateRequestDto {
     private String boardBackgroundImage;
     private String boardBackgroundImageName;
     private String boardBackgroundColor;
     private String boardFont;
-    private List<MemoImagesTextColorSetsRequestDto> memoImageTextColorSets;
-    private List<MemoBackgroundTextColorSetsRequestDto> memoBackgroundTextColorSets;
+    private List<MemoImageAndTextColorRequestDto> memoImageTextColorSets;
+    private List<MemoColorAndTextColorRequestDto> memoBackgroundTextColorSets;
 }

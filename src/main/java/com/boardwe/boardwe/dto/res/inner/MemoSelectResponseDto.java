@@ -1,4 +1,4 @@
-package com.boardwe.boardwe.dto.inner;
+package com.boardwe.boardwe.dto.res.inner;
 
 import lombok.Builder;
 import lombok.Data;

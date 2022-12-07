@@ -1,6 +1,6 @@
 package com.boardwe.boardwe.service.impl;
 
-import com.boardwe.boardwe.dto.MemoDeleteRequestDto;
+import com.boardwe.boardwe.dto.req.MemoDeleteRequestDto;
 import com.boardwe.boardwe.entity.Board;
 import com.boardwe.boardwe.entity.Memo;
 import com.boardwe.boardwe.exception.custom.BoardNotFoundException;
@@ -10,7 +10,6 @@ import com.boardwe.boardwe.repository.BoardRepository;
 import com.boardwe.boardwe.repository.MemoRepository;
 import com.boardwe.boardwe.service.MemoDeleteService;
 import lombok.RequiredArgsConstructor;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

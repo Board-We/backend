@@ -1,9 +1,7 @@
 package com.boardwe.boardwe.service;
 
-import com.boardwe.boardwe.dto.MemoAddRequestDto;
-import com.boardwe.boardwe.dto.MemoAddResponseDto;
-
-import java.time.LocalDateTime;
+import com.boardwe.boardwe.dto.req.MemoAddRequestDto;
+import com.boardwe.boardwe.dto.res.MemoAddResponseDto;
 
 public interface MemoAddService {
     MemoAddResponseDto addMemo(MemoAddRequestDto memoAddRequestDto, String boardCode);

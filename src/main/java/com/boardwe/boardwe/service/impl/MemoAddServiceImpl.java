@@ -1,7 +1,7 @@
 package com.boardwe.boardwe.service.impl;
 
-import com.boardwe.boardwe.dto.MemoAddRequestDto;
-import com.boardwe.boardwe.dto.MemoAddResponseDto;
+import com.boardwe.boardwe.dto.req.MemoAddRequestDto;
+import com.boardwe.boardwe.dto.res.MemoAddResponseDto;
 import com.boardwe.boardwe.entity.Board;
 import com.boardwe.boardwe.entity.Memo;
 import com.boardwe.boardwe.entity.MemoTheme;
@@ -14,8 +14,6 @@ import com.boardwe.boardwe.service.MemoAddService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor

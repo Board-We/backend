@@ -1,9 +1,7 @@
 package com.boardwe.boardwe.service;
 
-import com.boardwe.boardwe.dto.BoardCreateRequestDto;
-import com.boardwe.boardwe.dto.BoardCreateResponseDto;
-import com.boardwe.boardwe.dto.ResponseDto;
-import com.boardwe.boardwe.entity.Board;
+import com.boardwe.boardwe.dto.req.BoardCreateRequestDto;
+import com.boardwe.boardwe.dto.res.BoardCreateResponseDto;
 
 public interface BoardCreateService {
 

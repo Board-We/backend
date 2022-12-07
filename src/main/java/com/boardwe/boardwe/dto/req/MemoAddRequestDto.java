@@ -1,15 +1,13 @@
-package com.boardwe.boardwe.dto.inner;
+package com.boardwe.boardwe.dto.req;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class MemoSearchResponseDto {
-    private Long memoThemeId;
+public class MemoAddRequestDto {
     private String memoContent;
+    private Long memoThemeId;
 }

@@ -1,7 +1,7 @@
 package com.boardwe.boardwe.service.impl;
 
-import com.boardwe.boardwe.dto.BoardThemeSelectResponseDto;
-import com.boardwe.boardwe.dto.MemoThemeSelectResponseDto;
+import com.boardwe.boardwe.dto.res.BoardThemeSelectResponseDto;
+import com.boardwe.boardwe.dto.res.MemoThemeSelectResponseDto;
 import com.boardwe.boardwe.entity.*;
 import com.boardwe.boardwe.exception.custom.BoardNotFoundException;
 import com.boardwe.boardwe.repository.BoardRepository;
@@ -50,7 +50,7 @@ public class ThemeSelectServiceImpl implements ThemeSelectService {
 
         List<MemoTheme> memoThemes = memoThemeRepository.findByBoardThemeId(board.getBoardTheme().getId());
         for (MemoTheme memoTheme : memoThemes) {
-            memoThemeSelectResponseDtos.add(getMemoThemeSelectResponseDto(memoTheme, true));
+            memoThemeSelectResponseDtos.add(getMemoThemeSelectResponseDto(memoTheme));
         }
         return memoThemeSelectResponseDtos;
     }
@@ -74,16 +74,16 @@ public class ThemeSelectServiceImpl implements ThemeSelectService {
         List<MemoTheme> memoThemes = memoThemeRepository.findByBoardThemeId(boardTheme.getId());
         List<MemoThemeSelectResponseDto> memoThemeSelectResponseDtos = new ArrayList<>();
         for (MemoTheme memoTheme : memoThemes) {
-            memoThemeSelectResponseDtos.add(getMemoThemeSelectResponseDto(memoTheme, false));
+            memoThemeSelectResponseDtos.add(getMemoThemeSelectResponseDto(memoTheme));
         }
         return memoThemeSelectResponseDtos;
     }
 
-    private MemoThemeSelectResponseDto getMemoThemeSelectResponseDto(MemoTheme memoTheme, Boolean withId) {
+    private MemoThemeSelectResponseDto getMemoThemeSelectResponseDto(MemoTheme memoTheme) {
         String memoBackgroundValue = (memoTheme.getBackgroundType() == BackgroundType.COLOR) ?
                 memoTheme.getBackgroundColor() : getBackgroundImageUrl(memoTheme.getBackgroundImageInfo());
         return MemoThemeSelectResponseDto.builder()
-                .memoThemeId(withId? memoTheme.getId() : null)
+                .memoThemeId(memoTheme.getId())
                 .memoBackgroundType(memoTheme.getBackgroundType())
                 .memoBackground(memoBackgroundValue)
                 .memoTextColor(memoTheme.getTextColor())

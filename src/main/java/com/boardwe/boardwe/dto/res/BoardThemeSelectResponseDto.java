@@ -1,6 +1,5 @@
-package com.boardwe.boardwe.dto.inner;
+package com.boardwe.boardwe.dto.res;
 
-import com.boardwe.boardwe.dto.MemoThemeSelectResponseDto;
 import com.boardwe.boardwe.type.BackgroundType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
@@ -11,9 +10,13 @@ import java.util.List;
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class BoardThemeResponseDto {
+public class BoardThemeSelectResponseDto {
+    private Long id;
+    private String name;
+    private String category;
+    private Integer useCnt;
     private BackgroundType boardBackgroundType;
     private String boardBackground;
     private String boardFont;
-    private List<MemoThemeSelectResponseDto> memoThemesWithId;
+    private List<MemoThemeSelectResponseDto> memoThemes;
 }

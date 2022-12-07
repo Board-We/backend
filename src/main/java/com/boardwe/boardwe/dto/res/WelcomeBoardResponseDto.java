@@ -1,29 +1,24 @@
-package com.boardwe.boardwe.dto;
-
-import java.time.LocalDateTime;
-import java.util.List;
+package com.boardwe.boardwe.dto.res;
 
 import com.boardwe.boardwe.type.BackgroundType;
 import com.boardwe.boardwe.type.BoardStatus;
 import com.boardwe.boardwe.type.OpenType;
 import com.fasterxml.jackson.annotation.JsonInclude;
-
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class WelcomeBoardResponseDto {
     private String boardName;
-    private String boradDescription;
+    private String boardDescription;
     private List<String> tags;
-    private int memoCnt;
-    private int boardViews;
+    private Integer memoCnt;
+    private Integer boardViews;
     private LocalDateTime writingStartTime;
     private LocalDateTime writingEndTime;
     private LocalDateTime openStartTime;

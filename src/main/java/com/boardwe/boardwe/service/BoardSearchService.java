@@ -3,8 +3,8 @@ package com.boardwe.boardwe.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.boardwe.boardwe.dto.ListElementDtos.SimpleBoardResponseDto;
+import com.boardwe.boardwe.dto.res.BoardSearchResultResponseDto;
 
 public interface BoardSearchService {
-    Page<SimpleBoardResponseDto> getBoardSearchResultPage(String query, Pageable pageable);
+    Page<BoardSearchResultResponseDto> getBoardSearchResultPage(String query, Pageable pageable);
 }

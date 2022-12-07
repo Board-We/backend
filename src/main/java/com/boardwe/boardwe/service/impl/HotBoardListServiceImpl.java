@@ -1,13 +1,8 @@
 package com.boardwe.boardwe.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
-import com.boardwe.boardwe.dto.ListElementDtos.MemoThemeResponseDto;
-import com.boardwe.boardwe.dto.ListElementDtos.SimpleBoardResponseDto;
-import com.boardwe.boardwe.dto.ListElementDtos.ThemeResponseDto;
+import com.boardwe.boardwe.dto.res.BoardSearchResultResponseDto;
+import com.boardwe.boardwe.dto.res.BoardThemeSelectResponseDto;
+import com.boardwe.boardwe.dto.res.MemoThemeSelectResponseDto;
 import com.boardwe.boardwe.entity.Board;
 import com.boardwe.boardwe.entity.BoardTheme;
 import com.boardwe.boardwe.entity.MemoTheme;
@@ -18,8 +13,11 @@ import com.boardwe.boardwe.repository.TagRepository;
 import com.boardwe.boardwe.service.HotBoardListSelectService;
 import com.boardwe.boardwe.type.BackgroundType;
 import com.boardwe.boardwe.type.OpenType;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,36 +28,36 @@ public class HotBoardListServiceImpl implements HotBoardListSelectService{
     private final MemoThemeRepository memoThemeRepository;
 
     @Override
-    public List<SimpleBoardResponseDto> getBoardList() {
-        List<SimpleBoardResponseDto> boards = new ArrayList<SimpleBoardResponseDto>();
+    public List<BoardSearchResultResponseDto> getBoardList() {
+        List<BoardSearchResultResponseDto> boards = new ArrayList<BoardSearchResultResponseDto>();
         List<Board> hotBoards = boardRepository.findTop10ByOpenTypeOrderByViewsDesc(OpenType.PUBLIC);
         for(Board board:hotBoards){
-            SimpleBoardResponseDto simpleBoardResponseDto = SimpleBoardResponseDto.builder()
+            BoardSearchResultResponseDto boardSearchResultResponseDto = BoardSearchResultResponseDto.builder()
                 .boardName(board.getName())
                 .boardLink(getBoardLink(board.getCode()))
                 .boardViews(board.getViews())
                 .boardTags(getTagValues(board.getId()))
                 .theme(getThemeResponseDto(board.getBoardTheme()))
             .build();
-            boards.add(simpleBoardResponseDto);
+            boards.add(boardSearchResultResponseDto);
         }
         return boards;
     }
 
-    private ThemeResponseDto getThemeResponseDto(BoardTheme boardTheme){
-        return ThemeResponseDto.builder()
+    private BoardThemeSelectResponseDto getThemeResponseDto(BoardTheme boardTheme){
+        return BoardThemeSelectResponseDto.builder()
             .boardBackground(getBackground(boardTheme))
             .boardBackgroundType(boardTheme.getBackgroundType())
             .boardFont(boardTheme.getFont())
-            .memoTheme(getMemoThemeResponseDtos(boardTheme.getId()))
+            .memoThemes(getMemoThemeResponseDtos(boardTheme.getId()))
         .build();
     }
 
-    private List<MemoThemeResponseDto> getMemoThemeResponseDtos(Long boardThemeId){
+    private List<MemoThemeSelectResponseDto> getMemoThemeResponseDtos(Long boardThemeId){
         List<MemoTheme> memoThemes = memoThemeRepository.findByBoardThemeId(boardThemeId);
-        List<MemoThemeResponseDto> memoThemeResponseDtos = new ArrayList<MemoThemeResponseDto>();
+        List<MemoThemeSelectResponseDto> memoThemeResponseDtos = new ArrayList<>();
         for(MemoTheme memoTheme:memoThemes){
-            MemoThemeResponseDto memoThemeResponseDto = MemoThemeResponseDto.builder()
+            MemoThemeSelectResponseDto memoThemeResponseDto = MemoThemeSelectResponseDto.builder()
                 .memoBackgroundType(memoTheme.getBackgroundType())
                 .memoBackground(getBackground(memoTheme))
                 .memoTextColor(memoTheme.getTextColor())

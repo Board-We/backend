@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.boardwe.boardwe.dto.WelcomeBoardResponseDto;
+import com.boardwe.boardwe.dto.res.WelcomeBoardResponseDto;
 import com.boardwe.boardwe.entity.Board;
 import com.boardwe.boardwe.entity.BoardTheme;
 import com.boardwe.boardwe.entity.ImageInfo;
@@ -40,7 +40,7 @@ public class WelcomeBoardServiceImpl implements WelcomeBoardService{
 
         return WelcomeBoardResponseDto.builder()
             .boardName(board.getName())
-            .boradDescription(board.getDescription())
+            .boardDescription(board.getDescription())
             .tags(getTagValues(board.getId()))
             .memoCnt(getMemoCnt(board.getId()))
             .boardViews(board.getViews())

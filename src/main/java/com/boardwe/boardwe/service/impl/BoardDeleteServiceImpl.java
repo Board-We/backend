@@ -1,6 +1,6 @@
 package com.boardwe.boardwe.service.impl;
 
-import com.boardwe.boardwe.dto.BoardDeleteRequestDto;
+import com.boardwe.boardwe.dto.req.BoardDeleteRequestDto;
 import com.boardwe.boardwe.entity.Board;
 import com.boardwe.boardwe.exception.custom.BoardNotFoundException;
 import com.boardwe.boardwe.repository.BoardRepository;

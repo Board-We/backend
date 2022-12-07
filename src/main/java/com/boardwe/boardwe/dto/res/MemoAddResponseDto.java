@@ -1,18 +1,14 @@
-package com.boardwe.boardwe.dto;
+package com.boardwe.boardwe.dto.res;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MemoAddResponseDto {
     private LocalDateTime openStartTime;
 }

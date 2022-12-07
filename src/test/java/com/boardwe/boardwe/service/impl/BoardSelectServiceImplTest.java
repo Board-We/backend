@@ -1,7 +1,7 @@
 package com.boardwe.boardwe.service.impl;
 
-import com.boardwe.boardwe.dto.BoardSelectResponseDto;
-import com.boardwe.boardwe.dto.MemoThemeSelectResponseDto;
+import com.boardwe.boardwe.dto.res.BoardSelectResponseDto;
+import com.boardwe.boardwe.dto.res.MemoThemeSelectResponseDto;
 import com.boardwe.boardwe.entity.*;
 import com.boardwe.boardwe.exception.custom.BoardBeforeOpenException;
 import com.boardwe.boardwe.exception.custom.BoardBeforeWritingException;
@@ -103,7 +103,7 @@ class BoardSelectServiceImplTest {
         assertEquals(BackgroundType.COLOR, responseDto.getTheme().getBoardBackgroundType());
         assertEquals(backgroundColor, responseDto.getTheme().getBoardBackground());
         assertEquals(font, responseDto.getTheme().getBoardFont());
-        assertMemoThemeResponseDtos(responseDto.getTheme().getMemoThemesWithId());
+        assertMemoThemeResponseDtos(responseDto.getTheme().getMemoThemes());
     }
 
     @Test
@@ -152,7 +152,7 @@ class BoardSelectServiceImplTest {
         assertEquals(BackgroundType.IMAGE, responseDto.getTheme().getBoardBackgroundType());
         assertEquals("/image/" + backgroundImageUuid, responseDto.getTheme().getBoardBackground());
         assertEquals(font, responseDto.getTheme().getBoardFont());
-        assertMemoThemeResponseDtos(responseDto.getTheme().getMemoThemesWithId());
+        assertMemoThemeResponseDtos(responseDto.getTheme().getMemoThemes());
     }
 
     @Test

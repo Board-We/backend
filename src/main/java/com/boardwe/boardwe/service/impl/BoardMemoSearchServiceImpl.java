@@ -1,9 +1,9 @@
 package com.boardwe.boardwe.service.impl;
 
-import com.boardwe.boardwe.dto.BoardMemoSearchResponseDto;
-import com.boardwe.boardwe.dto.inner.BoardThemeSearchResponseDto;
-import com.boardwe.boardwe.dto.inner.MemoSearchResponseDto;
-import com.boardwe.boardwe.dto.inner.MemoThemesWithIdResponseDto;
+import com.boardwe.boardwe.dto.res.inner.MemoSelectResponseDto;
+import com.boardwe.boardwe.dto.res.BoardMemoSearchResponseDto;
+import com.boardwe.boardwe.dto.res.BoardThemeSelectResponseDto;
+import com.boardwe.boardwe.dto.res.MemoThemeSelectResponseDto;
 import com.boardwe.boardwe.entity.*;
 import com.boardwe.boardwe.exception.custom.BoardNotFoundException;
 import com.boardwe.boardwe.repository.BoardRepository;
@@ -39,16 +39,16 @@ public class BoardMemoSearchServiceImpl implements BoardMemoSearchService {
         String boardBackgroundValue = (boardTheme.getBackgroundType() == BackgroundType.COLOR) ?
                 boardTheme.getBackgroundColor() : getBackgroundImageUrl(boardTheme.getBackgroundImageInfo());
 
-        BoardThemeSearchResponseDto boardThemeDto = BoardThemeSearchResponseDto.builder()
+        BoardThemeSelectResponseDto boardThemeDto = BoardThemeSelectResponseDto.builder()
                 .boardBackgroundType(boardTheme.getBackgroundType())
                 .boardBackground(boardBackgroundValue)
                 .boardFont(boardTheme.getFont())
-                .memoThemesWithId(getMemoThemeResponseDtos(boardTheme))
+                .memoThemes(getMemoThemeResponseDtos(boardTheme))
                 .build();
 
-        List<MemoSearchResponseDto> memoDtos = new ArrayList<>();
+        List<MemoSelectResponseDto> memoDtos = new ArrayList<>();
         for (Memo memo : memos) {
-            MemoSearchResponseDto memoDto = MemoSearchResponseDto.builder()
+            MemoSelectResponseDto memoDto = MemoSelectResponseDto.builder()
                     .memoThemeId(memo.getMemoTheme().getId())
                     .memoContent(memo.getContent())
                     .build();
@@ -61,13 +61,13 @@ public class BoardMemoSearchServiceImpl implements BoardMemoSearchService {
                 .build();
 
     }
-    private List<MemoThemesWithIdResponseDto> getMemoThemeResponseDtos(BoardTheme boardTheme) {
+    private List<MemoThemeSelectResponseDto> getMemoThemeResponseDtos(BoardTheme boardTheme) {
         List<MemoTheme> memoThemes = memoThemeRepository.findByBoardThemeId(boardTheme.getId());
-        List<MemoThemesWithIdResponseDto> memoThemeSelectResponseDtos = new ArrayList<>();
+        List<MemoThemeSelectResponseDto> memoThemeSelectResponseDtos = new ArrayList<>();
         for (MemoTheme memoTheme : memoThemes) {
             String memoBackgroundValue = (memoTheme.getBackgroundType() == BackgroundType.COLOR) ?
                     memoTheme.getBackgroundColor() : getBackgroundImageUrl(memoTheme.getBackgroundImageInfo());
-            memoThemeSelectResponseDtos.add(MemoThemesWithIdResponseDto.builder()
+            memoThemeSelectResponseDtos.add(MemoThemeSelectResponseDto.builder()
                     .memoThemeId(memoTheme.getId())
                     .memoBackgroundType(memoTheme.getBackgroundType())
                     .memoBackground(memoBackgroundValue)
