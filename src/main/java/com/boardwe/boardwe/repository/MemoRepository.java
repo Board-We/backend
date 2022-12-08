@@ -14,6 +14,7 @@ public interface MemoRepository extends JpaRepository<Memo,Long> {
 
     List<Memo> findByBoardAndContentContains(Board board,String query);
 
+    Optional<Memo> findByIdAndBoard(Long id, Board board);
 
     List<Memo> findByBoardId(Long boardId);
 }

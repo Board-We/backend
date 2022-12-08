@@ -3,16 +3,23 @@ package com.boardwe.boardwe.exception;
 public enum ErrorCode {
     // -------- 4xx --------
     REQUEST_ERROR(400,"잘못된 요청입니다."),
+
+    // Invalid Input
+    INVALID_INPUT_VALUE(400, "입력값이 유효하지 않습니다."),
+    INVALID_DATE_VALUE(400, "날짜 순서가 유효하지 않습니다."),
+
+    // Entity Not Found
     ENTITY_NOT_FOUND(400, "해당 리소스가 존재하지 않습니다."),
     BOARD_NOT_FOUND(400, "해당 보드가 존재하지 않습니다."),
     IMAGE_INFO_NOT_FOUND(400, "해당 이미지 정보가 존재하지 않습니다."),
 
-    // Unable to Enter Board
+    // About Board Status
     BOARD_BEFORE_WRITING(400, "롤링페이퍼 작성기간 이전입니다."),
     BOARD_BEFORE_OPEN(400, "롤링페이퍼의 작성기간이 마감되었습니다."),
     BOARD_CLOSED(400, "롤링페이퍼의 공개기간이 만료되었습니다."),
     BOARD_THEME_NOT_FOUND(400,"해당 보드 테마가 존재하지 않습니다."),
-
+    BOARD_CANNOT_WRITE(400, "롤링페이퍼 작성기간이 아닙니다."),
+    BOARD_NOT_OPENED(400, "롤링페이퍼 공개기간이 아닙니다."),
 
     // File
     IMAGE_NOT_FOUND(400, "이미지가 존재하지 않습니다."),

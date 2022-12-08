@@ -1,10 +1,10 @@
 package com.boardwe.boardwe.service.impl;
 
 import com.boardwe.boardwe.entity.ImageInfo;
-import com.boardwe.boardwe.exception.custom.ImageInfoNotFoundException;
-import com.boardwe.boardwe.exception.custom.ImageNotFoundException;
+import com.boardwe.boardwe.exception.custom.entity.ImageInfoNotFoundException;
+import com.boardwe.boardwe.exception.custom.other.ImageNotFoundException;
 import com.boardwe.boardwe.repository.ImageInfoRepository;
-import org.junit.jupiter.api.BeforeEach;
+import com.boardwe.boardwe.util.FileUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +23,8 @@ import static org.mockito.Mockito.*;
 class FileServiceImplTest {
 
     @Mock
+    private FileUtil fileUtil;
+    @Mock
     private ImageInfoRepository imageInfoRepository;
 
     @InjectMocks
@@ -30,15 +32,6 @@ class FileServiceImplTest {
 
     private final String ROOT_DIR = "./src/test/resources/files";
     private final String ORIGINAL_FILE_DIR = "existing";
-    private Path storedPath;
-
-    @BeforeEach
-    void before(){
-        storedPath = Path.of(ROOT_DIR);
-        fileService = new FileServiceImpl(
-                storedPath,
-                imageInfoRepository);
-    }
 
     @Test
     @DisplayName("Path 정보가 존재하는 이미지를 조회하는 데 성공한다.")
@@ -58,6 +51,10 @@ class FileServiceImplTest {
                         .path(ORIGINAL_FILE_DIR)
                         .savedName(savedName)
                         .build()));
+        when(fileUtil.getSavedPath(ORIGINAL_FILE_DIR, savedName))
+                .thenReturn(Path.of(ROOT_DIR)
+                        .resolve(ORIGINAL_FILE_DIR)
+                        .resolve(savedName));
 
         // when
         Resource result = fileService.loadImageAsResource(imageUuid);
@@ -84,6 +81,9 @@ class FileServiceImplTest {
                         .extension(extension)
                         .savedName(savedName)
                         .build()));
+        when(fileUtil.getSavedPath(null, savedName))
+                .thenReturn(Path.of(ROOT_DIR)
+                        .resolve(savedName));
 
         // when
         Resource result = fileService.loadImageAsResource(imageUuid);
@@ -122,6 +122,9 @@ class FileServiceImplTest {
                                 .extension(extension)
                                 .savedName(savedName)
                                 .build()));
+        when(fileUtil.getSavedPath(null, savedName))
+                .thenReturn(Path.of(ROOT_DIR)
+                        .resolve(savedName));
 
         // when & then
         assertThrows(ImageNotFoundException.class, () -> fileService.loadImageAsResource(imageUuid));
