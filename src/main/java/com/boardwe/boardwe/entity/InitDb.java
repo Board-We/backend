@@ -317,6 +317,11 @@ public class InitDb {
                     .build();
 
             em.persist(expiredBoard);
+            Tag christmasTagExpired = Tag.builder()
+                    .board(closedBoard)
+                    .value("크리스마스")
+                    .build();
+            em.persist(christmasTagExpired);
         }
     }
 }
