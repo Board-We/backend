@@ -301,6 +301,22 @@ public class InitDb {
             em.persist(chunsikMemo2);
             em.persist(chunsikMemo3);
             em.persist(chunsikMemo4);
+
+            Board expiredBoard = Board.builder()
+                    .boardTheme(christmasTheme)
+                    .name("기간 만료 테스트 보드")
+                    .description("기간 만료 테스트 보드")
+                    .code(UUID.randomUUID().toString())
+                    .writingStartTime(currentTime.minusDays(10))
+                    .writingEndTime(currentTime.minusDays(9))
+                    .openStartTime(currentTime.minusDays(8))
+                    .openEndTime(currentTime.minusDays(7))
+                    .openType(OpenType.PUBLIC)
+                    .password("1234")
+                    .views(0)
+                    .build();
+
+            em.persist(expiredBoard);
         }
     }
 }
