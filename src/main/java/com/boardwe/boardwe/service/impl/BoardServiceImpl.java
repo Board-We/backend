@@ -91,6 +91,8 @@ public class BoardServiceImpl implements BoardService {
 
         validateBoardStatus(boardStatus);
 
+        saveBoardWithIncreaseViews(board);
+
         return BoardReadResponseDto.builder()
                 .boardName(board.getName())
                 .boardDescription(board.getDescription())
@@ -243,5 +245,23 @@ public class BoardServiceImpl implements BoardService {
 
     private int getMemoCnt(Long boardId) {
         return memoRepository.findByBoardId(boardId).size();
+    }
+
+    private synchronized void saveBoardWithIncreaseViews(Board board){
+        boardRepository.saveAndFlush(Board.builder()
+                .id(board.getId())
+                .boardTheme(board.getBoardTheme())
+                .code(board.getCode())
+                .name(board.getName())
+                .description(board.getDescription())
+                .writingStartTime(board.getWritingStartTime())
+                .writingEndTime(board.getWritingEndTime())
+                .openStartTime(board.getOpenStartTime())
+                .openEndTime(board.getOpenEndTime())
+                .password(board.getPassword())
+                .openType(board.getOpenType())
+                .views((board.getViews().intValue() + 1))
+                .build()
+        );
     }
 }

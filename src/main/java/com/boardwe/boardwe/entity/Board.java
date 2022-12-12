@@ -68,7 +68,7 @@ public class Board {
     private Integer views;
 
     @Builder
-    public Board(BoardTheme boardTheme, String name, String description, String code, LocalDateTime writingStartTime, LocalDateTime writingEndTime, LocalDateTime openStartTime, LocalDateTime openEndTime, String password, OpenType openType, Integer views) {
+    public Board(Long id, BoardTheme boardTheme, String name, String description, String code, LocalDateTime writingStartTime, LocalDateTime writingEndTime, LocalDateTime openStartTime, LocalDateTime openEndTime, String password, OpenType openType, Integer views) {
         if (!(writingStartTime.isBefore(writingEndTime)
                 && writingEndTime.isBefore(openStartTime)
                 && openStartTime.isBefore(openEndTime)))
@@ -85,5 +85,6 @@ public class Board {
         this.password = password;
         this.openType = openType;
         this.views = views;
+        this.id = id;
     }
 }
