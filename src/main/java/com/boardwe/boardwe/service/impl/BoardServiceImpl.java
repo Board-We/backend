@@ -248,20 +248,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     private synchronized void saveBoardWithIncreaseViews(Board board){
-        boardRepository.saveAndFlush(Board.builder()
-                .id(board.getId())
-                .boardTheme(board.getBoardTheme())
-                .code(board.getCode())
-                .name(board.getName())
-                .description(board.getDescription())
-                .writingStartTime(board.getWritingStartTime())
-                .writingEndTime(board.getWritingEndTime())
-                .openStartTime(board.getOpenStartTime())
-                .openEndTime(board.getOpenEndTime())
-                .password(board.getPassword())
-                .openType(board.getOpenType())
-                .views((board.getViews().intValue() + 1))
-                .build()
-        );
+        board.increaseViews();
+        boardRepository.saveAndFlush(board);
     }
 }

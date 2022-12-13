@@ -9,12 +9,16 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "BOARD")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicUpdate
 public class Board {
 
     @Id
@@ -68,7 +72,7 @@ public class Board {
     private Integer views;
 
     @Builder
-    public Board(Long id, BoardTheme boardTheme, String name, String description, String code, LocalDateTime writingStartTime, LocalDateTime writingEndTime, LocalDateTime openStartTime, LocalDateTime openEndTime, String password, OpenType openType, Integer views) {
+    public Board(BoardTheme boardTheme, String name, String description, String code, LocalDateTime writingStartTime, LocalDateTime writingEndTime, LocalDateTime openStartTime, LocalDateTime openEndTime, String password, OpenType openType, Integer views) {
         if (!(writingStartTime.isBefore(writingEndTime)
                 && writingEndTime.isBefore(openStartTime)
                 && openStartTime.isBefore(openEndTime)))
@@ -85,6 +89,9 @@ public class Board {
         this.password = password;
         this.openType = openType;
         this.views = views;
-        this.id = id;
+    }
+
+    public void increaseViews(){
+        views = views.intValue() + 1;
     }
 }
