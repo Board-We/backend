@@ -36,7 +36,9 @@ public class BoardSearchServiceImpl implements BoardSearchService {
                 .toList();
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), searchResults.size());
-        return new PageImpl<>(searchResults.subList(start, end), pageable, searchResults.size());
+        return (searchResults.size() > 0) ?
+            new PageImpl<>(searchResults.subList(start, end), pageable, searchResults.size()) :
+            new PageImpl<>(searchResults, pageable, searchResults.size());
     }
 
     @Override

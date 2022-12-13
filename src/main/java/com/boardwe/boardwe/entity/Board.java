@@ -9,12 +9,16 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.DynamicUpdate;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "BOARD")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicUpdate
 public class Board {
 
     @Id
@@ -85,5 +89,9 @@ public class Board {
         this.password = password;
         this.openType = openType;
         this.views = views;
+    }
+
+    public void increaseViews(){
+        views = views.intValue() + 1;
     }
 }

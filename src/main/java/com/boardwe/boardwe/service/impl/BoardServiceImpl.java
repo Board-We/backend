@@ -91,6 +91,8 @@ public class BoardServiceImpl implements BoardService {
 
         validateBoardStatus(boardStatus);
 
+        saveBoardWithIncreaseViews(board);
+
         return BoardReadResponseDto.builder()
                 .boardName(board.getName())
                 .boardDescription(board.getDescription())
@@ -243,5 +245,10 @@ public class BoardServiceImpl implements BoardService {
 
     private int getMemoCnt(Long boardId) {
         return memoRepository.findByBoardId(boardId).size();
+    }
+
+    private synchronized void saveBoardWithIncreaseViews(Board board){
+        board.increaseViews();
+        boardRepository.saveAndFlush(board);
     }
 }
