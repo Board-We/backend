@@ -19,6 +19,7 @@ import com.boardwe.boardwe.repository.*;
 import com.boardwe.boardwe.service.BoardService;
 import com.boardwe.boardwe.type.BackgroundType;
 import com.boardwe.boardwe.type.BoardStatus;
+import com.boardwe.boardwe.type.OpenType;
 import com.boardwe.boardwe.util.BoardInfoUtil;
 import com.boardwe.boardwe.util.FileUtil;
 import com.boardwe.boardwe.util.ThemeUtil;
@@ -79,31 +80,41 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional
     public BoardReadResponseDto readBoard(String boardCode) {
         Board board = boardRepository.findByCode(boardCode)
                 .orElseThrow(BoardNotFoundException::new);
 
+        BoardTheme boardTheme = board.getBoardTheme();
         BoardStatus boardStatus = BoardStatus.calculateBoardStatus(
                 board.getWritingStartTime(),
                 board.getWritingEndTime(),
                 board.getOpenStartTime(),
                 board.getOpenEndTime());
 
-        validateBoardStatus(boardStatus);
+        List<String> tagValues = tagRepository.findAllByBoardId(board.getId())
+                .stream()
+                .map(Tag::getValue)
+                .toList();
+
+        OpenType boardOpenType = board.getOpenType();
 
         saveBoardWithIncreaseViews(board);
 
         return BoardReadResponseDto.builder()
                 .boardName(board.getName())
                 .boardDescription(board.getDescription())
+                .boardTags(tagValues)
                 .writingStartTime(board.getWritingStartTime())
                 .writingEndTime(board.getWritingEndTime())
                 .openStartTime(board.getOpenStartTime())
                 .openEndTime(board.getOpenEndTime())
-                .openType(board.getOpenType())
+                .openType(boardOpenType)
                 .boardStatus(boardStatus)
-                .theme(themeUtil.getBoardThemeSelectResponseDto(board.getBoardTheme()))
-                .memos(boardStatus == BoardStatus.OPEN ? getMemoResponseDtos(board) : null)
+                .boardFont(boardTheme.getFont())
+                .boardViews(board.getViews())
+                .boardBackgroundType(boardOpenType == OpenType.PUBLIC? boardTheme.getBackgroundType() : null)
+                .boardBackground(boardOpenType == OpenType.PUBLIC? themeUtil.getBackgroundValue(boardTheme) : null)
                 .build();
     }
 
@@ -117,38 +128,6 @@ public class BoardServiceImpl implements BoardService {
             tagRepository.deleteByBoard(board);
             boardRepository.delete(board);
         }
-    }
-
-    @Override
-    public WelcomeBoardResponseDto getBoardWelcomePage(String boardCode) {
-        Board board = boardRepository.findByCode(boardCode)
-                .orElseThrow(BoardNotFoundException::new);
-        BoardStatus boardStatus = BoardStatus.calculateBoardStatus(
-                board.getWritingStartTime(),
-                board.getWritingEndTime(),
-                board.getOpenStartTime(),
-                board.getOpenEndTime());
-        BoardTheme boardTheme = board.getBoardTheme();
-        List<String> tagValues = tagRepository.findAllByBoardId(board.getId())
-                .stream()
-                .map(Tag::getValue)
-                .toList();
-
-        return WelcomeBoardResponseDto.builder()
-                .boardName(board.getName())
-                .boardDescription(board.getDescription())
-                .tags(tagValues)
-                .memoCnt(getMemoCnt(board.getId()))
-                .boardViews(board.getViews())
-                .writingStartTime(board.getWritingStartTime())
-                .writingEndTime(board.getWritingEndTime())
-                .openStartTime(board.getOpenStartTime())
-                .openEndTime(board.getOpenEndTime())
-                .boardStatus(boardStatus)
-                .boardBackgroundType(boardTheme.getBackgroundType())
-                .boardBackground(themeUtil.getBackgroundValue(boardTheme))
-                .boardFont(boardTheme.getFont())
-                .build();
     }
 
     private BoardTheme getBoardTheme(BoardCreateRequestDto requestDto) {
@@ -197,16 +176,6 @@ public class BoardServiceImpl implements BoardService {
                 .extension(imageInfoVo.getExtension())
                 .path(imageInfoVo.getPath())
                 .build());
-    }
-
-    private static void validateBoardStatus(BoardStatus boardStatus) {
-        if (boardStatus == BoardStatus.BEFORE_WRITING) {
-            throw new BoardBeforeWritingException();
-        } else if (boardStatus == BoardStatus.BEFORE_OPEN) {
-            throw new BoardBeforeOpenException();
-        } else if (boardStatus == BoardStatus.CLOSED) {
-            throw new BoardClosedException();
-        }
     }
 
     private void saveMemoThemesWithImage(BoardTheme boardTheme, List<MemoImageAndTextColorRequestDto> memoThemeDtos) {
