@@ -6,8 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.io.File;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -15,11 +18,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class InitDb {
     private final InitService initService;
+    private final Path rootDir;
 
     @PostConstruct
     public void init() {
         initService.dbInit1();
     }
+
+    @PreDestroy
+    public void destroy() {initService.fileDelete(rootDir.resolve("images").toFile());}
 
     @Component
     @Transactional
@@ -322,6 +329,21 @@ public class InitDb {
                     .value("크리스마스")
                     .build();
             em.persist(christmasTagExpired);
+        }
+
+        public void fileDelete(File fileDir) {
+            if (!fileDir.exists()) {
+                return;
+            }
+            File[] files = fileDir.listFiles();
+            assert files != null;
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    fileDelete(file);
+                }
+                file.delete();
+            }
+            fileDir.delete();
         }
     }
 }
