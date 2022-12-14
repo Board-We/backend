@@ -96,9 +96,16 @@ public class InitDb {
                     .backgroundColor("#FFFFE0")
                     .textColor("#000000")
                     .build();
+            MemoTheme basicMemoTheme2 = MemoTheme.builder()
+                    .boardTheme(userTheme2)
+                    .backgroundType(BackgroundType.COLOR)
+                    .backgroundColor("#FFFFE0")
+                    .textColor("#000000")
+                    .build();
             em.persist(christmasMemoTheme1);
             em.persist(christmasMemoTheme2);
             em.persist(basicMemoTheme1);
+            em.persist(basicMemoTheme2);
 
             LocalDateTime currentTime = LocalDateTime.now();
             Board beforeWritingBoard = Board.builder()
@@ -278,22 +285,22 @@ public class InitDb {
                     .build();
             Memo chunsikMemo1 = Memo.builder()
                     .board(publicBoard1)
-                    .memoTheme(basicMemoTheme1)
+                    .memoTheme(basicMemoTheme2)
                     .content("춘식이랑 라이언이랑 평생가자!")
                     .build();
             Memo chunsikMemo2 = Memo.builder()
                     .board(publicBoard1)
-                    .memoTheme(basicMemoTheme1)
+                    .memoTheme(basicMemoTheme2)
                     .content("춘식이 몰랑몰랑 기여워ㅠㅠ")
                     .build();
             Memo chunsikMemo3 = Memo.builder()
                     .board(publicBoard1)
-                    .memoTheme(basicMemoTheme1)
+                    .memoTheme(basicMemoTheme2)
                     .content("춘식이 인형 갖고싶당")
                     .build();
             Memo chunsikMemo4 = Memo.builder()
                     .board(publicBoard1)
-                    .memoTheme(basicMemoTheme1)
+                    .memoTheme(basicMemoTheme2)
                     .content("나는 어피치가 더 좋음ㅡㅡ")
                     .build();
             em.persist(christmasMemo1);

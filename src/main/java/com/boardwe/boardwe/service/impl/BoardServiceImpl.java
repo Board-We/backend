@@ -136,6 +136,10 @@ public class BoardServiceImpl implements BoardService {
                 throw new InvalidMemoThemeListException();
             }
 
+            if (memoThemeLen == 0) {
+                setBasicMemoTheme(boardTheme);
+            }
+
             for (int idx = 0; idx < memoThemeLen; idx++) {
                 String bgValue = memoThemes.getBackgrounds().get(idx);
                 String textColor = memoThemes.getTextColors().get(idx);
@@ -180,6 +184,10 @@ public class BoardServiceImpl implements BoardService {
                 .extension(imageInfoVo.getExtension())
                 .path(imageInfoVo.getPath())
                 .build());
+    }
+
+    private void setBasicMemoTheme(BoardTheme boardTheme) {
+        saveMemoThemeWithColor(boardTheme, "#FFFFE0", "#000000");
     }
 
     private void saveMemoThemeWithImage(BoardTheme boardTheme, String bgBase64, String textColor) {
