@@ -16,6 +16,7 @@ public enum ErrorCode {
 
     // About Board Status
     BOARD_BEFORE_WRITING(400, "롤링페이퍼 작성기간 이전입니다."),
+    BOARD_WRITING(400,"롤링페이퍼 작성기간입니다."),
     BOARD_BEFORE_OPEN(400, "롤링페이퍼의 작성기간이 마감되었습니다."),
     BOARD_CLOSED(400, "롤링페이퍼의 공개기간이 만료되었습니다."),
     BOARD_THEME_NOT_FOUND(400,"해당 보드 테마가 존재하지 않습니다."),
