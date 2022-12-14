@@ -2,6 +2,7 @@ package com.boardwe.boardwe.service.impl;
 
 import com.boardwe.boardwe.dto.res.BoardSearchResponseDto;
 import com.boardwe.boardwe.entity.Board;
+import com.boardwe.boardwe.entity.BoardTheme;
 import com.boardwe.boardwe.entity.Tag;
 import com.boardwe.boardwe.repository.BoardRepository;
 import com.boardwe.boardwe.repository.TagRepository;
@@ -62,12 +63,16 @@ public class BoardSearchServiceImpl implements BoardSearchService {
                 .stream()
                 .map(Tag::getValue)
                 .toList();
+        BoardTheme boardTheme = board.getBoardTheme();
         return BoardSearchResponseDto.builder()
                 .boardName(board.getName())
                 .boardLink(boardInfoUtil.getBoardLink(board.getCode()))
                 .boardViews(board.getViews())
                 .boardTags(tagValues)
-                .theme(themeUtil.getBoardThemeSelectResponseDto(board.getBoardTheme()))
+                .boardFont(boardTheme.getFont())
+                .boardBackgroundType(boardTheme.getBackgroundType())
+                .boardBackground(themeUtil.getBackgroundValue(boardTheme))
+                .memoThemes(themeUtil.getMemoThemeSelectResponseDtos(boardTheme))
                 .build();
     }
 }

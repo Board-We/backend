@@ -1,13 +1,10 @@
 package com.boardwe.boardwe.dto.res;
 
-import com.boardwe.boardwe.dto.res.inner.MemoSelectResponseDto;
-import com.boardwe.boardwe.type.BoardStatus;
-import com.boardwe.boardwe.type.OpenType;
+import com.boardwe.boardwe.type.BackgroundType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -18,6 +15,8 @@ public class BoardSearchResponseDto {
     private String boardName;
     private List<String> boardTags;
     private Integer boardViews;
-    private BoardThemeSelectResponseDto theme;
-    private List<MemoSelectResponseDto> memos;
+    private BackgroundType boardBackgroundType;
+    private String boardBackground;
+    private String boardFont;
+    private List<MemoThemeSelectResponseDto> memoThemes;
 }
