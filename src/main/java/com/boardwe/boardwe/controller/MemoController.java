@@ -3,6 +3,7 @@ package com.boardwe.boardwe.controller;
 import com.boardwe.boardwe.dto.req.MemoCreateRequestDto;
 import com.boardwe.boardwe.dto.req.MemoDeleteRequestDto;
 import com.boardwe.boardwe.dto.res.MemoCreateResponseDto;
+import com.boardwe.boardwe.dto.res.MemoResponseDto;
 import com.boardwe.boardwe.dto.res.MemoSearchResponseDto;
 import com.boardwe.boardwe.service.MemoService;
 import lombok.RequiredArgsConstructor;
@@ -31,5 +32,10 @@ public class MemoController {
     public ResponseEntity<MemoSearchResponseDto> searchMemo(@PathVariable String boardCode,
                                                             @RequestParam String query){
         return ResponseEntity.ok(memoService.searchMemo(boardCode,query));
+    }
+
+    @GetMapping("/board/{boardCode}/memos")
+    public ResponseEntity<MemoResponseDto> getMemos(@PathVariable String boardCode, @RequestParam String password){
+        return ResponseEntity.ok(memoService.getMemo(boardCode,password));
     }
 }
