@@ -10,6 +10,6 @@ public class BoardInfoUtilImpl implements BoardInfoUtil {
 
     @Override
     public String getBoardLink(String boardCode) {
-        return String.format("/board/%s/welcome", boardCode);
+        return String.format("/board/%s", boardCode);
     }
 }
