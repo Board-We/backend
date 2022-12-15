@@ -9,6 +9,7 @@ import com.boardwe.boardwe.entity.*;
 import com.boardwe.boardwe.exception.custom.entity.BoardNotFoundException;
 import com.boardwe.boardwe.exception.custom.entity.BoardThemeNotFoundException;
 import com.boardwe.boardwe.exception.custom.other.InvalidMemoThemeListException;
+import com.boardwe.boardwe.exception.custom.other.InvalidPasswordException;
 import com.boardwe.boardwe.repository.*;
 import com.boardwe.boardwe.service.BoardService;
 import com.boardwe.boardwe.type.BackgroundType;
@@ -121,6 +122,8 @@ public class BoardServiceImpl implements BoardService {
             memoRepository.deleteByBoard(board);
             tagRepository.deleteByBoard(board);
             boardRepository.delete(board);
+        } else {
+            throw new InvalidPasswordException();
         }
     }
 

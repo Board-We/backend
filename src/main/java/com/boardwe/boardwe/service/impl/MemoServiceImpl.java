@@ -141,6 +141,7 @@ public class MemoServiceImpl implements MemoService {
         return memoRepository.findByBoardId(board.getId())
                 .stream()
                 .map(memo -> MemoSelectResponseDto.builder()
+                        .memoId(memo.getId())
                         .memoThemeId(memo.getMemoTheme().getId())
                         .memoContent(memo.getContent())
                         .build())
