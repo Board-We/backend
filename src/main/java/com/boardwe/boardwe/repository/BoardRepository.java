@@ -20,6 +20,6 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
     @Query(value = "select * from Board where Board.board_open_type='PUBLIC' and Board.board_open_end_time > now() order by RAND() limit 10 ", nativeQuery = true)
     List<Board> find10OpenBoardsOderByRandom();
 
-    @Query("select b from Board b, Tag t where t.value=?1 and t.board.id=b.id and b.openEndTime > now()")
+    @Query("select b from Board b, Tag t where t.value=?1 and t.board.id=b.id and b.openType='PUBLIC' and b.openEndTime > now()")
     List<Board> findAllByTagValue(String query, Pageable pageable);
 }
