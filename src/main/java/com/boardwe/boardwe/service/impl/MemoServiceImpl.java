@@ -4,9 +4,8 @@ import com.boardwe.boardwe.dto.req.MemoCreateRequestDto;
 import com.boardwe.boardwe.dto.req.MemoDeleteRequestDto;
 import com.boardwe.boardwe.dto.res.BoardThemeSelectResponseDto;
 import com.boardwe.boardwe.dto.res.MemoCreateResponseDto;
-import com.boardwe.boardwe.dto.res.MemoResponseDto;
 import com.boardwe.boardwe.dto.res.MemoSearchResponseDto;
-import com.boardwe.boardwe.dto.res.inner.MemoSelectResponseDto;
+import com.boardwe.boardwe.dto.res.MemoSelectResponseDto;
 import com.boardwe.boardwe.entity.Board;
 import com.boardwe.boardwe.entity.BoardTheme;
 import com.boardwe.boardwe.entity.Memo;
@@ -20,6 +19,7 @@ import com.boardwe.boardwe.repository.MemoRepository;
 import com.boardwe.boardwe.repository.MemoThemeRepository;
 import com.boardwe.boardwe.service.MemoService;
 import com.boardwe.boardwe.type.BoardStatus;
+import com.boardwe.boardwe.type.OpenType;
 import com.boardwe.boardwe.util.ThemeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -116,10 +116,11 @@ public class MemoServiceImpl implements MemoService {
     }
 
     @Override
-    public MemoResponseDto getMemo(String boardCode, String password) {
-        Board board = boardRepository.findByCode(boardCode).orElseThrow(BoardNotFoundException::new);
+    public List<MemoSelectResponseDto> getMemo(String boardCode, String password) {
+        Board board = boardRepository.findByCode(boardCode)
+        .orElseThrow(BoardNotFoundException::new);
 
-        if (!Objects.equals(board.getPassword(), password)){
+        if (board.getOpenType() == OpenType.PRIVATE && !Objects.equals(board.getPassword(), password)){
             throw new InvalidPasswordException();
         }
 
@@ -137,15 +138,12 @@ public class MemoServiceImpl implements MemoService {
             throw new BoardClosedException();
         }
 
-        List<MemoSelectResponseDto> memoDtos = memoRepository.findByBoardId(board.getId())
+        return memoRepository.findByBoardId(board.getId())
                 .stream()
                 .map(memo -> MemoSelectResponseDto.builder()
                         .memoThemeId(memo.getMemoTheme().getId())
                         .memoContent(memo.getContent())
                         .build())
                 .toList();
-
-        return MemoResponseDto.builder().memos(memoDtos).build();
-
     }
 }

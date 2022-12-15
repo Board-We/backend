@@ -3,10 +3,13 @@ package com.boardwe.boardwe.controller;
 import com.boardwe.boardwe.dto.req.MemoCreateRequestDto;
 import com.boardwe.boardwe.dto.req.MemoDeleteRequestDto;
 import com.boardwe.boardwe.dto.res.MemoCreateResponseDto;
-import com.boardwe.boardwe.dto.res.MemoResponseDto;
 import com.boardwe.boardwe.dto.res.MemoSearchResponseDto;
+import com.boardwe.boardwe.dto.res.MemoSelectResponseDto;
 import com.boardwe.boardwe.service.MemoService;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +38,7 @@ public class MemoController {
     }
 
     @GetMapping("/board/{boardCode}/memos")
-    public ResponseEntity<MemoResponseDto> getMemos(@PathVariable String boardCode, @RequestParam String password){
+    public ResponseEntity<List<MemoSelectResponseDto>> getMemos(@PathVariable String boardCode, @RequestParam(required = false) String password){
         return ResponseEntity.ok(memoService.getMemo(boardCode,password));
     }
 }
