@@ -5,7 +5,7 @@ import com.boardwe.boardwe.dto.req.MemoDeleteRequestDto;
 import com.boardwe.boardwe.dto.res.BoardThemeSelectResponseDto;
 import com.boardwe.boardwe.dto.res.MemoCreateResponseDto;
 import com.boardwe.boardwe.dto.res.MemoSearchResponseDto;
-import com.boardwe.boardwe.dto.res.inner.MemoSelectResponseDto;
+import com.boardwe.boardwe.dto.res.MemoSelectResponseDto;
 import com.boardwe.boardwe.entity.Board;
 import com.boardwe.boardwe.entity.BoardTheme;
 import com.boardwe.boardwe.entity.Memo;
@@ -13,19 +13,21 @@ import com.boardwe.boardwe.entity.MemoTheme;
 import com.boardwe.boardwe.exception.custom.entity.BoardNotFoundException;
 import com.boardwe.boardwe.exception.custom.entity.MemoNotFoundException;
 import com.boardwe.boardwe.exception.custom.entity.MemoThemeNotFoundException;
-import com.boardwe.boardwe.exception.custom.other.BoardCannotWriteException;
-import com.boardwe.boardwe.exception.custom.other.BoardNotOpenedException;
+import com.boardwe.boardwe.exception.custom.other.*;
 import com.boardwe.boardwe.repository.BoardRepository;
 import com.boardwe.boardwe.repository.MemoRepository;
 import com.boardwe.boardwe.repository.MemoThemeRepository;
 import com.boardwe.boardwe.service.MemoService;
 import com.boardwe.boardwe.type.BoardStatus;
+import com.boardwe.boardwe.type.OpenType;
 import com.boardwe.boardwe.util.ThemeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -111,5 +113,37 @@ public class MemoServiceImpl implements MemoService {
         if (boardStatus != BoardStatus.OPEN) {
             throw new BoardNotOpenedException();
         }
+    }
+
+    @Override
+    public List<MemoSelectResponseDto> getMemo(String boardCode, String password) {
+        Board board = boardRepository.findByCode(boardCode)
+        .orElseThrow(BoardNotFoundException::new);
+
+        if (board.getOpenType() == OpenType.PRIVATE && !Objects.equals(board.getPassword(), password)){
+            throw new InvalidPasswordException();
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        if(now.isBefore(board.getWritingStartTime())){
+            throw new BoardBeforeWritingException();
+        }
+        else if(now.isBefore(board.getWritingEndTime())){
+            throw new BoardWritingException();
+        }
+        else if(now.isBefore(board.getOpenStartTime())){
+            throw new BoardBeforeOpenException();
+        }
+        else if(now.isAfter(board.getOpenEndTime())) {
+            throw new BoardClosedException();
+        }
+
+        return memoRepository.findByBoardId(board.getId())
+                .stream()
+                .map(memo -> MemoSelectResponseDto.builder()
+                        .memoThemeId(memo.getMemoTheme().getId())
+                        .memoContent(memo.getContent())
+                        .build())
+                .toList();
     }
 }

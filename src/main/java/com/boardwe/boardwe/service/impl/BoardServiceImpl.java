@@ -5,7 +5,6 @@ import com.boardwe.boardwe.dto.req.BoardDeleteRequestDto;
 import com.boardwe.boardwe.dto.req.inner.MemoThemesCreateRequestDto;
 import com.boardwe.boardwe.dto.res.BoardCreateResponseDto;
 import com.boardwe.boardwe.dto.res.BoardReadResponseDto;
-import com.boardwe.boardwe.dto.res.inner.MemoSelectResponseDto;
 import com.boardwe.boardwe.entity.*;
 import com.boardwe.boardwe.exception.custom.entity.BoardNotFoundException;
 import com.boardwe.boardwe.exception.custom.entity.BoardThemeNotFoundException;
@@ -207,16 +206,6 @@ public class BoardServiceImpl implements BoardService {
                 .backgroundColor(bgColor)
                 .textColor(textColor)
                 .build());
-    }
-
-    private List<MemoSelectResponseDto> getMemoResponseDtos(Board board) {
-        return memoRepository.findByBoardId(board.getId())
-                .stream()
-                .map(memo -> MemoSelectResponseDto.builder()
-                        .memoThemeId(memo.getMemoTheme().getId())
-                        .memoContent(memo.getContent())
-                        .build())
-                .toList();
     }
 
     private int getMemoCnt(Long boardId) {

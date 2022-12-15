@@ -7,6 +7,7 @@ public enum ErrorCode {
     // Invalid Input
     INVALID_INPUT_VALUE(400, "입력값이 유효하지 않습니다."),
     INVALID_DATE_VALUE(400, "날짜 순서가 유효하지 않습니다."),
+    INVALID_PASSWORD(400,"틀린 비밀번호 입니다."),
     INVALID_MEMO_THEME_LIST(400, "메모리 리스트가 올바르지 않습니다."),
 
     // Entity Not Found
@@ -16,6 +17,7 @@ public enum ErrorCode {
 
     // About Board Status
     BOARD_BEFORE_WRITING(400, "롤링페이퍼 작성기간 이전입니다."),
+    BOARD_WRITING(400,"롤링페이퍼 작성기간입니다."),
     BOARD_BEFORE_OPEN(400, "롤링페이퍼의 작성기간이 마감되었습니다."),
     BOARD_CLOSED(400, "롤링페이퍼의 공개기간이 만료되었습니다."),
     BOARD_THEME_NOT_FOUND(400,"해당 보드 테마가 존재하지 않습니다."),

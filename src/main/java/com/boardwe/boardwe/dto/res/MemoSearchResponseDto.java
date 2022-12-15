@@ -1,6 +1,5 @@
 package com.boardwe.boardwe.dto.res;
 
-import com.boardwe.boardwe.dto.res.inner.MemoSelectResponseDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
