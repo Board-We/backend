@@ -1,6 +1,6 @@
 package com.boardwe.boardwe.dto.req;
 
-import com.boardwe.boardwe.dto.req.inner.BoardThemeCreateRequestDto;
+import com.boardwe.boardwe.dto.req.inner.MemoThemesCreateRequestDto;
 import com.boardwe.boardwe.type.OpenType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,5 +23,7 @@ public class BoardCreateRequestDto {
     private String password;
     private OpenType openType;
     private Long boardThemeId;
-    private BoardThemeCreateRequestDto theme;
+    private String boardBackground;
+    private String boardFont;
+    private MemoThemesCreateRequestDto memoThemes;
 }

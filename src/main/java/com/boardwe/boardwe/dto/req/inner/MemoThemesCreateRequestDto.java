@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemoImageAndTextColorRequestDto {
-    private String memoBackgroundImage;
-    private String memoBackgroundImageName;
-    private String memoTextColor;
+public class MemoThemesCreateRequestDto {
+    private List<String> backgrounds;
+    private List<String> textColors;
 }

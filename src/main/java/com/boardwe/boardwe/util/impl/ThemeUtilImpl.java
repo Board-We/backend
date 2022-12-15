@@ -22,7 +22,7 @@ public class ThemeUtilImpl implements ThemeUtil {
 
     private final ThemeCategoryRepository categoryRepository;
     private final MemoThemeRepository memoThemeRepository;
-
+    private final String cdnUrl;
     private final String USER_THEME_NAME = "TEMP";
 
     @Override
@@ -74,13 +74,13 @@ public class ThemeUtilImpl implements ThemeUtil {
     public String getBackgroundValue(BoardTheme boardTheme) {
         return boardTheme.getBackgroundType() == BackgroundType.COLOR?
                 boardTheme.getBackgroundColor()
-                : String.format("/image/%s", boardTheme.getBackgroundImageInfo().getUuid());
+                : String.format("%s/image/%s", cdnUrl, boardTheme.getBackgroundImageInfo().getUuid());
     }
 
     @Override
     public String getBackgroundValue(MemoTheme memoTheme) {
         return memoTheme.getBackgroundType() == BackgroundType.COLOR?
                 memoTheme.getBackgroundColor()
-                : String.format("/image/%s", memoTheme.getBackgroundImageInfo().getUuid());
+                : String.format("%s/image/%s", cdnUrl, memoTheme.getBackgroundImageInfo().getUuid());
     }
 }

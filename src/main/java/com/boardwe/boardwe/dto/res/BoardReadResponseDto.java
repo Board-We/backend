@@ -1,5 +1,6 @@
 package com.boardwe.boardwe.dto.res;
 
+import com.boardwe.boardwe.type.BackgroundType;
 import com.boardwe.boardwe.type.BoardStatus;
 import com.boardwe.boardwe.type.OpenType;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -22,8 +23,8 @@ public class BoardReadResponseDto {
     private LocalDateTime openEndTime;
     private OpenType openType;
     private BoardStatus boardStatus;
-    private String boardLink;
+    private String boardFont;
     private Integer boardViews;
-    private BoardThemeSelectResponseDto theme;
-    private List<MemoSelectResponseDto> memos;
+    private BackgroundType boardBackgroundType;
+    private String boardBackground;
 }

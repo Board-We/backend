@@ -4,6 +4,7 @@ import com.boardwe.boardwe.dto.req.BoardCreateRequestDto;
 import com.boardwe.boardwe.dto.req.BoardDeleteRequestDto;
 import com.boardwe.boardwe.dto.res.BoardCreateResponseDto;
 import com.boardwe.boardwe.dto.res.BoardReadResponseDto;
+import com.boardwe.boardwe.dto.res.BoardSearchResponseDto;
 import com.boardwe.boardwe.dto.res.WelcomeBoardResponseDto;
 import com.boardwe.boardwe.service.BoardSearchService;
 import com.boardwe.boardwe.service.BoardService;
@@ -40,24 +41,19 @@ public class BoardController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/board/{boardCode}/welcome")
-    public ResponseEntity<WelcomeBoardResponseDto> getWelcomeBoard(@PathVariable String boardCode){
-        return ResponseEntity.ok(boardService.getBoardWelcomePage(boardCode));
-    }
-
     @GetMapping("/board/search")
-    public ResponseEntity<Page<BoardReadResponseDto>> searchBoardsByTagValue(@RequestParam String query, @RequestParam int page, @RequestParam int size){
+    public ResponseEntity<Page<BoardSearchResponseDto>> searchBoardsByTagValue(@RequestParam String query, @RequestParam int page, @RequestParam int size){
         Pageable pageable = PageRequest.of(page, size);
         return ResponseEntity.ok(boardSearchService.searchBoardByTagWithPaging(query, pageable));
     }
 
     @GetMapping("/boards/hot")
-    public ResponseEntity<List<BoardReadResponseDto>> getHotBoards(){
+    public ResponseEntity<List<BoardSearchResponseDto>> getHotBoards(){
         return ResponseEntity.ok(boardSearchService.selectHotBoards());
     }
 
     @GetMapping("/boards/recommend")
-    public ResponseEntity<List<BoardReadResponseDto>> getRecommendBoards(){
+    public ResponseEntity<List<BoardSearchResponseDto>> getRecommendBoards(){
         return ResponseEntity.ok(boardSearchService.selectRecommendBoards());
     }
 }
