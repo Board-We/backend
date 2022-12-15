@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class MemoSelectResponseDto {
+    private Long memoId;
     private Long memoThemeId;
     private String memoContent;
 }
