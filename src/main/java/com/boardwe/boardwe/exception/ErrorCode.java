@@ -7,6 +7,7 @@ public enum ErrorCode {
     // Invalid Input
     INVALID_INPUT_VALUE(400, "입력값이 유효하지 않습니다."),
     INVALID_DATE_VALUE(400, "날짜 순서가 유효하지 않습니다."),
+    INVALID_MEMO_THEME_LIST(400, "메모리 리스트가 올바르지 않습니다."),
 
     // Entity Not Found
     ENTITY_NOT_FOUND(400, "해당 리소스가 존재하지 않습니다."),

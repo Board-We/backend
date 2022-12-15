@@ -6,8 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.io.File;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -15,11 +18,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class InitDb {
     private final InitService initService;
+    private final Path rootDir;
 
     @PostConstruct
     public void init() {
         initService.dbInit1();
     }
+
+    @PreDestroy
+    public void destroy() {initService.fileDelete(rootDir.resolve("images").toFile());}
 
     @Component
     @Transactional
@@ -89,9 +96,16 @@ public class InitDb {
                     .backgroundColor("#FFFFE0")
                     .textColor("#000000")
                     .build();
+            MemoTheme basicMemoTheme2 = MemoTheme.builder()
+                    .boardTheme(userTheme2)
+                    .backgroundType(BackgroundType.COLOR)
+                    .backgroundColor("#FFFFE0")
+                    .textColor("#000000")
+                    .build();
             em.persist(christmasMemoTheme1);
             em.persist(christmasMemoTheme2);
             em.persist(basicMemoTheme1);
+            em.persist(basicMemoTheme2);
 
             LocalDateTime currentTime = LocalDateTime.now();
             Board beforeWritingBoard = Board.builder()
@@ -271,22 +285,22 @@ public class InitDb {
                     .build();
             Memo chunsikMemo1 = Memo.builder()
                     .board(publicBoard1)
-                    .memoTheme(basicMemoTheme1)
+                    .memoTheme(basicMemoTheme2)
                     .content("춘식이랑 라이언이랑 평생가자!")
                     .build();
             Memo chunsikMemo2 = Memo.builder()
                     .board(publicBoard1)
-                    .memoTheme(basicMemoTheme1)
+                    .memoTheme(basicMemoTheme2)
                     .content("춘식이 몰랑몰랑 기여워ㅠㅠ")
                     .build();
             Memo chunsikMemo3 = Memo.builder()
                     .board(publicBoard1)
-                    .memoTheme(basicMemoTheme1)
+                    .memoTheme(basicMemoTheme2)
                     .content("춘식이 인형 갖고싶당")
                     .build();
             Memo chunsikMemo4 = Memo.builder()
                     .board(publicBoard1)
-                    .memoTheme(basicMemoTheme1)
+                    .memoTheme(basicMemoTheme2)
                     .content("나는 어피치가 더 좋음ㅡㅡ")
                     .build();
             em.persist(christmasMemo1);
@@ -322,6 +336,21 @@ public class InitDb {
                     .value("크리스마스")
                     .build();
             em.persist(christmasTagExpired);
+        }
+
+        public void fileDelete(File fileDir) {
+            if (!fileDir.exists()) {
+                return;
+            }
+            File[] files = fileDir.listFiles();
+            assert files != null;
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    fileDelete(file);
+                }
+                file.delete();
+            }
+            fileDir.delete();
         }
     }
 }

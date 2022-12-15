@@ -10,5 +10,4 @@ public interface BoardService {
     BoardCreateResponseDto createBoard(BoardCreateRequestDto requestDto);
     BoardReadResponseDto readBoard(String boardCode);
     void deleteBoard(BoardDeleteRequestDto requestDto, String boardCode);
-    WelcomeBoardResponseDto getBoardWelcomePage(String boardCode);
 }

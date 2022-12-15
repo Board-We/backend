@@ -2,23 +2,19 @@ package com.boardwe.boardwe.service.impl;
 
 import com.boardwe.boardwe.dto.req.BoardCreateRequestDto;
 import com.boardwe.boardwe.dto.req.BoardDeleteRequestDto;
-import com.boardwe.boardwe.dto.req.inner.BoardThemeCreateRequestDto;
-import com.boardwe.boardwe.dto.req.inner.MemoColorAndTextColorRequestDto;
-import com.boardwe.boardwe.dto.req.inner.MemoImageAndTextColorRequestDto;
+import com.boardwe.boardwe.dto.req.inner.MemoThemesCreateRequestDto;
 import com.boardwe.boardwe.dto.res.BoardCreateResponseDto;
 import com.boardwe.boardwe.dto.res.BoardReadResponseDto;
-import com.boardwe.boardwe.dto.res.WelcomeBoardResponseDto;
 import com.boardwe.boardwe.dto.res.inner.MemoSelectResponseDto;
 import com.boardwe.boardwe.entity.*;
 import com.boardwe.boardwe.exception.custom.entity.BoardNotFoundException;
 import com.boardwe.boardwe.exception.custom.entity.BoardThemeNotFoundException;
-import com.boardwe.boardwe.exception.custom.other.BoardBeforeOpenException;
-import com.boardwe.boardwe.exception.custom.other.BoardBeforeWritingException;
-import com.boardwe.boardwe.exception.custom.other.BoardClosedException;
+import com.boardwe.boardwe.exception.custom.other.InvalidMemoThemeListException;
 import com.boardwe.boardwe.repository.*;
 import com.boardwe.boardwe.service.BoardService;
 import com.boardwe.boardwe.type.BackgroundType;
 import com.boardwe.boardwe.type.BoardStatus;
+import com.boardwe.boardwe.type.OpenType;
 import com.boardwe.boardwe.util.BoardInfoUtil;
 import com.boardwe.boardwe.util.FileUtil;
 import com.boardwe.boardwe.util.ThemeUtil;
@@ -79,31 +75,41 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional
     public BoardReadResponseDto readBoard(String boardCode) {
         Board board = boardRepository.findByCode(boardCode)
                 .orElseThrow(BoardNotFoundException::new);
 
+        BoardTheme boardTheme = board.getBoardTheme();
         BoardStatus boardStatus = BoardStatus.calculateBoardStatus(
                 board.getWritingStartTime(),
                 board.getWritingEndTime(),
                 board.getOpenStartTime(),
                 board.getOpenEndTime());
 
-        validateBoardStatus(boardStatus);
+        List<String> tagValues = tagRepository.findAllByBoardId(board.getId())
+                .stream()
+                .map(Tag::getValue)
+                .toList();
+
+        OpenType boardOpenType = board.getOpenType();
 
         saveBoardWithIncreaseViews(board);
 
         return BoardReadResponseDto.builder()
                 .boardName(board.getName())
                 .boardDescription(board.getDescription())
+                .boardTags(tagValues)
                 .writingStartTime(board.getWritingStartTime())
                 .writingEndTime(board.getWritingEndTime())
                 .openStartTime(board.getOpenStartTime())
                 .openEndTime(board.getOpenEndTime())
-                .openType(board.getOpenType())
+                .openType(boardOpenType)
                 .boardStatus(boardStatus)
-                .theme(themeUtil.getBoardThemeSelectResponseDto(board.getBoardTheme()))
-                .memos(boardStatus == BoardStatus.OPEN ? getMemoResponseDtos(board) : null)
+                .boardFont(boardTheme.getFont())
+                .boardViews(board.getViews())
+                .boardBackgroundType(boardOpenType == OpenType.PUBLIC ? boardTheme.getBackgroundType() : null)
+                .boardBackground(boardOpenType == OpenType.PUBLIC ? themeUtil.getBackgroundValue(boardTheme) : null)
                 .build();
     }
 
@@ -119,77 +125,58 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
-    @Override
-    public WelcomeBoardResponseDto getBoardWelcomePage(String boardCode) {
-        Board board = boardRepository.findByCode(boardCode)
-                .orElseThrow(BoardNotFoundException::new);
-        BoardStatus boardStatus = BoardStatus.calculateBoardStatus(
-                board.getWritingStartTime(),
-                board.getWritingEndTime(),
-                board.getOpenStartTime(),
-                board.getOpenEndTime());
-        BoardTheme boardTheme = board.getBoardTheme();
-        List<String> tagValues = tagRepository.findAllByBoardId(board.getId())
-                .stream()
-                .map(Tag::getValue)
-                .toList();
-
-        return WelcomeBoardResponseDto.builder()
-                .boardName(board.getName())
-                .boardDescription(board.getDescription())
-                .tags(tagValues)
-                .memoCnt(getMemoCnt(board.getId()))
-                .boardViews(board.getViews())
-                .writingStartTime(board.getWritingStartTime())
-                .writingEndTime(board.getWritingEndTime())
-                .openStartTime(board.getOpenStartTime())
-                .openEndTime(board.getOpenEndTime())
-                .boardStatus(boardStatus)
-                .boardBackgroundType(boardTheme.getBackgroundType())
-                .boardBackground(themeUtil.getBackgroundValue(boardTheme))
-                .boardFont(boardTheme.getFont())
-                .build();
-    }
-
-    private BoardTheme getBoardTheme(BoardCreateRequestDto requestDto) {
+    private BoardTheme getBoardTheme(BoardCreateRequestDto createDto) {
         BoardTheme boardTheme;
-        if (requestDto.getBoardThemeId() == null) {
-            BoardThemeCreateRequestDto themeDto = requestDto.getTheme();
-            boardTheme = saveBoardTheme(themeDto);
-            saveMemoThemesWithImage(boardTheme, themeDto.getMemoImageTextColorSets());
-            saveMemoThemesWithColor(boardTheme, themeDto.getMemoBackgroundTextColorSets());
+        if (createDto.getBoardThemeId() == null) {
+            boardTheme = saveBoardTheme(createDto.getBoardBackground(), createDto.getBoardFont());
+
+            MemoThemesCreateRequestDto memoThemes = createDto.getMemoThemes();
+            int memoThemeLen = memoThemes.getBackgrounds().size();
+            if (memoThemes.getTextColors().size() != memoThemeLen) {
+                throw new InvalidMemoThemeListException();
+            }
+
+            if (memoThemeLen == 0) {
+                setBasicMemoTheme(boardTheme);
+            }
+
+            for (int idx = 0; idx < memoThemeLen; idx++) {
+                String bgValue = memoThemes.getBackgrounds().get(idx);
+                String textColor = memoThemes.getTextColors().get(idx);
+                if (isColorCodeString(bgValue)) saveMemoThemeWithColor(boardTheme, bgValue, textColor);
+                else saveMemoThemeWithImage(boardTheme, bgValue, textColor);
+            }
         } else {
-            boardTheme = boardThemeRepository.findById(requestDto.getBoardThemeId())
+            boardTheme = boardThemeRepository.findById(createDto.getBoardThemeId())
                     .orElseThrow(BoardThemeNotFoundException::new);
         }
         return boardTheme;
     }
 
-    private BoardTheme saveBoardTheme(BoardThemeCreateRequestDto themeDto) {
+    private BoardTheme saveBoardTheme(String boardBackgroundValue, String boardFont) {
         ThemeCategory userThemeCategory = themeUtil.getUserThemeCategory();
         String userThemeName = themeUtil.getUserThemeName();
-        if (themeDto.getBoardBackgroundImage() != null) {
-            String imageBase64 = themeDto.getBoardBackgroundImage();
-            ImageInfo imageInfo = saveImageAndImageInfo(imageBase64, themeDto.getBoardBackgroundImageName());
+        if (isColorCodeString(boardBackgroundValue)) {
+            return boardThemeRepository.save(BoardTheme.builder()
+                    .themeCategory(userThemeCategory)
+                    .name(userThemeName)
+                    .backgroundType(BackgroundType.COLOR)
+                    .backgroundColor(boardBackgroundValue)
+                    .font(boardFont).build());
+        } else {
+            ImageInfo imageInfo = saveImageAndImageInfo(boardBackgroundValue);
 
             return boardThemeRepository.save(BoardTheme.builder()
                     .themeCategory(userThemeCategory)
                     .name(userThemeName)
                     .backgroundType(BackgroundType.IMAGE)
                     .backgroundImageInfo(imageInfo)
-                    .font(themeDto.getBoardFont()).build());
-        } else {
-            return boardThemeRepository.save(BoardTheme.builder()
-                    .themeCategory(userThemeCategory)
-                    .name(userThemeName)
-                    .backgroundType(BackgroundType.COLOR)
-                    .backgroundColor(themeDto.getBoardBackgroundColor())
-                    .font(themeDto.getBoardFont()).build());
+                    .font(boardFont).build());
         }
     }
 
-    private ImageInfo saveImageAndImageInfo(String base64, String fileName) {
-        ImageInfoVo imageInfoVo = fileUtil.saveImage(base64, fileName);
+    private ImageInfo saveImageAndImageInfo(String base64) {
+        ImageInfoVo imageInfoVo = fileUtil.saveImage(base64, "imageTempName.jpg");
         return imageInfoRepository.save(ImageInfo.builder()
                 .uuid(imageInfoVo.getUuid())
                 .originalName(imageInfoVo.getOriginalName())
@@ -199,38 +186,27 @@ public class BoardServiceImpl implements BoardService {
                 .build());
     }
 
-    private static void validateBoardStatus(BoardStatus boardStatus) {
-        if (boardStatus == BoardStatus.BEFORE_WRITING) {
-            throw new BoardBeforeWritingException();
-        } else if (boardStatus == BoardStatus.BEFORE_OPEN) {
-            throw new BoardBeforeOpenException();
-        } else if (boardStatus == BoardStatus.CLOSED) {
-            throw new BoardClosedException();
-        }
+    private void setBasicMemoTheme(BoardTheme boardTheme) {
+        saveMemoThemeWithColor(boardTheme, "#FFFFE0", "#000000");
     }
 
-    private void saveMemoThemesWithImage(BoardTheme boardTheme, List<MemoImageAndTextColorRequestDto> memoThemeDtos) {
-        for (MemoImageAndTextColorRequestDto imageAndTextColor : memoThemeDtos) {
-            String imageBase64 = imageAndTextColor.getMemoBackgroundImage();
-            ImageInfo imageInfo = saveImageAndImageInfo(imageBase64, imageAndTextColor.getMemoBackgroundImageName());
-            memoThemeRepository.save(MemoTheme.builder()
-                    .boardTheme(boardTheme)
-                    .backgroundType(BackgroundType.IMAGE)
-                    .backgroundImageInfo(imageInfo)
-                    .textColor(imageAndTextColor.getMemoTextColor())
-                    .build());
-        }
+    private void saveMemoThemeWithImage(BoardTheme boardTheme, String bgBase64, String textColor) {
+        ImageInfo imageInfo = saveImageAndImageInfo(bgBase64);
+        memoThemeRepository.save(MemoTheme.builder()
+                .boardTheme(boardTheme)
+                .backgroundType(BackgroundType.IMAGE)
+                .backgroundImageInfo(imageInfo)
+                .textColor(textColor)
+                .build());
     }
 
-    private void saveMemoThemesWithColor(BoardTheme boardTheme, List<MemoColorAndTextColorRequestDto> memoThemeDtos) {
-        for (MemoColorAndTextColorRequestDto bgAndTextColor : memoThemeDtos) {
-            memoThemeRepository.save(MemoTheme.builder()
-                    .boardTheme(boardTheme)
-                    .backgroundType(BackgroundType.COLOR)
-                    .backgroundColor(bgAndTextColor.getMemoBackgroundColor())
-                    .textColor(bgAndTextColor.getMemoTextColor())
-                    .build());
-        }
+    private void saveMemoThemeWithColor(BoardTheme boardTheme, String bgColor, String textColor) {
+        memoThemeRepository.save(MemoTheme.builder()
+                .boardTheme(boardTheme)
+                .backgroundType(BackgroundType.COLOR)
+                .backgroundColor(bgColor)
+                .textColor(textColor)
+                .build());
     }
 
     private List<MemoSelectResponseDto> getMemoResponseDtos(Board board) {
@@ -247,8 +223,12 @@ public class BoardServiceImpl implements BoardService {
         return memoRepository.findByBoardId(boardId).size();
     }
 
-    private synchronized void saveBoardWithIncreaseViews(Board board){
+    private synchronized void saveBoardWithIncreaseViews(Board board) {
         board.increaseViews();
         boardRepository.saveAndFlush(board);
+    }
+
+    private Boolean isColorCodeString(String backgroundString) {
+        return backgroundString.startsWith("#") && backgroundString.length() < 10;
     }
 }

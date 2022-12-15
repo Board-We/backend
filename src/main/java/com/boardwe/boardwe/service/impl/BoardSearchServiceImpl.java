@@ -1,7 +1,8 @@
 package com.boardwe.boardwe.service.impl;
 
-import com.boardwe.boardwe.dto.res.BoardReadResponseDto;
+import com.boardwe.boardwe.dto.res.BoardSearchResponseDto;
 import com.boardwe.boardwe.entity.Board;
+import com.boardwe.boardwe.entity.BoardTheme;
 import com.boardwe.boardwe.entity.Tag;
 import com.boardwe.boardwe.repository.BoardRepository;
 import com.boardwe.boardwe.repository.TagRepository;
@@ -29,8 +30,8 @@ public class BoardSearchServiceImpl implements BoardSearchService {
     private final BoardInfoUtil boardInfoUtil;
 
     @Override
-    public Page<BoardReadResponseDto> searchBoardByTagWithPaging(String query, Pageable pageable) {
-        List<BoardReadResponseDto> searchResults = boardRepository.findAllByTagValue(query, pageable)
+    public Page<BoardSearchResponseDto> searchBoardByTagWithPaging(String query, Pageable pageable) {
+        List<BoardSearchResponseDto> searchResults = boardRepository.findAllByTagValue(query, pageable)
                 .stream()
                 .map(this::getBoardSearchResponseDto)
                 .toList();
@@ -42,7 +43,7 @@ public class BoardSearchServiceImpl implements BoardSearchService {
     }
 
     @Override
-    public List<BoardReadResponseDto> selectHotBoards() {
+    public List<BoardSearchResponseDto> selectHotBoards() {
         return boardRepository.findTop10ByOpenTypeOrderByViewsDesc(OpenType.PUBLIC)
                 .stream()
                 .map(this::getBoardSearchResponseDto)
@@ -50,24 +51,28 @@ public class BoardSearchServiceImpl implements BoardSearchService {
     }
 
     @Override
-    public List<BoardReadResponseDto> selectRecommendBoards() {
+    public List<BoardSearchResponseDto> selectRecommendBoards() {
         return boardRepository.find10OpenBoardsOderByRandom()
                 .stream()
                 .map(this::getBoardSearchResponseDto)
                 .toList();
     }
 
-    private BoardReadResponseDto getBoardSearchResponseDto(Board board) {
+    private BoardSearchResponseDto getBoardSearchResponseDto(Board board) {
         List<String> tagValues = tagRepository.findAllByBoardId(board.getId())
                 .stream()
                 .map(Tag::getValue)
                 .toList();
-        return BoardReadResponseDto.builder()
+        BoardTheme boardTheme = board.getBoardTheme();
+        return BoardSearchResponseDto.builder()
                 .boardName(board.getName())
                 .boardLink(boardInfoUtil.getBoardLink(board.getCode()))
                 .boardViews(board.getViews())
                 .boardTags(tagValues)
-                .theme(themeUtil.getBoardThemeSelectResponseDto(board.getBoardTheme()))
+                .boardFont(boardTheme.getFont())
+                .boardBackgroundType(boardTheme.getBackgroundType())
+                .boardBackground(themeUtil.getBackgroundValue(boardTheme))
+                .memoThemes(themeUtil.getMemoThemeSelectResponseDtos(boardTheme))
                 .build();
     }
 }
