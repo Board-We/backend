@@ -18,5 +18,4 @@ public class BoardSearchResponseDto {
     private BackgroundType boardBackgroundType;
     private String boardBackground;
     private String boardFont;
-    private List<MemoThemeSelectResponseDto> memoThemes;
 }

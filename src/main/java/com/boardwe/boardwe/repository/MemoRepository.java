@@ -3,7 +3,6 @@ package com.boardwe.boardwe.repository;
 import com.boardwe.boardwe.entity.Board;
 import com.boardwe.boardwe.entity.Memo;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 

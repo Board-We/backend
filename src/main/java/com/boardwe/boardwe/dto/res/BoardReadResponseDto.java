@@ -1,6 +1,5 @@
 package com.boardwe.boardwe.dto.res;
 
-import com.boardwe.boardwe.dto.res.inner.MemoSelectResponseDto;
 import com.boardwe.boardwe.type.BackgroundType;
 import com.boardwe.boardwe.type.BoardStatus;
 import com.boardwe.boardwe.type.OpenType;
