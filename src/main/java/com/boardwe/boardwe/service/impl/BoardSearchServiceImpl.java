@@ -72,7 +72,6 @@ public class BoardSearchServiceImpl implements BoardSearchService {
                 .boardFont(boardTheme.getFont())
                 .boardBackgroundType(boardTheme.getBackgroundType())
                 .boardBackground(themeUtil.getBackgroundValue(boardTheme))
-                .memoThemes(themeUtil.getMemoThemeSelectResponseDtos(boardTheme))
                 .build();
     }
 }
