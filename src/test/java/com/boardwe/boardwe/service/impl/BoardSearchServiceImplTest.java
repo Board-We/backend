@@ -1,6 +1,8 @@
 package com.boardwe.boardwe.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -131,6 +133,25 @@ public class BoardSearchServiceImplTest {
             assertEquals(boards.get(i).getBoardTheme().getBackgroundColor(), recommendBoards.get(i).getBoardBackground());
             assertEquals(tagValues, recommendBoards.get(i).getBoardTags());
         }
+    }
+
+    @Test
+    @DisplayName("검색 결과가 없어 빈 Content List가 반환된다.")
+    void NoMatchTagValueOrInvalidPageParamInSearchBoard(){
+        List<Board> boards = new ArrayList<>();
+        String query = "크리스마스";
+        int size = 10;
+        int page = 0;
+        Pageable pageable = PageRequest.of(page, size);
+
+        when(boardRepository.findAllByTagValue(query, pageable)).thenReturn(boards);
+        Page<BoardSearchResponseDto> searchResultBoards = boardSearchServiceImpl.searchBoardByTagWithPaging(query, pageable);
+
+        assertNotNull(searchResultBoards);
+        assertNotNull(searchResultBoards.getContent());
+        assertEquals(true, searchResultBoards.getContent().isEmpty());
+        assertEquals(10, searchResultBoards.getSize());
+        assertEquals(true, searchResultBoards.isLast());
     }
 
     private List<Board> setBoard(){
