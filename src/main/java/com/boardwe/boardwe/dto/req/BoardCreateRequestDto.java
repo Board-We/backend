@@ -3,6 +3,7 @@ package com.boardwe.boardwe.dto.req;
 import com.boardwe.boardwe.dto.req.inner.MemoThemesCreateRequestDto;
 import com.boardwe.boardwe.type.OpenType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class BoardCreateRequestDto {
     private String boardName;
     private String boardDescription;
