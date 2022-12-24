@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 public class MemoTheme {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "memo_theme_id")
     private Long id;
 
@@ -28,10 +28,7 @@ public class MemoTheme {
     private BoardTheme boardTheme;
 
     @Enumerated(EnumType.STRING)
-    @Column(
-            columnDefinition = "NVARCHAR(10)",
-            name = "memo_theme_background_type"
-    )
+    @Column(name = "memo_theme_background_type")
     @NotNull
     private BackgroundType backgroundType;
 
@@ -42,16 +39,10 @@ public class MemoTheme {
     )
     private ImageInfo backgroundImageInfo;
 
-    @Column(
-            columnDefinition = "NVARCHAR(7)",
-            name = "memo_theme_background_color"
-    )
+    @Column(name = "memo_theme_background_color")
     private String backgroundColor;
 
-    @Column(
-            columnDefinition = "NVARCHAR(7)",
-            name = "memo_theme_text_color"
-    )
+    @Column(name = "memo_theme_text_color")
     private String textColor;
 
     @Builder

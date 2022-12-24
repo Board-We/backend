@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardTheme {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="board_theme_id")
     private Long id;
 
@@ -23,12 +23,13 @@ public class BoardTheme {
     @NotNull
     private ThemeCategory themeCategory;
 
-    @Column(columnDefinition = "NVARCHAR2(20)",name = "board_theme_name")
+    @Column(name = "board_theme_name")
     @NotNull
     private String name;
 
-    @Column(columnDefinition = "NVARCHAR2(10)",name="board_theme_background_type")
+    @Column(name="board_theme_background_type")
     @NotNull
+    @Enumerated(EnumType.STRING)
     private BackgroundType backgroundType;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,10 +37,10 @@ public class BoardTheme {
     private ImageInfo backgroundImageInfo;
 
 
-    @Column(columnDefinition = "NVARCHAR2(7)",name="board_theme_background_color")
+    @Column(name="board_theme_background_color")
     private String backgroundColor;
 
-    @Column(columnDefinition = "NVARCHAR2(20)",name="board_theme_font")
+    @Column(name="board_theme_font")
     private String font;
 
     @Builder

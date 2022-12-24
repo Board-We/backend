@@ -3,18 +3,21 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/boardWe
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:mysql://localhost:3306/boardwe?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+    username: boardwe
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     properties:
       hibernate:
         #        show_sql: true # sout?? ??
         format_sql: true
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+
 logging:
   level:
     org.hibernate.SQL: debug
