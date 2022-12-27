@@ -28,9 +28,10 @@ public class ImageConfig {
     }
 
     @Bean
-    public String cdnUrl(@Value("${server.port}") String port) throws UnknownHostException {
-        InetAddress ipAddress = InetAddress.getLocalHost();
-        return String.format("%s:%s", ipAddress.getHostAddress(), port);
+    public String cdnUrl(@Value("${board-we.file-server}") String fileServer) throws UnknownHostException {
+//        InetAddress ipAddress = InetAddress.getLocalHost();
+//        return String.format("%s:%s", ipAddress.getHostAddress(), fileServer);
+        return fileServer;
     }
 
 }

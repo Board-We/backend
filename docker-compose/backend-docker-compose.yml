@@ -19,6 +19,7 @@ services:
     environment:
       DB_HOSTNAME: boardwe-database
       DB_PORT: 3306
+      FILE_SERVER: localhost:16383
     restart: always
     volumes:
       - boardwe_shared_volume:/boardwe_home

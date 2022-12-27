@@ -25,6 +25,9 @@ logging:
 file:
   upload-dir: ./files
 
+board-we:
+  file-server: localhost:16383
+
 ---
 spring:
   config:
@@ -48,3 +51,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+
+file:
+  upload-dir: ./boardwe_home/files
+
+board-we:
+  file-server: ${FILE_SERVER}
