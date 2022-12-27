@@ -3,7 +3,6 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/boardwe?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
     username: boardwe
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -13,15 +12,39 @@ spring:
       ddl-auto: validate
     properties:
       hibernate:
-        #        show_sql: true # sout?? ??
+        #        show_sql: true
         format_sql: true
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
 
 
 logging:
   level:
-    org.hibernate.SQL: debug
+    org.hibernate.SQL: info
     #    org.hibernate.type: trace
 
 file:
   upload-dir: ./files
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:mysql://localhost:3306/boardwe?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: jdbc:mysql://${DB_HOSTNAME}:${DB_PORT}/boardwe?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+  jpa:
+    hibernate:
+      ddl-auto: none
