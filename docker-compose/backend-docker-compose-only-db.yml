@@ -3,7 +3,7 @@ version: '3.7'
 services:
   boardwe-database:
     container_name: db
-    image: wjyddd/boardwe-db:prod
+    image: wjyddd/boardwe-db:local-test
     ports:
       - 3306:3306
     volumes:
