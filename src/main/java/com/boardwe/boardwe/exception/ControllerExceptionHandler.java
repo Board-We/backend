@@ -36,12 +36,13 @@ public class ControllerExceptionHandler {
                 .body(response);
     }
 
-    @ExceptionHandler(Exception.class)
-    protected ResponseEntity<ErrorResponseDto> handleException() {
-        ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
-        ErrorResponseDto response = ErrorResponseDto.error(errorCode);
-        return ResponseEntity.status(errorCode.getStatus())
-                .body(response);
-    }
+    // TODO: Log 설정 후 다시 켜기
+//    @ExceptionHandler(Exception.class)
+//    protected ResponseEntity<ErrorResponseDto> handleException() {
+//        ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
+//        ErrorResponseDto response = ErrorResponseDto.error(errorCode);
+//        return ResponseEntity.status(errorCode.getStatus())
+//                .body(response);
+//    }
 
 }
