@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 public class Board {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id")
     private Long id;
 
@@ -74,7 +74,7 @@ public class Board {
     @Builder
     public Board(BoardTheme boardTheme, String name, String description, String code, LocalDateTime writingStartTime, LocalDateTime writingEndTime, LocalDateTime openStartTime, LocalDateTime openEndTime, String password, OpenType openType, Integer views) {
         if (!(writingStartTime.isBefore(writingEndTime)
-                && writingEndTime.isBefore(openStartTime)
+                && (writingEndTime.isBefore(openStartTime) || writingEndTime.isEqual(openStartTime))
                 && openStartTime.isBefore(openEndTime)))
             throw new InvalidDateValueException();
 

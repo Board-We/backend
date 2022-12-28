@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 public class Memo {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "memo_id")
     private Long id;
 
@@ -34,10 +34,7 @@ public class Memo {
     @NotNull
     private MemoTheme memoTheme;
 
-    @Column(
-            columnDefinition = "NVARCHAR(100)",
-            name = "memo_content"
-    )
+    @Column(name = "memo_content")
     @NotNull
     private String content;
 

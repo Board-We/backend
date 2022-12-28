@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  boardwe-database:
+    container_name: db
+    image: wjyddd/boardwe-database:local-test
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    restart: always
+    volumes:
+      -  boardwe_db_volume:/var/lib/mysql
+
+volumes:
+  boardwe_db_volume:

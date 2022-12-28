@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -17,42 +14,27 @@ import javax.validation.constraints.NotNull;
 public class ImageInfo {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "image_info_id")
     private Long id;
 
-    @Column(
-            columnDefinition = "NVARCHAR(36)",
-            name = "image_uuid"
-    )
+    @Column(name = "image_uuid")
     @NotNull
     private String uuid;
 
-    @Column(
-            columnDefinition = "NVARCHAR(255)",
-            name = "image_original_name"
-    )
+    @Column(name = "image_original_name")
     @NotNull
     private String originalName;
 
-    @Column(
-            columnDefinition = "NVARCHAR(255)",
-            name = "image_saved_name"
-    )
+    @Column(name = "image_saved_name")
     @NotNull
     private String savedName;
 
-    @Column(
-            columnDefinition = "NVARCHAR(6)",
-            name = "image_extension"
-    )
+    @Column(name = "image_extension")
     @NotNull
     private String extension;
 
-    @Column(
-            columnDefinition = "NVARCHAR(255)",
-            name = "image_path"
-    )
+    @Column(name = "image_path")
     @NotNull
     private String path;
 
