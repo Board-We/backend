@@ -7,6 +7,7 @@ import com.boardwe.boardwe.repository.ImageInfoRepository;
 import com.boardwe.boardwe.service.FileService;
 import com.boardwe.boardwe.util.FileUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
@@ -24,6 +26,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public Resource loadImageAsResource(String imageUuid) {
+        log.info("[FileServiceImpl] Load image {}.", imageUuid);
         ImageInfo imageInfo = imageInfoRepository.findByUuid(imageUuid)
                 .orElseThrow(ImageInfoNotFoundException::new);
 

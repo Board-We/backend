@@ -5,6 +5,7 @@ import com.boardwe.boardwe.exception.custom.other.UnableToCreateDirectoryExcepti
 import com.boardwe.boardwe.util.FileUtil;
 import com.boardwe.boardwe.vo.ImageInfoVo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -16,6 +17,7 @@ import java.nio.file.Path;
 import java.util.Base64;
 import java.util.UUID;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class FileUtilImpl implements FileUtil {
@@ -24,6 +26,7 @@ public class FileUtilImpl implements FileUtil {
 
     @Override
     public ImageInfoVo saveImage(String base64, String fileName) {
+        log.info("[FileUtilImpl] Save image.");
         String imageUuid = UUID.randomUUID().toString();
         String imageOriginalName = fileName.substring(0, fileName.lastIndexOf("."));
         String imageExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
