@@ -21,6 +21,7 @@ logging:
   level:
     org.hibernate.SQL: info
     #    org.hibernate.type: trace
+    root: info
 
 file:
   upload-dir: ./files
@@ -39,6 +40,7 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug
+    config: classpath:log4j2-dev.xml
 
 ---
 
@@ -51,6 +53,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+
+logging:
+  config: classpath:log4j2-prod.xml
 
 file:
   upload-dir: ./boardwe_home/files
