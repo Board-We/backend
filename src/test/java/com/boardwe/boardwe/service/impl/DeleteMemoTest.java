@@ -32,15 +32,15 @@ public class DeleteMemoTest {
     @Test
     @DisplayName("메모 삭제 성공")
     void deleteMemo(){
-        List<Long> memoIds = new ArrayList<>();
-        memoIds.add(1L);
-        memoIds.add(2L);
-
-        MemoDeleteRequestDto.builder().memoIds(memoIds).build();
-        String boardCode = "test";
-
-        Board board = mock(Board.class);
-        when(boardRepository.findByCode(boardCode)).thenReturn(Optional.of(board));
+//        List<Long> memoIds = new ArrayList<>();
+//        memoIds.add(1L);
+//        memoIds.add(2L);
+//
+//        MemoDeleteRequestDto.builder().memoIds(memoIds).build();
+//        String boardCode = "test";
+//
+//        Board board = mock(Board.class);
+//        when(boardRepository.findByCode(boardCode)).thenReturn(Optional.of(board));
         //when(memoRepository.findByIdAndBoard())
 
 

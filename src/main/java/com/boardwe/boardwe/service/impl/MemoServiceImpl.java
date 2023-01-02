@@ -22,6 +22,7 @@ import com.boardwe.boardwe.type.BoardStatus;
 import com.boardwe.boardwe.type.OpenType;
 import com.boardwe.boardwe.util.ThemeUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -43,6 +45,7 @@ public class MemoServiceImpl implements MemoService {
     @Override
     @Transactional
     public MemoCreateResponseDto createMemo(MemoCreateRequestDto memoCreateRequestDto, String boardCode) {
+        log.info("[MemoServiceImpl] Create memo (content: {}).", memoCreateRequestDto.getMemoContent());
         Board board = boardRepository.findByCode(boardCode)
                 .orElseThrow(BoardNotFoundException::new);
         validateBoardCanWrite(getBoardStatus(board));
@@ -56,6 +59,7 @@ public class MemoServiceImpl implements MemoService {
                 .content(memoCreateRequestDto.getMemoContent())
                 .build());
 
+        log.info("[MemoServiceImpl] Memo attached at board ({}).", board.getName());
         return MemoCreateResponseDto.builder()
                 .openStartTime(board.getOpenStartTime())
                 .build();
@@ -64,6 +68,7 @@ public class MemoServiceImpl implements MemoService {
     @Override
     @Transactional
     public void deleteMemo(MemoDeleteRequestDto memoDeleteRequestDto, String boardCode) {
+        log.info("[MemoServiceImpl] Delete memos (ids: {}).", memoDeleteRequestDto.getMemoIds());
         Board board = boardRepository.findByCode(boardCode)
                 .orElseThrow(BoardNotFoundException::new);
         for (Long memoId : memoDeleteRequestDto.getMemoIds()) {
@@ -75,6 +80,7 @@ public class MemoServiceImpl implements MemoService {
 
     @Override
     public MemoSearchResponseDto searchMemo(String boardCode, String query) {
+        log.info("[MemoServiceImpl] Search memos (query: {}).", query);
         Board board = boardRepository.findByCode(boardCode)
                 .orElseThrow(BoardNotFoundException::new);
         validateBoardIsOpened(getBoardStatus(board));
@@ -105,22 +111,26 @@ public class MemoServiceImpl implements MemoService {
 
     private void validateBoardCanWrite(BoardStatus boardStatus) {
         if (boardStatus != BoardStatus.WRITING) {
+            log.error("[MemoServiceImpl] Board cannot write.");
             throw new BoardCannotWriteException();
         }
     }
 
     private void validateBoardIsOpened(BoardStatus boardStatus) {
         if (boardStatus != BoardStatus.OPEN) {
+            log.error("[MemoServiceImpl] Board not opening.");
             throw new BoardNotOpenedException();
         }
     }
 
     @Override
     public List<MemoSelectResponseDto> getMemo(String boardCode, String password) {
+        log.info("[MemoServiceImpl] Get memos of board (code: {}).", boardCode);
         Board board = boardRepository.findByCode(boardCode)
         .orElseThrow(BoardNotFoundException::new);
 
         if (board.getOpenType() == OpenType.PRIVATE && !Objects.equals(board.getPassword(), password)){
+            log.error("[MemoServiceImpl] Password is incorrect.");
             throw new InvalidPasswordException();
         }
 

@@ -12,12 +12,14 @@ import com.boardwe.boardwe.repository.ThemeCategoryRepository;
 import com.boardwe.boardwe.service.ThemeService;
 import com.boardwe.boardwe.util.ThemeUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -31,6 +33,7 @@ public class ThemeServiceImpl implements ThemeService {
 
     @Override
     public List<BoardThemeSelectResponseDto> getPublicThemes() {
+        log.info("[ThemeServiceImpl] Get public themes.");
         ThemeCategory userThemeCategory = themeUtil.getUserThemeCategory();
         List<ThemeCategory> themeCategories = categoryRepository.findByNameNot(userThemeCategory.getName());
 
@@ -56,6 +59,7 @@ public class ThemeServiceImpl implements ThemeService {
 
     @Override
     public List<MemoThemeSelectResponseDto> getMemoThemesOfBoard(String boardCode) {
+        log.info("[ThemeServiceImpl] Get memo themes of board (code: {}).", boardCode);
         Board board = boardRepository.findByCode(boardCode)
                 .orElseThrow(BoardNotFoundException::new);
 

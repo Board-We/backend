@@ -11,11 +11,13 @@ import com.boardwe.boardwe.repository.ThemeCategoryRepository;
 import com.boardwe.boardwe.type.BackgroundType;
 import com.boardwe.boardwe.util.ThemeUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ThemeUtilImpl implements ThemeUtil {
@@ -27,6 +29,7 @@ public class ThemeUtilImpl implements ThemeUtil {
 
     @Override
     public ThemeCategory getUserThemeCategory() {
+        log.info("[ThemeUtilImpl] Get user custom theme category.");
         List<ThemeCategory> tempCategories = categoryRepository.findByName(USER_THEME_NAME);
         if (tempCategories.isEmpty()) {
             return categoryRepository.save(

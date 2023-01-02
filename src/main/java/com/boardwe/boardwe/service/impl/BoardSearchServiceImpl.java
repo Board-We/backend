@@ -11,6 +11,7 @@ import com.boardwe.boardwe.type.OpenType;
 import com.boardwe.boardwe.util.BoardInfoUtil;
 import com.boardwe.boardwe.util.ThemeUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -31,6 +33,7 @@ public class BoardSearchServiceImpl implements BoardSearchService {
 
     @Override
     public Page<BoardSearchResponseDto> searchBoardByTagWithPaging(String query, Pageable pageable) {
+        log.info("[BoardServiceServiceImpl] Search boards with tag (query: {}).", query);
         List<BoardSearchResponseDto> searchResults = boardRepository.findAllByTagValue(query, pageable)
                 .stream()
                 .map(this::getBoardSearchResponseDto)
@@ -44,6 +47,7 @@ public class BoardSearchServiceImpl implements BoardSearchService {
 
     @Override
     public List<BoardSearchResponseDto> selectHotBoards() {
+        log.info("[BoardServiceServiceImpl] Get 10 Hottest boards.");
         return boardRepository.findTop10ByOpenTypeOrderByViewsDesc(OpenType.PUBLIC)
                 .stream()
                 .map(this::getBoardSearchResponseDto)
@@ -52,6 +56,7 @@ public class BoardSearchServiceImpl implements BoardSearchService {
 
     @Override
     public List<BoardSearchResponseDto> selectRecommendBoards() {
+        log.info("[BoardServiceServiceImpl] Get 10 recommended boards.");
         return boardRepository.find10OpenBoardsOderByRandom()
                 .stream()
                 .map(this::getBoardSearchResponseDto)
