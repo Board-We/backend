@@ -13,7 +13,6 @@ import com.boardwe.boardwe.exception.custom.other.BoardCannotWriteException;
 import com.boardwe.boardwe.repository.BoardRepository;
 import com.boardwe.boardwe.repository.MemoRepository;
 import com.boardwe.boardwe.repository.MemoThemeRepository;
-import com.boardwe.boardwe.type.BoardStatus;
 import com.boardwe.boardwe.util.ThemeUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
