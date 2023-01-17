@@ -1,7 +1,6 @@
 package com.boardwe.boardwe.service.impl;
 
 import com.boardwe.boardwe.dto.res.BoardSearchResponseDto;
-import com.boardwe.boardwe.dto.res.BoardSearchWithTimeResponseDto;
 import com.boardwe.boardwe.entity.Board;
 import com.boardwe.boardwe.entity.BoardTheme;
 import com.boardwe.boardwe.entity.Tag;
@@ -47,20 +46,20 @@ public class BoardSearchServiceImpl implements BoardSearchService {
     }
 
     @Override
-    public List<BoardSearchWithTimeResponseDto> selectHotBoards() {
+    public List<BoardSearchResponseDto> selectHotBoards() {
         log.info("[BoardServiceServiceImpl] Get 10 Hottest boards.");
         return boardRepository.findTop10ByOpenTypeOrderByViewsDesc(OpenType.PUBLIC)
                 .stream()
-                .map(this::getBoardSearchWithTimeResponseDto)
+                .map(this::getBoardSearchResponseDto)
                 .toList();
     }
 
     @Override
-    public List<BoardSearchWithTimeResponseDto> selectRecommendBoards() {
+    public List<BoardSearchResponseDto> selectRecommendBoards() {
         log.info("[BoardServiceServiceImpl] Get 10 recommended boards.");
         return boardRepository.find10OpenBoardsOderByRandom()
                 .stream()
-                .map(this::getBoardSearchWithTimeResponseDto)
+                .map(this::getBoardSearchResponseDto)
                 .toList();
     }
 
@@ -71,23 +70,6 @@ public class BoardSearchServiceImpl implements BoardSearchService {
                 .toList();
         BoardTheme boardTheme = board.getBoardTheme();
         return BoardSearchResponseDto.builder()
-                .boardName(board.getName())
-                .boardLink(boardInfoUtil.getBoardLink(board.getCode()))
-                .boardViews(board.getViews())
-                .boardTags(tagValues)
-                .boardFont(boardTheme.getFont())
-                .boardBackgroundType(boardTheme.getBackgroundType())
-                .boardBackground(themeUtil.getBackgroundValue(boardTheme))
-                .build();
-    }
-
-    private BoardSearchWithTimeResponseDto getBoardSearchWithTimeResponseDto(Board board) {
-        List<String> tagValues = tagRepository.findAllByBoardId(board.getId())
-                .stream()
-                .map(Tag::getValue)
-                .toList();
-        BoardTheme boardTheme = board.getBoardTheme();
-        return BoardSearchWithTimeResponseDto.builder()
                 .boardName(board.getName())
                 .boardLink(boardInfoUtil.getBoardLink(board.getCode()))
                 .boardViews(board.getViews())

@@ -19,7 +19,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import com.boardwe.boardwe.dto.res.BoardSearchResponseDto;
-import com.boardwe.boardwe.dto.res.BoardSearchWithTimeResponseDto;
 import com.boardwe.boardwe.entity.Board;
 import com.boardwe.boardwe.entity.BoardTheme;
 import com.boardwe.boardwe.entity.Tag;
@@ -89,7 +88,7 @@ public class BoardSearchServiceImplTest {
             when(tagRepository.findAllByBoardId((long) i)).thenReturn(tags);
         }
 
-        List<BoardSearchWithTimeResponseDto> hotBoards = boardSearchServiceImpl.selectHotBoards();
+        List<BoardSearchResponseDto> hotBoards = boardSearchServiceImpl.selectHotBoards();
         List<String> tagValues = new ArrayList<>();
 
         tagValues.add("크리스마스");
@@ -118,7 +117,7 @@ public class BoardSearchServiceImplTest {
             when(tagRepository.findAllByBoardId((long) i)).thenReturn(tags);
         }
 
-        List<BoardSearchWithTimeResponseDto> recommendBoards = boardSearchServiceImpl.selectRecommendBoards();
+        List<BoardSearchResponseDto> recommendBoards = boardSearchServiceImpl.selectRecommendBoards();
         List<String> tagValues = new ArrayList<>();
 
         tagValues.add("크리스마스");

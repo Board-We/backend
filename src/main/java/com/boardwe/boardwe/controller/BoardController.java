@@ -5,7 +5,6 @@ import com.boardwe.boardwe.dto.req.BoardDeleteRequestDto;
 import com.boardwe.boardwe.dto.res.BoardCreateResponseDto;
 import com.boardwe.boardwe.dto.res.BoardReadResponseDto;
 import com.boardwe.boardwe.dto.res.BoardSearchResponseDto;
-import com.boardwe.boardwe.dto.res.BoardSearchWithTimeResponseDto;
 import com.boardwe.boardwe.service.BoardSearchService;
 import com.boardwe.boardwe.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -48,12 +47,12 @@ public class BoardController {
     }
 
     @GetMapping("/boards/hot")
-    public ResponseEntity<List<BoardSearchWithTimeResponseDto>> getHotBoards(){
+    public ResponseEntity<List<BoardSearchResponseDto>> getHotBoards(){
         return ResponseEntity.ok(boardSearchService.selectHotBoards());
     }
 
     @GetMapping("/boards/recommend")
-    public ResponseEntity<List<BoardSearchWithTimeResponseDto>> getRecommendBoards(){
+    public ResponseEntity<List<BoardSearchResponseDto>> getRecommendBoards(){
         return ResponseEntity.ok(boardSearchService.selectRecommendBoards());
     }
 }
