@@ -73,6 +73,8 @@ public class BoardSearchServiceImpl implements BoardSearchService {
                 .boardName(board.getName())
                 .boardLink(boardInfoUtil.getBoardLink(board.getCode()))
                 .boardViews(board.getViews())
+                .openStartTime(board.getOpenStartTime())
+                .writingStartTime(board.getWritingStartTime())
                 .boardTags(tagValues)
                 .boardFont(boardTheme.getFont())
                 .boardBackgroundType(boardTheme.getBackgroundType())
