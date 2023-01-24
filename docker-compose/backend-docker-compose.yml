@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   boardwe-database:
-    container_name: db
+    container_name: db2
     image: wjyddd/boardwe-database:local-test
     ports:
       - 3306:3306
@@ -12,8 +12,8 @@ services:
     volumes:
       -  boardwe_db_volume:/var/lib/mysql
   boardwe-backend:
-    container_name: backend
-    image: wjyddd/boardwe-backend:local-test
+    container_name: backend2
+    image: boardwe-backend:hyunwoo
     ports:
       - 16383:16383
     environment:
