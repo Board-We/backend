@@ -34,7 +34,7 @@ jobs:
           files: ${{ env.RESOURCE_PATH }}
         env:
           # 프로젝트 내에 필요한 변수 값 주입
-          spring.datasource.url: ${{ vars.DATASOURCE_URL }}
+          # spring.datasource.url: ${{ vars.DATASOURCE_URL }}
           spring.datasource.username: ${{ vars.DATASOURCE_USERNAME }}
           spring.datasource.password: ${{ secrets.DATASOURCE_PASSWORD }}
           board-we.file-server: ${{ vars.FILE_SERVER_URL }}
