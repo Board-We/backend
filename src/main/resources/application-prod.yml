@@ -1,0 +1,13 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+server:
+  port: 8080
+
+logging:
+  config: classpath:log4j2-prod.xml
