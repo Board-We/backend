@@ -3,7 +3,10 @@ name: CI-CD
 on:
   push:
     branches:
-      - main
+      - master
+
+  # 수동으로 Action 동작시킬 수 있음
+  workflow_dispatch:
 
 env:
   S3_BUCKET_NAME: board-me
@@ -62,7 +65,7 @@ jobs:
 
         # [5]
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
+        run: aws s3 cp --region ${{ secrets.AWS_REGION }} ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
 
         # [6]
       - name: Code Deploy
