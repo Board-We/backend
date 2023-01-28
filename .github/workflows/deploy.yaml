@@ -34,11 +34,11 @@ jobs:
           files: ${{ env.RESOURCE_PATH }}
         env:
           # 프로젝트 내에 필요한 변수 값 주입
-          spring.datasource.url: ${{ secrets.DATASOURCE_URL }}
-          spring.datasource.username: ${{ secrets.DATASOURCE_USERNAME }}
+          spring.datasource.url: ${{ vars.DATASOURCE_URL }}
+          spring.datasource.username: ${{ vars.DATASOURCE_USERNAME }}
           spring.datasource.password: ${{ secrets.DATASOURCE_PASSWORD }}
-          board-we.file-server: ${{ secrets.FILE_SERVER_URL }}
-          file.upload-dir: ${{ secrets.FILE_UPLOAD_PATH }}
+          board-we.file-server: ${{ vars.FILE_SERVER_URL }}
+          file.upload-dir: ${{ vars.FILE_UPLOAD_PATH }}
           # override.value: 'from deploy.yaml' <-- 이렇게 사용해도 주입이 된다.
 
       - name: Grant execute permission for gradlew
