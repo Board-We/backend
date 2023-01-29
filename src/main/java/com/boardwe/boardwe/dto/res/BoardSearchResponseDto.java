@@ -16,7 +16,6 @@ public class BoardSearchResponseDto {
     private String boardName;
     private List<String> boardTags;
     private LocalDateTime writingStartTime;
-    private LocalDateTime writingEndTime;
     private LocalDateTime openStartTime;
     private Integer boardViews;
     private BackgroundType boardBackgroundType;
