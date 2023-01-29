@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.boardwe.boardwe.exception.custom.other.CannotStoreFileException;
+import com.boardwe.boardwe.exception.custom.other.UnableToCreateDirectoryException;
 import com.boardwe.boardwe.util.FileUtil;
 import com.boardwe.boardwe.vo.ImageInfoVo;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Base64;
 import java.util.UUID;
@@ -25,6 +28,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class S3FileUtil implements FileUtil {
 
+    private final Path rootDir;
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -39,7 +43,7 @@ public class S3FileUtil implements FileUtil {
         String imageSavedName = String.format("%s.%s",imageUuid,imageExtension);
         String imageDir = "/images";
 
-        File file = convertBase64(base64, "./" + imageSavedName);
+        File file = convertBase64(base64, getSavedPath(imageDir, imageSavedName));
         String uploadUrl = upload(file, imageDir + "/" + imageSavedName);
 
         return ImageInfoVo.builder()
@@ -53,13 +57,24 @@ public class S3FileUtil implements FileUtil {
 
     @Override
     public Path getSavedPath(String savedDir, String savedName) {
-        return null;
+        if (!StringUtils.hasText(savedDir)){
+            return rootDir.resolve(savedName);
+        }
+        if (savedDir.startsWith("/")){
+            savedDir = savedDir.substring(1);
+        }
+        if (!savedDir.endsWith("/")) {
+            savedDir = savedDir + "/";
+        }
+        Path targetDir = rootDir.resolve(savedDir);
+        createDirectory(targetDir);
+        return targetDir.resolve(savedName);
     }
 
-    private File convertBase64(String base64, String savedName) {
-        log.info("[S3FileUtil] Convert base64 img to {}", savedName);
+    private File convertBase64(String base64, Path savedPath) {
+        log.info("[S3FileUtil] Convert base64 img to {}", savedPath.toString());
+        File file = savedPath.toFile();
 
-        File file = new File(savedName);
         BufferedOutputStream bos = null;
         java.io.FileOutputStream fos = null;
         try {
@@ -111,6 +126,14 @@ public class S3FileUtil implements FileUtil {
             log.info("[S3FileUtil] File is deleted.");
         }else {
             log.info("[S3FileUtil] File cannot be deleted.");
+        }
+    }
+
+    private void createDirectory(Path targetDir) {
+        try {
+            Files.createDirectories(targetDir);
+        } catch (IOException e) {
+            throw new UnableToCreateDirectoryException();
         }
     }
 }
