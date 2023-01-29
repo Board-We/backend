@@ -13,6 +13,7 @@ env:
   RESOURCE_PATH: ./src/main/resources/application.yml
   CODE_DEPLOY_APPLICATION_NAME: board-me
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: board-we
+  JAR_NAME: board-me
 
 jobs:
   build:
@@ -52,7 +53,7 @@ jobs:
 
         # [3]
       - name: Make zip file
-        run: zip -r ./$GITHUB_SHA.zip .
+        run: zip -r ./$JAR_NAME.zip .
         shell: bash
 
         # [4]
@@ -65,7 +66,7 @@ jobs:
 
         # [5]
       - name: Upload to S3
-        run: aws s3 cp --region ${{ secrets.AWS_REGION }} ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
+        run: aws s3 cp --region ${{ secrets.AWS_REGION }} ./$JAR_NAME.zip s3://$S3_BUCKET_NAME/$JAR_NAME.zip
 
         # [6]
       - name: Code Deploy
@@ -74,4 +75,4 @@ jobs:
           --deployment-config-name CodeDeployDefault.AllAtOnce \
           --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
           --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
-          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$JAR_NAME.zip
