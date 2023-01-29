@@ -35,6 +35,8 @@ cloud:
     credentials:
       accessKey:
       secretKey:
+    stack:
+      -auto: false
     s3:
       bucket: board-me
     region:

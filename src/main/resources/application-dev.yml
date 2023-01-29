@@ -6,4 +6,15 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug
-    config: classpath:log4j2-dev.xml
+  config: classpath:log4j2-dev.xml
+
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}
+    s3:
+      bucket: board-me-files-dev
+    region:
+      static: ap-northeast-2
