@@ -35,12 +35,15 @@ jobs:
           files: ${{ env.RESOURCE_PATH }}
         env:
           # 프로젝트 내에 필요한 변수 값 주입
-          # spring.datasource.url: ${{ vars.DATASOURCE_URL }}
+          spring.datasource.url: ${{ vars.DATASOURCE_URL }}
           spring.datasource.username: ${{ vars.DATASOURCE_USERNAME }}
           spring.datasource.password: ${{ secrets.DATASOURCE_PASSWORD }}
           board-we.file-server: ${{ vars.FILE_SERVER_URL }}
           file.upload-dir: ${{ vars.FILE_UPLOAD_PATH }}
-          # override.value: 'from deploy.yaml' <-- 이렇게 사용해도 주입이 된다.
+          cloud.aws.credentials.accessKey: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          cloud.aws.credentials.secretKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          cloud.aws.s3.bucket: $S3_BUCKET_NAME
+          cloud.aws.region.static: ${{ secrets.AWS_REGION }}
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
