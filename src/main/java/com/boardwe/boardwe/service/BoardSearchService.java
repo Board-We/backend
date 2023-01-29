@@ -1,6 +1,7 @@
 package com.boardwe.boardwe.service;
 
 import com.boardwe.boardwe.dto.res.BoardSearchResponseDto;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
