@@ -185,7 +185,7 @@ public class BoardCreateTest {
 
     private static String makeImageToBase64() {
         String imageBase64;
-        File file = new File("/files/imageBase64Test.txt");
+        File file = new File("./src/test/resources/files/imageBase64Test.txt");
         try{
             FileReader fr = new FileReader(file);
             BufferedReader br = new BufferedReader(fr);
