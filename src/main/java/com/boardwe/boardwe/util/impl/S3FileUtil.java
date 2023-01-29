@@ -114,6 +114,7 @@ public class S3FileUtil implements FileUtil {
     }
 
     private String putS3(File uploadFile, String fileName) {
+        log.info("[S3FileUtil] Upload to S3 {} bucket.", bucket);
         amazonS3Client.putObject(
                 new PutObjectRequest(bucket, fileName, uploadFile)
                         .withCannedAcl(CannedAccessControlList.PublicRead)	// PublicRead 권한으로 업로드 됨
