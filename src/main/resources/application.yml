@@ -31,37 +31,3 @@ file:
 
 board-we:
   file-server: localhost:16383
-
----
-spring:
-  config:
-    activate:
-      on-profile: dev
-  datasource:
-    url: jdbc:mysql://localhost:3306/boardwe?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
-
-logging:
-  level:
-    org.hibernate.SQL: debug
-    config: classpath:log4j2-dev.xml
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: prod
-  datasource:
-    url: jdbc:mysql://${DB_HOSTNAME}:${DB_PORT}/boardwe?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
-  jpa:
-    hibernate:
-      ddl-auto: none
-
-logging:
-  config: classpath:log4j2-prod.xml
-
-file:
-  upload-dir: ./boardwe_home/files
-
-board-we:
-  file-server: ${FILE_SERVER}
