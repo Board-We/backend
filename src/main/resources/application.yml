@@ -29,3 +29,13 @@ file:
 
 board-we:
   file-server: localhost:16383
+
+cloud:
+  aws:
+    credentials:
+      accessKey:
+      secretKey:
+    s3:
+      bucket: board-me
+    region:
+      static:
