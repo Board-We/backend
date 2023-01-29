@@ -31,7 +31,7 @@ public class MemoController {
 
     @PostMapping("/board/{boardCode}/memo/delete")
     public ResponseEntity<Void> deleteMemo(@RequestBody MemoDeleteRequestDto memoDeleteRequestDto, @PathVariable String boardCode, HttpSession session){
-        if(session.getAttribute("boardCode") == null){
+        if(session.getAttribute("boardCode") == null || !boardCode.equals(session.getAttribute("boardCode").toString())){
             throw new CustomException(ErrorCode.INVALID_ACCESS);
         }
         memoService.deleteMemo(memoDeleteRequestDto,boardCode);
