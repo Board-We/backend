@@ -41,7 +41,7 @@ public class S3FileUtil implements FileUtil {
         String imageOriginalName = fileName.substring(0, fileName.lastIndexOf("."));
         String imageExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
         String imageSavedName = String.format("%s.%s",imageUuid,imageExtension);
-        String imageDir = "/images";
+        String imageDir = "images";
 
         File file = convertBase64(base64, getSavedPath(imageDir, imageSavedName));
         String uploadUrl = upload(file, imageDir + "/" + imageSavedName);
