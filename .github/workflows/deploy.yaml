@@ -10,7 +10,6 @@ on:
 
 env:
   S3_BUCKET_NAME: board-me
-  S3_FILE_BUCKET_NAME: board-me-files
   RESOURCE_PATH: ./src/main/resources/application.yml
   CODE_DEPLOY_APPLICATION_NAME: board-me
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: board-we
@@ -43,7 +42,7 @@ jobs:
           file.upload-dir: ${{ vars.FILE_UPLOAD_PATH }}
           cloud.aws.credentials.accessKey: ${{ secrets.AWS_ACCESS_KEY_ID }}
           cloud.aws.credentials.secretKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          cloud.aws.s3.bucket: $S3_FILE_BUCKET_NAME
+          cloud.aws.s3.bucket: ${{ vars.S3_FILE_BUCKET_NAME }}
           cloud.aws.region.static: ${{ secrets.AWS_REGION }}
 
       - name: Grant execute permission for gradlew
