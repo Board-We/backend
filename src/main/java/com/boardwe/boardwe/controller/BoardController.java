@@ -2,6 +2,7 @@ package com.boardwe.boardwe.controller;
 
 import com.boardwe.boardwe.dto.req.BoardCreateRequestDto;
 import com.boardwe.boardwe.dto.req.BoardDeleteRequestDto;
+import com.boardwe.boardwe.dto.req.BoardLoginRequestDto;
 import com.boardwe.boardwe.dto.res.BoardCreateResponseDto;
 import com.boardwe.boardwe.dto.res.BoardReadResponseDto;
 import com.boardwe.boardwe.dto.res.BoardSearchResponseDto;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -54,5 +56,10 @@ public class BoardController {
     @GetMapping("/boards/recommend")
     public ResponseEntity<List<BoardSearchResponseDto>> getRecommendBoards(){
         return ResponseEntity.ok(boardSearchService.selectRecommendBoards());
+    }
+
+    @PostMapping("/board/login")
+    public ResponseEntity<Void> login(@RequestBody BoardLoginRequestDto boardLoginRequestDto, HttpSession session){
+        return null;
     }
 }
