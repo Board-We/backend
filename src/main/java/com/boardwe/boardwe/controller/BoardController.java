@@ -8,6 +8,7 @@ import com.boardwe.boardwe.dto.res.BoardReadResponseDto;
 import com.boardwe.boardwe.dto.res.BoardSearchResponseDto;
 import com.boardwe.boardwe.service.BoardSearchService;
 import com.boardwe.boardwe.service.BoardService;
+import com.boardwe.boardwe.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardController {
 
+    private final LoginService loginService;
     private final BoardService boardService;
     private final BoardSearchService boardSearchService;
 
@@ -60,6 +62,11 @@ public class BoardController {
 
     @PostMapping("/board/login")
     public ResponseEntity<Void> login(@RequestBody BoardLoginRequestDto boardLoginRequestDto, HttpSession session){
-        return null;
+        loginService.login(
+                boardLoginRequestDto.getBoardCode(),
+                boardLoginRequestDto.getPassword(),
+                session
+        );
+        return ResponseEntity.ok().build();
     }
 }

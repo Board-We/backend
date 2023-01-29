@@ -5,6 +5,8 @@ import com.boardwe.boardwe.dto.req.MemoDeleteRequestDto;
 import com.boardwe.boardwe.dto.res.MemoCreateResponseDto;
 import com.boardwe.boardwe.dto.res.MemoSearchResponseDto;
 import com.boardwe.boardwe.dto.res.MemoSelectResponseDto;
+import com.boardwe.boardwe.exception.ErrorCode;
+import com.boardwe.boardwe.exception.custom.CustomException;
 import com.boardwe.boardwe.service.MemoService;
 import lombok.RequiredArgsConstructor;
 
@@ -12,6 +14,8 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,7 +30,10 @@ public class MemoController {
     }
 
     @PostMapping("/board/{boardCode}/memo/delete")
-    public ResponseEntity<Void> deleteMemo(@RequestBody MemoDeleteRequestDto memoDeleteRequestDto, @PathVariable String boardCode){
+    public ResponseEntity<Void> deleteMemo(@RequestBody MemoDeleteRequestDto memoDeleteRequestDto, @PathVariable String boardCode, HttpSession session){
+        if(session.getAttribute("boardCode") == null){
+            throw new CustomException(ErrorCode.INVALID_ACCESS);
+        }
         memoService.deleteMemo(memoDeleteRequestDto,boardCode);
         return ResponseEntity.ok().build();
     }
