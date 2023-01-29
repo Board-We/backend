@@ -57,6 +57,8 @@ public class S3FileUtil implements FileUtil {
     }
 
     private File convertBase64(String base64, String savedName) {
+        log.info("[S3FileUtil] Convert base64 img to {}", savedName);
+
         File file = new File(savedName);
         BufferedOutputStream bos = null;
         java.io.FileOutputStream fos = null;
@@ -66,6 +68,7 @@ public class S3FileUtil implements FileUtil {
             bos = new BufferedOutputStream(fos);
             bos.write(bytes);
         } catch (Exception e) {
+            log.error(e.toString());
             file.delete();
             throw new CannotStoreFileException();
         } finally {
