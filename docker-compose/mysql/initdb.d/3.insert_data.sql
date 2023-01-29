@@ -13,19 +13,19 @@ set @temp_theme_category_id = (select LAST_INSERT_ID());
 
 # insert board themes
 insert into board_theme (theme_category_id, board_theme_name, board_theme_background_type, board_theme_background_color, board_theme_font)
-    VALUES (@christmas_theme_category_id, '크리스마스', 'COLOR', '#A52A2A', '바탕');
+    VALUES (@christmas_theme_category_id, '크리스마스', 'COLOR', '#A52A2A', '0');
 set @christmas_theme_id = (select LAST_INSERT_ID());
 
 insert into board_theme (theme_category_id, board_theme_name, board_theme_background_type, board_theme_background_color, board_theme_font)
-VALUES (@birthday_theme_category_id, '생일', 'COLOR', '#F4BCF5', '나눔고딕');
+VALUES (@birthday_theme_category_id, '생일', 'COLOR', '#F4BCF5', '0');
 set @birthday_theme_id = (select LAST_INSERT_ID());
 
 insert into board_theme (theme_category_id, board_theme_name, board_theme_background_type, board_theme_background_color, board_theme_font)
-VALUES (@temp_theme_category_id, 'TEMP', 'COLOR', '#FFFFFF', '궁서');
+VALUES (@temp_theme_category_id, 'TEMP', 'COLOR', '#FFFFFF', '0');
 set @temp1_theme_id = (select LAST_INSERT_ID());
 
 insert into board_theme (theme_category_id, board_theme_name, board_theme_background_type, board_theme_background_color, board_theme_font)
-VALUES (@temp_theme_category_id, 'TEMP', 'COLOR', '#000000', '궁서');
+VALUES (@temp_theme_category_id, 'TEMP', 'COLOR', '#000000', '0');
 set @temp2_theme_id = (select LAST_INSERT_ID());
 
 

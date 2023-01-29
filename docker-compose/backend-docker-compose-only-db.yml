@@ -3,7 +3,7 @@ version: '3.7'
 services:
   boardwe-database:
     container_name: db
-    image: wjyddd/boardwe-database:local-test
+    image: wjyddd/boardwe-database:v0.1.0
     ports:
       - 3306:3306
     environment:
