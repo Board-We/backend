@@ -39,8 +39,8 @@ public class S3FileUtil implements FileUtil {
         String imageSavedName = String.format("%s.%s",imageUuid,imageExtension);
         String imageDir = "/images";
 
-        File file = convertBase64(base64, imageSavedName);
-        String uploadUrl = upload(file, imageDir);
+        File file = convertBase64(base64, "./" + imageSavedName);
+        String uploadUrl = upload(file, imageDir + "/" + imageSavedName);
 
         return ImageInfoVo.builder()
                 .uuid(imageUuid)
@@ -90,8 +90,7 @@ public class S3FileUtil implements FileUtil {
         return file;
     }
 
-    private String upload(File uploadFile, String dirName) {
-        String fileName = dirName + "/" + uploadFile.getName();
+    private String upload(File uploadFile, String fileName) {
         String uploadImageUrl = putS3(uploadFile, fileName);
 
         removeNewFile(uploadFile);  // 로컬에 생성된 File 삭제 (MultipartFile -> File 전환 하며 로컬에 파일 생성됨)
