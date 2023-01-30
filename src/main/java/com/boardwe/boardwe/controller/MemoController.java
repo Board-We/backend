@@ -15,6 +15,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
 
 @RestController
@@ -30,8 +31,9 @@ public class MemoController {
     }
 
     @PostMapping("/board/{boardCode}/memo/delete")
-    public ResponseEntity<Void> deleteMemo(@RequestBody MemoDeleteRequestDto memoDeleteRequestDto, @PathVariable String boardCode, HttpSession session){
-        if(session.getAttribute("boardCode") == null || !boardCode.equals(session.getAttribute("boardCode").toString())){
+    public ResponseEntity<Void> deleteMemo(@RequestBody MemoDeleteRequestDto memoDeleteRequestDto, @PathVariable String boardCode
+            , HttpSession session, @CookieValue(value = "sessionId")Cookie cookie){
+        if(session.getAttribute(cookie.getValue()) == null || !boardCode.equals(session.getAttribute("boardCode").toString())){
             throw new CustomException(ErrorCode.INVALID_ACCESS);
         }
         memoService.deleteMemo(memoDeleteRequestDto,boardCode);

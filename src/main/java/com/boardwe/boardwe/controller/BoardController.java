@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -61,10 +62,11 @@ public class BoardController {
     }
 
     @PostMapping("/board/login")
-    public ResponseEntity<Void> login(@RequestBody BoardLoginRequestDto boardLoginRequestDto, HttpSession session){
+    public ResponseEntity<Void> login(@RequestBody BoardLoginRequestDto boardLoginRequestDto, HttpServletResponse response, HttpSession session){
         loginService.login(
                 boardLoginRequestDto.getBoardCode(),
                 boardLoginRequestDto.getPassword(),
+                response,
                 session
         );
         return ResponseEntity.ok().build();

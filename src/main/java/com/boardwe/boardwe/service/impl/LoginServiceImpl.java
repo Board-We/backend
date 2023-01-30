@@ -10,7 +10,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -19,11 +22,19 @@ public class LoginServiceImpl implements LoginService {
     private final BoardRepository boardRepository;
 
     @Override
-    public void login(String boardCode, String password, HttpSession session) {
+    public void login(String boardCode, String password, HttpServletResponse response, HttpSession session) {
         Board board = boardRepository.findByCode(boardCode).orElseThrow(BoardNotFoundException::new);
+
         if(!board.getPassword().equals(password)){
             throw new InvalidPasswordException();
         }
-        session.setAttribute("boardCode", board.getCode());
+
+        UUID sessionId = UUID.randomUUID();
+        Cookie cookie = new Cookie("sessionId", sessionId.toString());
+
+        cookie.setMaxAge(300);
+        response.addCookie(cookie);
+
+        session.setAttribute(sessionId.toString(), board.getCode());
     }
 }
