@@ -30,7 +30,7 @@ public class LoginServiceImpl implements LoginService {
         }
 
         UUID sessionId = UUID.randomUUID();
-        Cookie cookie = new Cookie("sessionId", sessionId.toString());
+        Cookie cookie = new Cookie("boardWeSessionId", sessionId.toString());
 
         cookie.setMaxAge(300);
         response.addCookie(cookie);

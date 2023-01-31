@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class MemoController {
 
     private final MemoService memoService;
@@ -31,9 +33,16 @@ public class MemoController {
     }
 
     @PostMapping("/board/{boardCode}/memo/delete")
-    public ResponseEntity<Void> deleteMemo(@RequestBody MemoDeleteRequestDto memoDeleteRequestDto, @PathVariable String boardCode
-            , HttpSession session, @CookieValue(value = "sessionId")Cookie cookie){
-        if(session.getAttribute(cookie.getValue()) == null || !boardCode.equals(session.getAttribute("boardCode").toString())){
+    public ResponseEntity<Void> deleteMemo(@RequestBody MemoDeleteRequestDto memoDeleteRequestDto, @PathVariable String boardCode, HttpSession session, @CookieValue(value = "boardWeSessionId", required = false)Cookie cookie){
+        String cookieValue = cookie.getValue();
+        log.info("cookie value" + cookieValue);
+        if(session.getAttribute(cookieValue) == null){
+            throw new CustomException(ErrorCode.INVALID_ACCESS);
+        }
+
+        String sessionValue = (String) session.getAttribute(cookieValue);
+
+        if(!boardCode.equals(sessionValue)){
             throw new CustomException(ErrorCode.INVALID_ACCESS);
         }
         memoService.deleteMemo(memoDeleteRequestDto,boardCode);
