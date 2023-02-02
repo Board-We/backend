@@ -7,6 +7,7 @@ import com.boardwe.boardwe.dto.res.MemoSearchResponseDto;
 import com.boardwe.boardwe.dto.res.MemoSelectResponseDto;
 import com.boardwe.boardwe.exception.ErrorCode;
 import com.boardwe.boardwe.exception.custom.CustomException;
+import com.boardwe.boardwe.exception.custom.other.InvalidAccessException;
 import com.boardwe.boardwe.service.MemoService;
 import lombok.RequiredArgsConstructor;
 
@@ -37,13 +38,13 @@ public class MemoController {
         String cookieValue = cookie.getValue();
         log.info("cookie value" + cookieValue);
         if(session.getAttribute(cookieValue) == null){
-            throw new CustomException(ErrorCode.INVALID_ACCESS);
+            throw new InvalidAccessException();
         }
 
         String sessionValue = (String) session.getAttribute(cookieValue);
 
         if(!boardCode.equals(sessionValue)){
-            throw new CustomException(ErrorCode.INVALID_ACCESS);
+            throw new InvalidAccessException();
         }
         memoService.deleteMemo(memoDeleteRequestDto,boardCode);
         return ResponseEntity.ok().build();
