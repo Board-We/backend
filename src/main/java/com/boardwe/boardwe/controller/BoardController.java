@@ -2,11 +2,13 @@ package com.boardwe.boardwe.controller;
 
 import com.boardwe.boardwe.dto.req.BoardCreateRequestDto;
 import com.boardwe.boardwe.dto.req.BoardDeleteRequestDto;
+import com.boardwe.boardwe.dto.req.BoardLoginRequestDto;
 import com.boardwe.boardwe.dto.res.BoardCreateResponseDto;
 import com.boardwe.boardwe.dto.res.BoardReadResponseDto;
 import com.boardwe.boardwe.dto.res.BoardSearchResponseDto;
 import com.boardwe.boardwe.service.BoardSearchService;
 import com.boardwe.boardwe.service.BoardService;
+import com.boardwe.boardwe.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,12 +16,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 public class BoardController {
 
+    private final LoginService loginService;
     private final BoardService boardService;
     private final BoardSearchService boardSearchService;
 
@@ -54,5 +59,16 @@ public class BoardController {
     @GetMapping("/boards/recommend")
     public ResponseEntity<List<BoardSearchResponseDto>> getRecommendBoards(){
         return ResponseEntity.ok(boardSearchService.selectRecommendBoards());
+    }
+
+    @PostMapping("/board/login")
+    public ResponseEntity<Void> login(@RequestBody BoardLoginRequestDto boardLoginRequestDto, HttpServletResponse response, HttpSession session){
+        loginService.login(
+                boardLoginRequestDto.getBoardCode(),
+                boardLoginRequestDto.getPassword(),
+                response,
+                session
+        );
+        return ResponseEntity.ok().build();
     }
 }
