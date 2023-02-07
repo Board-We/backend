@@ -1,4 +1,7 @@
 server:
+  servlet:
+    session:
+      timeout: 300
   port: 16383
 
 spring:

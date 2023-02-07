@@ -5,16 +5,24 @@ import com.boardwe.boardwe.dto.req.MemoDeleteRequestDto;
 import com.boardwe.boardwe.dto.res.MemoCreateResponseDto;
 import com.boardwe.boardwe.dto.res.MemoSearchResponseDto;
 import com.boardwe.boardwe.dto.res.MemoSelectResponseDto;
+import com.boardwe.boardwe.exception.ErrorCode;
+import com.boardwe.boardwe.exception.custom.CustomException;
+import com.boardwe.boardwe.exception.custom.other.InvalidAccessException;
 import com.boardwe.boardwe.service.MemoService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
+
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class MemoController {
 
     private final MemoService memoService;
@@ -26,7 +34,18 @@ public class MemoController {
     }
 
     @PostMapping("/board/{boardCode}/memo/delete")
-    public ResponseEntity<Void> deleteMemo(@RequestBody MemoDeleteRequestDto memoDeleteRequestDto, @PathVariable String boardCode){
+    public ResponseEntity<Void> deleteMemo(@RequestBody MemoDeleteRequestDto memoDeleteRequestDto, @PathVariable String boardCode, HttpSession session, @CookieValue(value = "boardWeSessionId", required = false)Cookie cookie){
+        String cookieValue = cookie.getValue();
+        log.info("cookie value" + cookieValue);
+        if(session.getAttribute(cookieValue) == null){
+            throw new InvalidAccessException();
+        }
+
+        String sessionValue = (String) session.getAttribute(cookieValue);
+
+        if(!boardCode.equals(sessionValue)){
+            throw new InvalidAccessException();
+        }
         memoService.deleteMemo(memoDeleteRequestDto,boardCode);
         return ResponseEntity.ok().build();
     }

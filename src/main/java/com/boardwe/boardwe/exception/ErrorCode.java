@@ -4,6 +4,7 @@ public enum ErrorCode {
     // -------- 4xx --------
     REQUEST_ERROR(400,"잘못된 요청입니다."),
 
+    INVALID_ACCESS(400, "다시 로그인 후 이용해주세요."),
     // Invalid Input
     INVALID_INPUT_VALUE(400, "입력값이 유효하지 않습니다."),
     INVALID_DATE_VALUE(400, "날짜 순서가 유효하지 않습니다."),
