@@ -30,9 +30,6 @@ logging:
 file:
   upload-dir: ./files
 
-board-we:
-  file-server: localhost:16383
-
 cloud:
   aws:
     credentials:

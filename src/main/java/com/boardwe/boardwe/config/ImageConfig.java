@@ -27,11 +27,4 @@ public class ImageConfig {
         return rootDir;
     }
 
-    @Bean
-    public String cdnUrl(@Value("${board-we.file-server}") String fileServer) throws UnknownHostException {
-//        InetAddress ipAddress = InetAddress.getLocalHost();
-//        return String.format("%s:%s", ipAddress.getHostAddress(), fileServer);
-        return fileServer;
-    }
-
 }

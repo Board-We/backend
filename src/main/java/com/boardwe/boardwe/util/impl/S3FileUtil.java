@@ -22,7 +22,6 @@ import java.nio.file.Path;
 import java.util.Base64;
 import java.util.UUID;
 
-@Primary
 @Slf4j
 @Component
 @RequiredArgsConstructor
