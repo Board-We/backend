@@ -41,40 +41,14 @@ public class BoardDeleteTest {
     @DisplayName("보드를 삭제한다.")
     void deleteBoard(){
         String boardCode = "Test";
-        String password = "1234";
-
-        BoardDeleteRequestDto deleteBoard = BoardDeleteRequestDto.builder()
-                .password(password)
-                .build();
         Board board = mock(Board.class);
 
-        when(board.getPassword()).thenReturn("1234");
         when(boardRepository.findByCode(boardCode)).thenReturn(Optional.of(board));
         doNothing().when(memoRepository).deleteByBoard(board);
         doNothing().when(tagRepository).deleteByBoard(board);
         doNothing().when(boardRepository).delete(board);
 
-        boardService.deleteBoard(deleteBoard,boardCode);
-
-    }
-
-    @Test
-    @DisplayName("잘못된 비밀번호로 보드를 삭제할때 에러 처리")
-    void errorPasswordDeleteBoard(){
-        String boardCode = "Test";
-        String password = "1234";
-
-        BoardDeleteRequestDto deleteBoard = BoardDeleteRequestDto.builder()
-                .password(password)
-                .build();
-        Board board = mock(Board.class);
-
-        when(board.getPassword()).thenReturn("1235");
-        when(boardRepository.findByCode(boardCode)).thenReturn(Optional.of(board));
-
-        Assertions.assertThrows(InvalidPasswordException.class,()->{
-            boardService.deleteBoard(deleteBoard,boardCode);
-        });
+        boardService.deleteBoard(boardCode);
 
     }
 
@@ -82,17 +56,11 @@ public class BoardDeleteTest {
     @DisplayName("없는 보드를 삭제할 때 에러처리")
     void noBoardExceptionTest(){
         String boardCode = "Test";
-        String password = "1234";
-
-        BoardDeleteRequestDto deleteBoard = BoardDeleteRequestDto.builder()
-                .password(password)
-                .build();
-        Board board = mock(Board.class);
 
         when(boardRepository.findByCode(boardCode)).thenReturn(Optional.empty());
 
         Assertions.assertThrows(BoardNotFoundException.class,()->{
-            boardService.deleteBoard(deleteBoard,boardCode);
+            boardService.deleteBoard(boardCode);
         });
     }
 
