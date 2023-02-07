@@ -6,6 +6,7 @@ import com.boardwe.boardwe.exception.custom.entity.BoardNotFoundException;
 import com.boardwe.boardwe.exception.custom.other.InvalidPasswordException;
 import com.boardwe.boardwe.repository.BoardRepository;
 import com.boardwe.boardwe.service.LoginService;
+import com.boardwe.boardwe.type.SessionConst;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,19 +23,9 @@ public class LoginServiceImpl implements LoginService {
     private final BoardRepository boardRepository;
 
     @Override
-    public void login(String boardCode, String password, HttpServletResponse response, HttpSession session) {
-        Board board = boardRepository.findByCode(boardCode).orElseThrow(BoardNotFoundException::new);
-
-        if(!board.getPassword().equals(password)){
-            throw new InvalidPasswordException();
-        }
-
-        UUID sessionId = UUID.randomUUID();
-        Cookie cookie = new Cookie("boardWeSessionId", sessionId.toString());
-
-        cookie.setMaxAge(300);
-        response.addCookie(cookie);
-
-        session.setAttribute(sessionId.toString(), board.getCode());
+    public Boolean login(String boardCode, String password) {
+        Board board = boardRepository.findByCode(boardCode)
+                .orElseThrow(BoardNotFoundException::new);
+        return board.getPassword().equals(password);
     }
 }

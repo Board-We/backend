@@ -6,10 +6,14 @@ import com.boardwe.boardwe.dto.req.BoardLoginRequestDto;
 import com.boardwe.boardwe.dto.res.BoardCreateResponseDto;
 import com.boardwe.boardwe.dto.res.BoardReadResponseDto;
 import com.boardwe.boardwe.dto.res.BoardSearchResponseDto;
+import com.boardwe.boardwe.exception.custom.other.InvalidAccessException;
+import com.boardwe.boardwe.exception.custom.other.InvalidPasswordException;
 import com.boardwe.boardwe.service.BoardSearchService;
 import com.boardwe.boardwe.service.BoardService;
 import com.boardwe.boardwe.service.LoginService;
+import com.boardwe.boardwe.type.SessionConst;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class BoardController {
@@ -62,13 +67,15 @@ public class BoardController {
     }
 
     @PostMapping("/board/login")
-    public ResponseEntity<Void> login(@RequestBody BoardLoginRequestDto boardLoginRequestDto, HttpServletResponse response, HttpSession session){
-        loginService.login(
-                boardLoginRequestDto.getBoardCode(),
-                boardLoginRequestDto.getPassword(),
-                response,
-                session
-        );
+    public ResponseEntity<Void> login(@RequestBody BoardLoginRequestDto boardLoginRequestDto, HttpSession session){
+        String boardCode = boardLoginRequestDto.getBoardCode();
+        Boolean canLogin = loginService.login(boardCode, boardLoginRequestDto.getPassword());
+        if (canLogin){
+            session.setAttribute(SessionConst.LOGIN_SESSION_ID, boardCode);
+            log.info("[BoardController] Login Succeed to board {}", boardCode);
+        } else {
+            throw new InvalidPasswordException();
+        }
         return ResponseEntity.ok().build();
     }
 }
