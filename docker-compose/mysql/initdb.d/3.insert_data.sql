@@ -13,19 +13,19 @@ set @temp_theme_category_id = (select LAST_INSERT_ID());
 
 # insert board themes
 insert into board_theme (theme_category_id, board_theme_name, board_theme_background_type, board_theme_background_color, board_theme_font)
-    VALUES (@christmas_theme_category_id, '크리스마스', 'COLOR', '#A52A2A', '바탕');
+    VALUES (@christmas_theme_category_id, '크리스마스', 'COLOR', '#A52A2A', '0');
 set @christmas_theme_id = (select LAST_INSERT_ID());
 
 insert into board_theme (theme_category_id, board_theme_name, board_theme_background_type, board_theme_background_color, board_theme_font)
-VALUES (@birthday_theme_category_id, '생일', 'COLOR', '#F4BCF5', '나눔고딕');
+VALUES (@birthday_theme_category_id, '생일', 'COLOR', '#F4BCF5', '0');
 set @birthday_theme_id = (select LAST_INSERT_ID());
 
 insert into board_theme (theme_category_id, board_theme_name, board_theme_background_type, board_theme_background_color, board_theme_font)
-VALUES (@temp_theme_category_id, 'TEMP', 'COLOR', '#FFFFFF', '궁서');
+VALUES (@temp_theme_category_id, 'TEMP', 'COLOR', '#FFFFFF', '0');
 set @temp1_theme_id = (select LAST_INSERT_ID());
 
 insert into board_theme (theme_category_id, board_theme_name, board_theme_background_type, board_theme_background_color, board_theme_font)
-VALUES (@temp_theme_category_id, 'TEMP', 'COLOR', '#000000', '궁서');
+VALUES (@temp_theme_category_id, 'TEMP', 'COLOR', '#000000', '0');
 set @temp2_theme_id = (select LAST_INSERT_ID());
 
 
@@ -75,14 +75,26 @@ set @temp2_memo_theme2_id = (select LAST_INSERT_ID());
 
 # insert boards
 set @date_now = NOW();
-set @date_before_1 = DATE_SUB(@date_now, INTERVAL 1 MONTH);
-set @date_before_2 = DATE_SUB(@date_before_1, INTERVAL 1 MONTH);
-set @date_before_3 = DATE_SUB(@date_before_2, INTERVAL 1 MONTH);
-set @date_before_4 = DATE_SUB(@date_before_3, INTERVAL 1 MONTH);
-set @date_after_1 = DATE_ADD(@date_now, INTERVAL 10 YEAR);
-set @date_after_2 = DATE_ADD(@date_after_1, INTERVAL 1 MONTH);
-set @date_after_3 = DATE_ADD(@date_after_2, INTERVAL 1 MONTH);
-set @date_after_4 = DATE_ADD(@date_after_3, INTERVAL 1 MONTH);
+
+# # for creating permanent boards
+# set @date_before_1 = DATE_SUB(@date_now, INTERVAL 1 MONTH);
+# set @date_before_2 = DATE_SUB(@date_before_1, INTERVAL 1 MONTH);
+# set @date_before_3 = DATE_SUB(@date_before_2, INTERVAL 1 MONTH);
+# set @date_before_4 = DATE_SUB(@date_before_3, INTERVAL 1 MONTH);
+# set @date_after_1 = DATE_ADD(@date_now, INTERVAL 10 YEAR);
+# set @date_after_2 = DATE_ADD(@date_after_1, INTERVAL 1 MONTH);
+# set @date_after_3 = DATE_ADD(@date_after_2, INTERVAL 1 MONTH);
+# set @date_after_4 = DATE_ADD(@date_after_3, INTERVAL 1 MONTH);
+
+# for creating real-time boards
+set @date_before_1 = DATE_SUB(@date_now, INTERVAL 2 WEEK);
+set @date_before_2 = DATE_SUB(@date_before_1, INTERVAL 2 WEEK);
+set @date_before_3 = DATE_SUB(@date_before_2, INTERVAL 2 WEEK);
+set @date_before_4 = DATE_SUB(@date_before_3, INTERVAL 2 WEEK);
+set @date_after_1 = DATE_ADD(@date_now, INTERVAL 2 WEEK);
+set @date_after_2 = DATE_ADD(@date_after_1, INTERVAL 2 WEEK);
+set @date_after_3 = DATE_ADD(@date_after_2, INTERVAL 2 WEEK);
+set @date_after_4 = DATE_ADD(@date_after_3, INTERVAL 2 WEEK);
 
 insert into board (board_theme_id, board_name, board_description, board_code, board_writing_start_time, board_writing_end_time, board_open_start_time, board_open_end_time, board_password, board_open_type, board_views)
 VALUES (@christmas_theme_id, '크리스마스 축하 보드', '크리스마스를 축하해조!', 'c60ce626-b9ea-4dfa-8f2f-f6e9008ed4ee', @date_before_4, @date_before_3, @date_before_2, @date_after_1, '1234', 'PUBLIC', 100);

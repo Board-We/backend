@@ -15,6 +15,7 @@ public class FileController {
     private final FileService fileService;
 
 
+    @Deprecated
     @GetMapping("/image/{imageUuid}")
     public ResponseEntity<Resource> getBoard(@PathVariable String imageUuid) {
         Resource imageResource = fileService.loadImageAsResource(imageUuid);
