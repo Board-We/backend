@@ -9,6 +9,7 @@ import com.boardwe.boardwe.exception.ErrorCode;
 import com.boardwe.boardwe.exception.custom.CustomException;
 import com.boardwe.boardwe.exception.custom.other.InvalidAccessException;
 import com.boardwe.boardwe.service.MemoService;
+import com.boardwe.boardwe.type.SessionConst;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpSession;
+
+import static com.boardwe.boardwe.type.SessionConst.LOGIN_SESSION_ID;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,19 +37,17 @@ public class MemoController {
     }
 
     @PostMapping("/board/{boardCode}/memo/delete")
-    public ResponseEntity<Void> deleteMemo(@RequestBody MemoDeleteRequestDto memoDeleteRequestDto, @PathVariable String boardCode, HttpSession session, @CookieValue(value = "boardWeSessionId", required = false)Cookie cookie){
-        String cookieValue = cookie.getValue();
-        log.info("cookie value" + cookieValue);
-        if(session.getAttribute(cookieValue) == null){
+    public ResponseEntity<Void> deleteMemo(
+            @RequestBody MemoDeleteRequestDto memoDeleteRequestDto,
+            @PathVariable String boardCode,
+            @SessionAttribute(name = LOGIN_SESSION_ID, required = false) String sessionValue
+    ){
+        if (sessionValue == null || !sessionValue.equals(boardCode)){
+            log.info("[MemoController] Invalid Session: {}", sessionValue);
             throw new InvalidAccessException();
         }
 
-        String sessionValue = (String) session.getAttribute(cookieValue);
-
-        if(!boardCode.equals(sessionValue)){
-            throw new InvalidAccessException();
-        }
-        memoService.deleteMemo(memoDeleteRequestDto,boardCode);
+        memoService.deleteMemo(memoDeleteRequestDto, boardCode);
         return ResponseEntity.ok().build();
     }
 

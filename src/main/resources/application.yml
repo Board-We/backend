@@ -1,8 +1,8 @@
 server:
+  port: 16383
   servlet:
     session:
-      timeout: 300
-  port: 16383
+      timeout: 300s
 
 spring:
   datasource:
