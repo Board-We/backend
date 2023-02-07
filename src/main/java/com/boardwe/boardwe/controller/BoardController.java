@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+import static com.boardwe.boardwe.type.SessionConst.LOGIN_SESSION_ID;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -45,8 +47,15 @@ public class BoardController {
     }
 
     @PostMapping("/board/{boardCode}/delete")
-    public ResponseEntity<Void> delete(@RequestBody BoardDeleteRequestDto boardDeleteRequestDto, @PathVariable String boardCode){
-        boardService.deleteBoard(boardDeleteRequestDto,boardCode);
+    public ResponseEntity<Void> delete(
+            @PathVariable String boardCode,
+            @SessionAttribute(name = LOGIN_SESSION_ID, required = false) String sessionValue
+            ){
+        if (sessionValue == null || !sessionValue.equals(boardCode)){
+            log.info("[BoardController] Invalid Session: {}", sessionValue);
+            throw new InvalidAccessException();
+        }
+        boardService.deleteBoard(boardCode);
         return ResponseEntity.ok().build();
     }
 

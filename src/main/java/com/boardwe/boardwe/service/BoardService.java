@@ -8,5 +8,5 @@ import com.boardwe.boardwe.dto.res.BoardReadResponseDto;
 public interface BoardService {
     BoardCreateResponseDto createBoard(BoardCreateRequestDto requestDto);
     BoardReadResponseDto readBoard(String boardCode);
-    void deleteBoard(BoardDeleteRequestDto requestDto, String boardCode);
+    void deleteBoard(String boardCode);
 }

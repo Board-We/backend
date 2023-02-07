@@ -121,19 +121,13 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional
-    public void deleteBoard(BoardDeleteRequestDto requestDto, String boardCode) {
+    public void deleteBoard(String boardCode) {
         log.info("[BoardServiceImpl] Delete board (board code: {}).", boardCode);
-        Board board = boardRepository.findByCode(boardCode).orElseThrow(BoardNotFoundException::new);
-
-        if (Objects.equals(board.getPassword(), requestDto.getPassword())) {
-            log.info("[BoardServiceImpl] Delete memos and tags of board.");
-            memoRepository.deleteByBoard(board);
-            tagRepository.deleteByBoard(board);
-            boardRepository.delete(board);
-        } else {
-            log.error("[BoardServiceImpl] Password is incorrect.");
-            throw new InvalidPasswordException();
-        }
+        Board board = boardRepository.findByCode(boardCode)
+                .orElseThrow(BoardNotFoundException::new);
+        memoRepository.deleteByBoard(board);
+        tagRepository.deleteByBoard(board);
+        boardRepository.delete(board);
     }
 
     private BoardTheme getBoardTheme(BoardCreateRequestDto createDto) {
