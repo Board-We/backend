@@ -37,16 +37,8 @@ public class MemoController {
     }
 
     @PostMapping("/board/{boardCode}/memo/delete")
-    public ResponseEntity<Void> deleteMemo(
-            @RequestBody MemoDeleteRequestDto memoDeleteRequestDto,
-            @PathVariable String boardCode,
-            @SessionAttribute(name = LOGIN_SESSION_ID, required = false) String sessionValue
-    ){
-        if (sessionValue == null || !sessionValue.equals(boardCode)){
-            log.info("[MemoController] Invalid Session: {}", sessionValue);
-            throw new InvalidAccessException();
-        }
-
+    public ResponseEntity<Void> deleteMemo(@RequestBody MemoDeleteRequestDto memoDeleteRequestDto,
+                                           @PathVariable String boardCode) {
         memoService.deleteMemo(memoDeleteRequestDto, boardCode);
         return ResponseEntity.ok().build();
     }
