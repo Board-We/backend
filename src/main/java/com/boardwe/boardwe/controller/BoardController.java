@@ -47,14 +47,7 @@ public class BoardController {
     }
 
     @PostMapping("/board/{boardCode}/delete")
-    public ResponseEntity<Void> delete(
-            @PathVariable String boardCode,
-            @SessionAttribute(name = LOGIN_SESSION_ID, required = false) String sessionValue
-            ){
-        if (sessionValue == null || !sessionValue.equals(boardCode)){
-            log.info("[BoardController] Invalid Session: {}", sessionValue);
-            throw new InvalidAccessException();
-        }
+    public ResponseEntity<Void> delete(@PathVariable String boardCode){
         boardService.deleteBoard(boardCode);
         return ResponseEntity.ok().build();
     }
