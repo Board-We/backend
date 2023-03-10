@@ -23,6 +23,19 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(logInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/css/**", "/*.ico", "/error", "/error-page/**", "/health");
+                .excludePathPatterns(
+                        "/css/**",
+                        "*.ico",
+                        "*.env",
+                        "*html",
+                        "*.php",
+                        "*.aspx",
+                        "*.txt",
+                        "*.xml",
+                        "/error",
+                        "/error-page/**",
+                        "/health",
+                        "/"
+                );
     }
 }
