@@ -22,9 +22,8 @@
 - [ERD](#erd)
 - [API Document](#api-document)
 - [배포](#배포)
-- [구현과정(설계 및 의도)](#구현과정(설계-및-의도))
-- [TIL 및 회고](#til-및-회고)
-- [References](#references)
+- [구현과정(설계 및 의도)](#구현과정설계-및-의도)
+- [TIL 및 회고](#tiltoday-i-learn-및-회고)
 
 <br/>
 
@@ -46,6 +45,8 @@
 
 <br/>
 
+<img src="https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=Github&logoColor=white">
+<img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white">
 <img src="https://img.shields.io/badge/erd cloud-%23000000.svg?style=for-the-badge&logo=diagrams.net&logoColor=white">
 </div>
 
@@ -66,6 +67,7 @@
 <br/>
 
 ## 프로젝트 진행 및 이슈 관리
+
 <img src="https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=Github&logoColor=white">
 <img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white">
 
@@ -82,6 +84,9 @@
 <br/>
 
 ## ERD
+
+[ERD Cloud - Link](https://www.erdcloud.com/d/qosW2HRqNwG4G3uPu)
+
 ![erd](https://github.com/Board-We/backend/assets/29030538/d61efab5-2060-4483-b9c9-0a8229901c26)
 
 <br/>
